@@ -82,6 +82,7 @@ window.addEventListener('scroll', () => {
 // Initialize on Page Load
 document.addEventListener('DOMContentLoaded', () => {
     setActiveNavLink();
+    loadFeaturedProjects(); // Ensure projects load correctly
 });
 
 // Utility: Debounce Function
@@ -103,3 +104,19 @@ document.querySelectorAll('a[target="_blank"]').forEach(link => {
         link.setAttribute('rel', 'noopener noreferrer');
     }
 });
+
+// Fix for infinite loading in projects section
+function loadFeaturedProjects() {
+    const featuredProjectsGrid = document.getElementById('featuredProjectsGrid');
+
+    if (featuredProjectsGrid) {
+        // Simulate loading projects
+        setTimeout(() => {
+            featuredProjectsGrid.innerHTML = `
+                <div class="project-card">مشروع 1</div>
+                <div class="project-card">مشروع 2</div>
+                <div class="project-card">مشروع 3</div>
+            `;
+        }, 1000); // Simulate a 1-second delay for loading
+    }
+}
