@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مقالات محمد الزبيدي في تحليل البيانات">
+    <title>المقالات | محمد الزبيدي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">محمد الزبيدي</a>
+            
+            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+                <li><a href="projects.html" class="nav-link">المشاريع</a></li>
+                <li><a href="articles.html" class="nav-link active">المقالات</a></li>
+                <li><a href="index.html#contact" class="nav-link">تواصل</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title fade-in">المقالات</h1>
+                <p class="page-subtitle fade-in">أفكاري وخبراتي في عالم تحليل البيانات</p>
+            </div>
+        </section>
+
+        <section class="articles-section">
+            <div class="container">
+                <div class="notion-container slide-up" id="notionContainer">
+                    <div class="notion-loading">
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/notion-api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNotionEmbed('notionContainer');
+        });
+    </script>
+</body>
+</html>
