@@ -496,11 +496,11 @@ section {
 }
 
 .contact-content {
-    color: #333; /* Adjusted font color for better visibility */
+    color: var(--text-primary); /* Fixed: use light color for dark background */
 }
 
 .contact-item span {
-    color: #555; /* Improved contrast for text */
+    color: var(--text-primary); /* Fixed: use light color for dark background */
 }
 
 .footer {

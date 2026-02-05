@@ -86,8 +86,16 @@ async function loadFeaturedProjects() {
 
 // Load all projects (for projects page)
 async function loadAllProjects() {
-    const projects = await fetchProjects();
-    renderProjects(projects, 'projectsGrid');
+    const loadingState = document.querySelector('#projectsGrid .loading-state');
+    try {
+        const projects = await fetchProjects();
+        renderProjects(projects, 'projectsGrid');
+    } finally {
+        // Always hide loading spinner
+        if (loadingState) {
+            loadingState.style.display = 'none';
+        }
+    }
 }
 
 // Filter projects by tool
