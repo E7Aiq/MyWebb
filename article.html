@@ -46,11 +46,36 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container" id="articleContent">
-        <!-- سيتم تحميل محتوى المقال هنا عبر JavaScript -->
-        <div class="article-loading">
+    <main class="container" id="articleContainer">
+        <!-- صورة الغلاف -->
+        <div class="article-cover-wrapper">
+            <img id="article-cover" class="article-cover" src="" alt="صورة غلاف المقال" style="display: none;">
+        </div>
+        
+        <!-- رأس المقال -->
+        <header class="article-header">
+            <h1 id="article-title" class="article-title"></h1>
+            <div class="article-meta">
+                <span id="article-date" class="article-date"></span>
+                <span id="article-category" class="article-category"></span>
+                <span id="article-read-time" class="article-read-time"></span>
+            </div>
+        </header>
+        
+        <!-- محتوى المقال -->
+        <article id="article-body" class="article-body"></article>
+        
+        <!-- حالة التحميل -->
+        <div id="article-loading" class="article-loading">
             <div class="loading-spinner"></div>
             <p>جاري تحميل المقال...</p>
+        </div>
+        
+        <!-- حالة الخطأ -->
+        <div id="article-error" class="article-error" style="display: none;">
+            <h2>عذراً!</h2>
+            <p>لم نتمكن من تحميل المقال.</p>
+            <a href="articles.html" class="btn btn-primary">العودة للمقالات</a>
         </div>
     </main>
 

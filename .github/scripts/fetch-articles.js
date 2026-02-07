@@ -1,23 +1,50 @@
 /**
- * سكربت جلب المقالات من Notion
- * يعمل عبر GitHub Actions يومياً
+ * Notion to Website - Article Fetcher
+ * Converts Notion pages to HTML and saves to articles.json
+ * 
+ * Dependencies: @notionhq/client, notion-to-md, marked
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// Import Notion Client
-let Client;
+// ============================================
+// IMPORTS & INITIALIZATION
+// ============================================
+
+let Client, NotionToMarkdown, marked;
+
 try {
     const notionModule = require('@notionhq/client');
     Client = notionModule.Client;
-    console.log('✅ Notion client loaded successfully');
+    console.log('✅ @notionhq/client loaded');
 } catch (err) {
     console.error('❌ Failed to load @notionhq/client:', err.message);
     process.exit(1);
 }
 
-// Validate environment variables early
+try {
+    const n2mModule = require('notion-to-md');
+    NotionToMarkdown = n2mModule.NotionToMarkdown;
+    console.log('✅ notion-to-md loaded');
+} catch (err) {
+    console.error('❌ Failed to load notion-to-md:', err.message);
+    process.exit(1);
+}
+
+try {
+    const markedModule = require('marked');
+    marked = markedModule.marked;
+    console.log('✅ marked loaded');
+} catch (err) {
+    console.error('❌ Failed to load marked:', err.message);
+    process.exit(1);
+}
+
+// ============================================
+// ENVIRONMENT VALIDATION
+// ============================================
+
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
@@ -31,257 +58,153 @@ if (!DATABASE_ID) {
     process.exit(1);
 }
 
-// Initialize Notion Client
-const notion = new Client({
-    auth: NOTION_API_KEY
-});
+// ============================================
+// NOTION CLIENT SETUP
+// ============================================
+
+const notion = new Client({ auth: NOTION_API_KEY });
+const n2m = new NotionToMarkdown({ notionClient: notion });
 
 console.log('✅ Notion client initialized');
+console.log('📋 Database ID:', DATABASE_ID.substring(0, 8) + '...');
 
-/**
- * الدالة الرئيسية لجلب المقالات
- */
+// ============================================
+// MAIN FUNCTION
+// ============================================
+
 async function fetchArticles() {
     try {
-        console.log('🔄 جاري جلب المقالات من Notion...');
-        console.log('📋 Database ID:', DATABASE_ID.substring(0, 8) + '...');
+        console.log('\n🔄 Fetching articles from Notion...\n');
 
-        // جلب المقالات المنشورة فقط
+        // Query the database for published articles
         const response = await notion.databases.query({
             database_id: DATABASE_ID,
             filter: {
                 property: 'Published',
-                checkbox: {
-                    equals: true
-                }
+                checkbox: { equals: true }
             },
             sorts: [
-                {
-                    property: 'Date',
-                    direction: 'descending'
-                }
+                { property: 'Date', direction: 'descending' }
             ]
         });
 
-        console.log(`📚 تم العثور على ${response.results.length} مقال`);
+        console.log(`📚 Found ${response.results.length} published article(s)\n`);
 
-        // معالجة كل مقال
-        const articles = await Promise.all(
-            response.results.map(async (page, index) => {
-                console.log(`   📝 معالجة المقال ${index + 1}...`);
-                const content = await getPageContent(page.id);
-                
-                return {
-                    id: page.id.replace(/-/g, ''),
-                    title: getTitle(page.properties.Title || page.properties.Name),
-                    title_en: getRichText(page.properties.Title_EN),
-                    description: getRichText(page.properties.Description),
-                    date: getDate(page.properties.Date),
-                    category: getSelect(page.properties.Category),
-                    tags: getMultiSelect(page.properties.Tags),
-                    cover: getCover(page.cover),
-                    icon: getIcon(page.icon),
-                    read_time: getNumber(page.properties.ReadTime) || estimateReadTime(content),
-                    featured: getCheckbox(page.properties.Featured),
-                    content: content,
-                    url: page.url,
-                    last_edited: page.last_edited_time
-                };
-            })
-        );
-
-        // حفظ في ملف JSON
-        const dataDir = path.join(process.cwd(), 'data');
-        if (!fs.existsSync(dataDir)) {
-            fs.mkdirSync(dataDir, { recursive: true });
+        if (response.results.length === 0) {
+            console.log('⚠️ No published articles found. Check your Notion database.');
         }
 
-        const outputPath = path.join(dataDir, 'articles.json');
+        // Process each article
+        const articles = [];
+        
+        for (let i = 0; i < response.results.length; i++) {
+            const page = response.results[i];
+            console.log(`📝 Processing article ${i + 1}/${response.results.length}...`);
+            
+            try {
+                const article = await processArticle(page);
+                articles.push(article);
+                console.log(`   ✓ "${article.title}" (${article.content_html.length} chars)`);
+            } catch (err) {
+                console.error(`   ✗ Error processing page ${page.id}:`, err.message);
+            }
+        }
+
+        // Save to JSON
         const outputData = {
             last_updated: new Date().toISOString(),
             count: articles.length,
             articles: articles
         };
 
+        const dataDir = path.join(process.cwd(), 'data');
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
+
+        const outputPath = path.join(dataDir, 'articles.json');
         fs.writeFileSync(outputPath, JSON.stringify(outputData, null, 2), 'utf8');
 
-        console.log(`✅ تم حفظ ${articles.length} مقال في ${outputPath}`);
-        console.log(`📅 آخر تحديث: ${outputData.last_updated}`);
-        
+        console.log(`\n✅ Saved ${articles.length} article(s) to ${outputPath}`);
+        console.log(`📅 Last updated: ${outputData.last_updated}`);
+
     } catch (error) {
-        console.error('❌ خطأ في جلب المقالات:', error.message);
+        console.error('\n❌ Fatal error:', error.message);
         console.error(error.stack);
         process.exit(1);
     }
 }
 
-/**
- * جلب محتوى الصفحة (blocks)
- */
-async function getPageContent(pageId) {
-    try {
-        const blocks = [];
-        let cursor = undefined;
+// ============================================
+// ARTICLE PROCESSING
+// ============================================
 
-        // جلب كل الـ blocks (مع التعامل مع الصفحات)
-        do {
-            const response = await notion.blocks.children.list({
-                block_id: pageId,
-                start_cursor: cursor,
-                page_size: 100
-            });
-
-            blocks.push(...response.results);
-            cursor = response.has_more ? response.next_cursor : undefined;
-        } while (cursor);
-
-        return blocks.map(block => parseBlock(block)).filter(Boolean);
-    } catch (error) {
-        console.error(`   ⚠️ خطأ في جلب محتوى الصفحة ${pageId}:`, error.message);
-        return [];
-    }
-}
-
-/**
- * تحويل block إلى كائن منظم
- */
-function parseBlock(block) {
-    const type = block.type;
+async function processArticle(page) {
+    const props = page.properties;
     
-    switch (type) {
-        case 'paragraph':
-            const text = getRichTextContent(block.paragraph.rich_text);
-            return text ? { type: 'paragraph', content: text } : null;
-            
-        case 'heading_1':
-            return { 
-                type: 'heading_1', 
-                content: getRichTextContent(block.heading_1.rich_text) 
-            };
-            
-        case 'heading_2':
-            return { 
-                type: 'heading_2', 
-                content: getRichTextContent(block.heading_2.rich_text) 
-            };
-            
-        case 'heading_3':
-            return { 
-                type: 'heading_3', 
-                content: getRichTextContent(block.heading_3.rich_text) 
-            };
-            
-        case 'bulleted_list_item':
-            return { 
-                type: 'bullet', 
-                content: getRichTextContent(block.bulleted_list_item.rich_text) 
-            };
-            
-        case 'numbered_list_item':
-            return { 
-                type: 'number', 
-                content: getRichTextContent(block.numbered_list_item.rich_text) 
-            };
-            
-        case 'code':
-            return { 
-                type: 'code', 
-                content: getRichTextContent(block.code.rich_text),
-                language: block.code.language || 'plaintext'
-            };
-            
-        case 'quote':
-            return { 
-                type: 'quote', 
-                content: getRichTextContent(block.quote.rich_text) 
-            };
-            
-        case 'callout':
-            return { 
-                type: 'callout', 
-                content: getRichTextContent(block.callout.rich_text),
-                icon: block.callout.icon?.emoji || '💡'
-            };
-            
-        case 'image':
-            const imageUrl = block.image.type === 'external' 
-                ? block.image.external.url 
-                : block.image.file.url;
-            return { 
-                type: 'image', 
-                url: imageUrl,
-                caption: getRichTextContent(block.image.caption)
-            };
-            
-        case 'divider':
-            return { type: 'divider' };
-            
-        case 'toggle':
-            return {
-                type: 'toggle',
-                title: getRichTextContent(block.toggle.rich_text)
-            };
-            
-        case 'table':
-            return { type: 'table', id: block.id };
-            
-        default:
-            return null;
-    }
+    // Get page content as Markdown
+    const mdBlocks = await n2m.pageToMarkdown(page.id);
+    const mdString = n2m.toMarkdownString(mdBlocks);
+    
+    // Convert Markdown to HTML
+    const contentHtml = marked.parse(mdString.parent || mdString || '');
+    
+    // Build article object
+    return {
+        id: page.id.replace(/-/g, ''),
+        title: getTitle(props.Title || props.Name),
+        title_en: getRichText(props.Title_EN),
+        description: getRichText(props.Description),
+        date: getDate(props.Date),
+        category: getSelect(props.Category),
+        tags: getMultiSelect(props.Tags),
+        cover: getCover(page.cover),
+        icon: getIcon(page.icon),
+        read_time: getNumber(props.ReadTime) || estimateReadTime(contentHtml),
+        featured: getCheckbox(props.Featured),
+        content_html: contentHtml,  // Full HTML content
+        url: page.url,
+        last_edited: page.last_edited_time
+    };
 }
 
-// ==================== Helper Functions ====================
+// ============================================
+// PROPERTY HELPERS
+// ============================================
 
-function getTitle(property) {
-    if (!property || !property.title) return '';
-    return property.title.map(t => t.plain_text).join('');
+function getTitle(prop) {
+    if (!prop || !prop.title) return 'Untitled';
+    return prop.title.map(t => t.plain_text).join('') || 'Untitled';
 }
 
-function getRichText(property) {
-    if (!property || !property.rich_text) return '';
-    return property.rich_text.map(t => t.plain_text).join('');
+function getRichText(prop) {
+    if (!prop || !prop.rich_text) return '';
+    return prop.rich_text.map(t => t.plain_text).join('');
 }
 
-function getRichTextContent(richText) {
-    if (!richText || !richText.length) return '';
-    return richText.map(t => {
-        let text = t.plain_text;
-        
-        // تطبيق التنسيقات
-        if (t.annotations.bold) text = `<strong>${text}</strong>`;
-        if (t.annotations.italic) text = `<em>${text}</em>`;
-        if (t.annotations.code) text = `<code>${text}</code>`;
-        if (t.annotations.strikethrough) text = `<del>${text}</del>`;
-        if (t.annotations.underline) text = `<u>${text}</u>`;
-        if (t.href) text = `<a href="${t.href}" target="_blank" rel="noopener">${text}</a>`;
-        
-        return text;
-    }).join('');
+function getDate(prop) {
+    if (!prop || !prop.date) return null;
+    return prop.date.start;
 }
 
-function getDate(property) {
-    if (!property || !property.date) return null;
-    return property.date.start;
+function getSelect(prop) {
+    if (!prop || !prop.select) return null;
+    return prop.select.name;
 }
 
-function getSelect(property) {
-    if (!property || !property.select) return null;
-    return property.select.name;
+function getMultiSelect(prop) {
+    if (!prop || !prop.multi_select) return [];
+    return prop.multi_select.map(s => s.name);
 }
 
-function getMultiSelect(property) {
-    if (!property || !property.multi_select) return [];
-    return property.multi_select.map(s => s.name);
+function getNumber(prop) {
+    if (!prop || prop.number === null || prop.number === undefined) return null;
+    return prop.number;
 }
 
-function getNumber(property) {
-    if (!property || property.number === null || property.number === undefined) return null;
-    return property.number;
-}
-
-function getCheckbox(property) {
-    if (!property) return false;
-    return property.checkbox || false;
+function getCheckbox(prop) {
+    if (!prop) return false;
+    return prop.checkbox || false;
 }
 
 function getCover(cover) {
@@ -299,19 +222,16 @@ function getIcon(icon) {
     return null;
 }
 
-function estimateReadTime(content) {
-    const text = content
-        .filter(b => b.type === 'paragraph' || b.type === 'bullet' || b.type === 'number')
-        .map(b => b.content)
-        .join(' ');
-    
-    // إزالة HTML tags
-    const plainText = text.replace(/<[^>]*>/g, '');
-    const words = plainText.split(/\s+/).filter(w => w.length > 0).length;
-    
-    // 200 كلمة في الدقيقة للقراءة بالعربية
-    return Math.max(1, Math.ceil(words / 200));
+function estimateReadTime(html) {
+    // Strip HTML tags and count words
+    const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const wordCount = text.split(' ').filter(w => w.length > 0).length;
+    // Assume 200 words per minute for Arabic
+    return Math.max(1, Math.ceil(wordCount / 200));
 }
 
-// تشغيل السكربت
+// ============================================
+// RUN
+// ============================================
+
 fetchArticles();
