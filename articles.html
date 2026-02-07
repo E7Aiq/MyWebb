@@ -52,11 +52,13 @@
 
         <!-- Articles Section -->
         <section class="articles-section">
-            <div class="container" id="articlesContainer">
-                <!-- سيتم تحميل المقالات هنا عبر JavaScript -->
-                <div class="articles-loading">
-                    <div class="loading-spinner"></div>
-                    <p>جاري تحميل المقالات...</p>
+            <div class="container">
+                <div id="articles-grid" class="articles-grid">
+                    <!-- سيتم تحميل المقالات هنا عبر JavaScript -->
+                    <div class="articles-loading">
+                        <div class="loading-spinner"></div>
+                        <p>جاري تحميل المقالات...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -72,12 +74,6 @@
     <!-- Scripts -->
     <script src="main.js"></script>
     <script src="animations.js"></script>
-    <script src="js/articles.js"></script>
-    <script>
-        // تحميل المقالات عند فتح الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            renderArticles('articlesContainer');
-        });
-    </script>
+    <script src="js/articles-list.js"></script>
 </body>
 </html>
