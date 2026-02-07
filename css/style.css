@@ -503,6 +503,51 @@ section {
     color: var(--text-primary); /* Fixed: use light color for dark background */
 }
 
+/* Contact Form Styles */
+.contact-form {
+    margin-top: var(--spacing-xl);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: right;
+}
+
+.contact-form label {
+    display: block;
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+}
+
+.contact-form textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+    transition: var(--transition);
+}
+
+.contact-form textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.contact-form button {
+    margin-top: var(--spacing-md);
+    width: 100%;
+}
+
 .footer {
     background-color: var(--bg-secondary);
     padding: var(--spacing-lg) 0;

@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مقالات محمد الزبيدي في تحليل البيانات">
+    <meta name="description" content="مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد">
     <title>المقالات | محمد الزبيدي</title>
     
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
+    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/article.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">محمد الزبيدي</a>
@@ -34,7 +40,9 @@
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main>
+        <!-- Page Header -->
         <section class="page-header">
             <div class="container">
                 <h1 class="page-title fade-in">المقالات</h1>
@@ -42,32 +50,33 @@
             </div>
         </section>
 
+        <!-- Articles Section -->
         <section class="articles-section">
-            <div class="container">
-                <div class="notion-container slide-up" id="notionContainer">
-                    <div class="notion-loading">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text"></div>
-                        <div class="skeleton skeleton-text"></div>
-                        <div class="skeleton skeleton-text"></div>
-                    </div>
+            <div class="container" id="articlesContainer">
+                <!-- سيتم تحميل المقالات هنا عبر JavaScript -->
+                <div class="articles-loading">
+                    <div class="loading-spinner"></div>
+                    <p>جاري تحميل المقالات...</p>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/notion-api.js"></script>
+    <!-- Scripts -->
+    <script src="main.js"></script>
+    <script src="animations.js"></script>
+    <script src="js/articles.js"></script>
     <script>
+        // تحميل المقالات عند فتح الصفحة
         document.addEventListener('DOMContentLoaded', () => {
-            renderNotionEmbed('notionContainer');
+            renderArticles('articlesContainer');
         });
     </script>
 </body>
