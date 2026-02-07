@@ -3,16 +3,40 @@
  * يعمل عبر GitHub Actions يومياً
  */
 
-const { Client } = require('@notionhq/client');
 const fs = require('fs');
 const path = require('path');
 
-// إعداد Notion Client
+// Import Notion Client
+let Client;
+try {
+    const notionModule = require('@notionhq/client');
+    Client = notionModule.Client;
+    console.log('✅ Notion client loaded successfully');
+} catch (err) {
+    console.error('❌ Failed to load @notionhq/client:', err.message);
+    process.exit(1);
+}
+
+// Validate environment variables early
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
+const DATABASE_ID = process.env.NOTION_DATABASE_ID;
+
+if (!NOTION_API_KEY) {
+    console.error('❌ NOTION_API_KEY is not set');
+    process.exit(1);
+}
+
+if (!DATABASE_ID) {
+    console.error('❌ NOTION_DATABASE_ID is not set');
+    process.exit(1);
+}
+
+// Initialize Notion Client
 const notion = new Client({
-    auth: process.env.NOTION_API_KEY
+    auth: NOTION_API_KEY
 });
 
-const DATABASE_ID = process.env.NOTION_DATABASE_ID;
+console.log('✅ Notion client initialized');
 
 /**
  * الدالة الرئيسية لجلب المقالات
@@ -20,11 +44,7 @@ const DATABASE_ID = process.env.NOTION_DATABASE_ID;
 async function fetchArticles() {
     try {
         console.log('🔄 جاري جلب المقالات من Notion...');
-        
-        // التحقق من وجود المتغيرات
-        if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
-            throw new Error('NOTION_API_KEY أو NOTION_DATABASE_ID غير موجود');
-        }
+        console.log('📋 Database ID:', DATABASE_ID.substring(0, 8) + '...');
 
         // جلب المقالات المنشورة فقط
         const response = await notion.databases.query({
