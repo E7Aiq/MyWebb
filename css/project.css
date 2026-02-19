@@ -316,42 +316,48 @@
 
 /* ===== Responsive ===== */
 
+/* ==========================================================
+   project.css 768px overrides — matches responsive.css
+   Uses !important to guarantee these win.
+   ========================================================== */
 @media (max-width: 768px) {
 
-    /* Force card to never collapse */
     .project-card {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: 320px;
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 350px !important;
+        overflow: hidden !important;
+        width: 100% !important;
     }
 
     .project-card-image-wrapper {
-        width: 100%;
-        height: 200px;
-        min-height: 180px;
-        flex-shrink: 0;
+        width: 100% !important;
+        height: 200px !important;
+        min-height: 200px !important;
+        flex-shrink: 0 !important;
     }
 
     .project-card-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 100% !important;
+        height: 200px !important;
+        object-fit: cover !important;
+        display: block !important;
     }
 
     .project-card-content {
-        padding: var(--spacing-md);
-        flex: 1;
+        flex: 1 1 auto !important;
+        padding: 16px !important;
     }
 
     .project-card-actions {
-        flex-direction: column;
-        gap: var(--spacing-xs);
+        flex-direction: column !important;
+        gap: 8px !important;
     }
 
     .project-card-btn {
-        width: 100%;
-        min-height: 44px;
+        width: 100% !important;
+        min-height: 44px !important;
     }
 
     /* Detail page */
@@ -387,39 +393,39 @@
     }
 
     .project-preview-btn {
-        width: 100%;
-        min-height: 48px;
-        justify-content: center;
+        width: 100% !important;
+        min-height: 48px !important;
+        justify-content: center !important;
     }
 
     .project-detail-back .btn {
-        width: 100%;
-        min-height: 48px;
-        justify-content: center;
+        width: 100% !important;
+        min-height: 48px !important;
+        justify-content: center !important;
     }
 }
 
 @media (max-width: 480px) {
     .project-card {
-        min-height: 280px;
+        min-height: 300px !important;
     }
 
     .project-card-image-wrapper {
-        height: 170px;
-        min-height: 150px;
+        height: 170px !important;
+        min-height: 150px !important;
     }
 
     .project-card-content {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-sm) !important;
     }
 
     .project-card-title {
-        font-size: 1.1rem;
+        font-size: 1.1rem !important;
     }
 
     .project-card-btn {
-        min-height: 48px;
-        font-size: 0.9rem;
+        min-height: 48px !important;
+        font-size: 0.9rem !important;
     }
 
     .project-detail-cover-wrapper {

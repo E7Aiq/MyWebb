@@ -33,10 +33,109 @@
 
 @media (max-width: 768px) {
 
-    /* ===== 1. Mobile Navigation - Full Screen Overlay (RTL) ===== */
+    /* ==========================================================
+       FORCEFUL MOBILE OVERRIDE — Arabic RTL Portfolio
+       Uses !important to override all competing rules from
+       style.css, project.css, and animations.css.
+       ========================================================== */
 
+
+    /* ===== 1. PROJECT CARDS — PREVENT COLLAPSE ===== */
+
+    /* Force single-column grid */
+    .projects-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        width: 100% !important;
+    }
+
+    /* Force card to expand properly */
+    .project-card {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 350px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        opacity: 1 !important;
+        transform: none !important;
+        visibility: visible !important;
+    }
+
+    /* Force image sizing */
+    .project-card-image-wrapper {
+        width: 100% !important;
+        height: 200px !important;
+        min-height: 200px !important;
+        flex-shrink: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .project-card-image,
+    .project-image {
+        width: 100% !important;
+        height: 200px !important;
+        min-height: 200px !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    /* Force content area to fill remaining space */
+    .project-card-content,
+    .project-content {
+        flex: 1 1 auto !important;
+        padding: 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        white-space: normal !important;
+        overflow: visible !important;
+    }
+
+    .project-card-title,
+    .project-title {
+        font-size: 1.15rem !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .project-card-summary,
+    .project-description {
+        font-size: 0.9rem !important;
+        white-space: normal !important;
+        overflow: hidden !important;
+        -webkit-line-clamp: 4 !important;
+        line-clamp: 4 !important;
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical !important;
+    }
+
+    .project-card-categories {
+        flex-wrap: wrap !important;
+    }
+
+    /* Stack action buttons vertically */
+    .project-card-actions,
+    .project-links {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .project-card-btn,
+    .project-link {
+        width: 100% !important;
+        min-height: 44px !important;
+    }
+
+
+    /* ===== 2. MOBILE MENU OVERLAY ===== */
+
+    /* Show the hamburger toggle */
     .mobile-toggle {
-        display: flex;
+        display: flex !important;
         min-width: 44px;
         min-height: 44px;
         align-items: center;
@@ -45,7 +144,7 @@
         position: relative;
     }
 
-    /* Hamburger → X animation */
+    /* Hamburger → X transform */
     .mobile-toggle.active span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
@@ -56,118 +155,82 @@
         transform: rotate(-45deg) translate(5px, -5px);
     }
 
+    /* Full-screen overlay */
     .nav-links {
-        position: fixed;
-        inset: 0;               /* full-screen overlay */
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;         /* dynamic viewport height for mobile */
-        background-color: var(--bg-secondary);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: var(--spacing-sm);
-        padding: var(--spacing-xl) var(--spacing-md);
-        transform: translateX(100%);  /* slide from right for RTL */
-        opacity: 0;
-        visibility: hidden;
-        transition: transform 0.35s ease, opacity 0.3s ease, visibility 0.3s;
-        z-index: 1050;
-        overflow-y: auto;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        background-color: var(--bg-secondary) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0 !important;
+        padding: 80px 30px 40px !important;  /* space for close btn at top */
+        transform: translateX(100%) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: transform 0.35s ease, opacity 0.3s ease, visibility 0.3s !important;
+        z-index: 1050 !important;
+        overflow-y: auto !important;
     }
 
     .nav-links.active {
-        transform: translateX(0);
-        opacity: 1;
-        visibility: visible;
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* When overlay is open, move the toggle to top-left (RTL: left side) as close btn */
+    .mobile-toggle.active {
+        position: fixed !important;
+        top: 20px !important;
+        left: 20px !important;
+        right: auto !important;
+        z-index: 1100 !important;
     }
 
     .nav-links li {
-        width: 100%;
-        text-align: center;
+        width: 100% !important;
+        max-width: 320px !important;
+        text-align: center !important;
     }
 
+    /* Nav link touch targets */
     .nav-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        min-height: 52px;
-        padding: var(--spacing-sm) var(--spacing-md);
-        font-size: 1.2rem;
-        font-weight: 600;
-        border-bottom: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        transition: background 0.2s ease, color 0.2s ease;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-height: 52px !important;
+        padding: 15px 30px !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        border-radius: var(--border-radius) !important;
+        transition: background 0.2s ease, color 0.2s ease !important;
     }
 
     .nav-links li:last-child .nav-link {
-        border-bottom: none;
+        border-bottom: none !important;
     }
 
     .nav-link:hover,
     .nav-link:active {
-        background: rgba(59, 130, 246, 0.1);
-        color: var(--accent-primary);
+        background: rgba(59, 130, 246, 0.1) !important;
+        color: var(--accent-primary) !important;
     }
 
-    .nav-link::after {
-        display: none;           /* remove underline indicator on mobile */
+    /* Hide desktop underline indicators */
+    .nav-link::after,
+    .nav-link::before {
+        display: none !important;
     }
 
-    /* ===== 2. Project Cards - Prevent Collapse ===== */
 
-    .projects-grid {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-lg);
-    }
-
-    .project-card {
-        width: 100%;
-        min-height: 320px;
-        flex-shrink: 0;
-    }
-
-    .project-card-image-wrapper,
-    .project-card-image,
-    .project-image {
-        width: 100%;
-        height: 200px;
-        min-height: 180px;
-        object-fit: cover;
-    }
-
-    .project-card-content,
-    .project-content {
-        padding: var(--spacing-md);
-    }
-
-    .project-card-title,
-    .project-title {
-        font-size: 1.15rem;
-    }
-
-    .project-card-summary,
-    .project-description {
-        font-size: 0.9rem;
-        -webkit-line-clamp: 4;
-        line-clamp: 4;
-    }
-
-    .project-card-actions,
-    .project-links {
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-
-    .project-card-btn,
-    .project-link {
-        width: 100%;
-        min-height: 44px;
-    }
-
-    /* ===== 3. General RTL Mobile Optimisation ===== */
+    /* ===== 3. GENERAL RTL MOBILE OPTIMISATION ===== */
 
     /* Safe container margins */
     .container {
@@ -177,13 +240,10 @@
         padding: 0;
     }
 
-    /* Touch-friendly targets */
+    /* Touch-friendly targets (Apple HIG: 44px minimum) */
     .btn,
     .filter-btn,
-    .contact-item,
-    .project-card-btn,
-    .project-link,
-    .nav-link {
+    .contact-item {
         min-height: 44px;
     }
 
