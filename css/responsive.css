@@ -32,76 +32,207 @@
 }
 
 @media (max-width: 768px) {
+
+    /* ===== 1. Mobile Navigation - Full Screen Overlay (RTL) ===== */
+
     .mobile-toggle {
         display: flex;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        z-index: 1100;
+        position: relative;
     }
-    
+
+    /* Hamburger → X animation */
+    .mobile-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .mobile-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .mobile-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
     .nav-links {
-        position: absolute;
-        top: 100%;
-        right: 0;
+        position: fixed;
+        inset: 0;               /* full-screen overlay */
         width: 100%;
+        height: 100vh;
+        height: 100dvh;         /* dynamic viewport height for mobile */
         background-color: var(--bg-secondary);
         flex-direction: column;
-        gap: 0;
-        padding: var(--spacing-md) 0;
-        transform: translateY(-100%);
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-xl) var(--spacing-md);
+        transform: translateX(100%);  /* slide from right for RTL */
         opacity: 0;
         visibility: hidden;
-        transition: all 0.3s ease;
-        border-top: 1px solid var(--border-color);
+        transition: transform 0.35s ease, opacity 0.3s ease, visibility 0.3s;
+        z-index: 1050;
+        overflow-y: auto;
     }
-    
+
     .nav-links.active {
-        transform: translateY(0);
+        transform: translateX(0);
         opacity: 1;
         visibility: visible;
     }
-    
-    .nav-link {
-        padding: var(--spacing-sm) var(--spacing-md);
-        border-bottom: 1px solid var(--border-color);
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
     }
-    
-    .nav-link:last-child {
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 52px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-links li:last-child .nav-link {
         border-bottom: none;
     }
-    
+
+    .nav-link:hover,
+    .nav-link:active {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent-primary);
+    }
+
+    .nav-link::after {
+        display: none;           /* remove underline indicator on mobile */
+    }
+
+    /* ===== 2. Project Cards - Prevent Collapse ===== */
+
+    .projects-grid {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+
+    .project-card {
+        width: 100%;
+        min-height: 320px;
+        flex-shrink: 0;
+    }
+
+    .project-card-image-wrapper,
+    .project-card-image,
+    .project-image {
+        width: 100%;
+        height: 200px;
+        min-height: 180px;
+        object-fit: cover;
+    }
+
+    .project-card-content,
+    .project-content {
+        padding: var(--spacing-md);
+    }
+
+    .project-card-title,
+    .project-title {
+        font-size: 1.15rem;
+    }
+
+    .project-card-summary,
+    .project-description {
+        font-size: 0.9rem;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+    }
+
+    .project-card-actions,
+    .project-links {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+
+    .project-card-btn,
+    .project-link {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    /* ===== 3. General RTL Mobile Optimisation ===== */
+
+    /* Safe container margins */
+    .container {
+        width: 90%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    /* Touch-friendly targets */
+    .btn,
+    .filter-btn,
+    .contact-item,
+    .project-card-btn,
+    .project-link,
+    .nav-link {
+        min-height: 44px;
+    }
+
+    /* Typography */
     .hero-title {
         font-size: 2rem;
     }
-    
+
     .name-en {
         font-size: 1.125rem;
     }
-    
+
     .hero-role {
         font-size: 1.25rem;
     }
-    
+
     .section-title {
         font-size: 2rem;
     }
-    
+
     .page-title {
         font-size: 2rem;
     }
-    
+
     .about-bio {
         font-size: 1.125rem;
     }
-    
+
     .contact-methods {
         grid-template-columns: 1fr;
     }
-    
+
     .filters {
         gap: var(--spacing-xs);
+        padding: 0 var(--spacing-xs);
     }
-    
+
     .filter-btn {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1.1rem;
         font-size: 0.875rem;
+        min-height: 44px;
+    }
+
+    /* Prevent horizontal overflow */
+    img,
+    video,
+    iframe,
+    table {
+        max-width: 100%;
     }
 }
 
@@ -110,51 +241,69 @@
         --spacing-xl: 2rem;
         --spacing-2xl: 2.5rem;
     }
-    
+
     .container {
-        padding: 0 var(--spacing-sm);
+        width: 92%;
+        padding: 0;
     }
-    
+
     .hero {
         padding: var(--spacing-xl) 0;
     }
-    
+
     .hero-title {
         font-size: 1.75rem;
     }
-    
+
     .hero-cta {
         flex-direction: column;
         width: 100%;
     }
-    
+
     .btn {
         width: 100%;
         text-align: center;
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
-    
+
     .profile-img {
         max-width: 250px;
     }
-    
+
     section {
         padding: var(--spacing-xl) 0;
     }
-    
+
     .section-title {
         font-size: 1.75rem;
     }
-    
+
     .skill-card {
         padding: var(--spacing-md);
     }
-    
+
     .project-card {
         margin-bottom: var(--spacing-md);
+        min-height: 280px;
     }
-    
+
+    .project-card-image-wrapper,
+    .project-card-image,
+    .project-image {
+        height: 170px;
+        min-height: 150px;
+    }
+
     .notion-embed {
         height: 600px;
+    }
+
+    .nav-link {
+        font-size: 1.3rem;
+        min-height: 56px;
     }
 }
 
