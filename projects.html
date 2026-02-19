@@ -3,28 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مشاريع محمد الزبيدي في تحليل البيانات">
+    <meta name="description" content="مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد">
     <title>المشاريع | محمد الزبيدي</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/project.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">محمد الزبيدي</a>
-            
+
             <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            
+
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html" class="nav-link">الرئيسية</a></li>
                 <li><a href="projects.html" class="nav-link active">المشاريع</a></li>
@@ -34,7 +36,9 @@
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main>
+        <!-- Page Header -->
         <section class="page-header">
             <div class="container">
                 <h1 class="page-title fade-in">المشاريع</h1>
@@ -42,15 +46,15 @@
             </div>
         </section>
 
+        <!-- Projects Section -->
         <section class="projects-section">
             <div class="container">
+                <!-- Dynamic Filters (built from data) -->
                 <div class="filters slide-up" id="projectFilters">
                     <button class="filter-btn active" data-filter="all">الكل</button>
-                    <button class="filter-btn" data-filter="SQL">SQL</button>
-                    <button class="filter-btn" data-filter="Power BI">Power BI</button>
-                    <button class="filter-btn" data-filter="Python">Python</button>
                 </div>
 
+                <!-- Projects Grid -->
                 <div class="projects-grid" id="projectsGrid">
                     <div class="loading-state">
                         <div class="spinner"></div>
@@ -58,27 +62,27 @@
                     </div>
                 </div>
 
+                <!-- Error State -->
                 <div class="error-state" id="errorState" style="display: none;">
-                    <p>حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
+                    <div class="error-icon">⚠️</div>
+                    <h3 class="error-title">عذراً</h3>
+                    <p class="error-message">حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
+                    <button class="btn btn-primary" onclick="location.reload()">إعادة المحاولة</button>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="main.js"></script>
     <script src="animations.js"></script>
     <script src="projects.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllProjects();
-            initializeFilters();
-        });
-    </script>
 </body>
 </html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تفاصيل المشروع - محمد الزبيدي">
+    <title>المشروع | محمد الزبيدي</title>
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/article.css">
+    <link rel="stylesheet" href="css/project.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">محمد الزبيدي</a>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+                <li><a href="projects.html" class="nav-link active">المشاريع</a></li>
+                <li><a href="articles.html" class="nav-link">المقالات</a></li>
+                <li><a href="index.html#contact" class="nav-link">تواصل</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container" id="projectContainer">
+        <!-- صورة الغلاف -->
+        <div class="project-detail-cover-wrapper">
+            <img id="project-cover" class="project-detail-cover" src="" alt="صورة غلاف المشروع" style="display: none;">
+        </div>
+
+        <!-- رأس المشروع -->
+        <header class="project-detail-header">
+            <h1 id="project-title" class="article-title"></h1>
+            <div class="project-detail-meta">
+                <span id="project-date" class="project-detail-date"></span>
+                <span id="project-read-time" class="project-detail-read-time"></span>
+            </div>
+            <!-- التصنيفات -->
+            <div id="project-categories" class="project-detail-categories"></div>
+            <!-- زر المعاينة -->
+            <div id="project-preview-wrapper" class="project-detail-preview-wrapper" style="display: none;">
+                <a id="project-preview-link" href="#" class="btn btn-primary project-preview-btn" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    معاينة المشروع
+                </a>
+            </div>
+        </header>
+
+        <!-- محتوى المشروع -->
+        <article id="project-body" class="article-body project-detail-body"></article>
+
+        <!-- العودة للمشاريع -->
+        <div class="project-detail-back">
+            <a href="projects.html" class="btn btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                العودة لجميع المشاريع
+            </a>
+        </div>
+
+        <!-- حالة التحميل -->
+        <div id="project-loading" class="article-loading">
+            <div class="loading-spinner"></div>
+            <p>جاري تحميل المشروع...</p>
+        </div>
+
+        <!-- حالة الخطأ -->
+        <div id="project-error" class="article-error" style="display: none;">
+            <h2>عذراً!</h2>
+            <p>لم نتمكن من تحميل تفاصيل المشروع.</p>
+            <a href="projects.html" class="btn btn-primary">العودة للمشاريع</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+    <script src="animations.js"></script>
+    <script src="js/project.js"></script>
+</body>
+</html>
