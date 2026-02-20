@@ -48,7 +48,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
         
-        if (href === '#') return;
+        // Skip if href is just "#" or has been changed to a non-anchor URL
+        if (!href || href === '#' || !href.startsWith('#')) return;
         
         e.preventDefault();
         const target = document.querySelector(href);
