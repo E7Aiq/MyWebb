@@ -1,3 +1,89 @@
+/* ============================================================
+   خط ثمانية (Thmanyah) — ثلاث عائلات، خمسة أوزان لكل عائلة
+   Display: للعناوين | Text: لجسم المقالات | Sans: للواجهة
+   ============================================================ */
+
+/* --- Thmanyah Display (العناوين) --- */
+@font-face {
+    font-family: 'Thmanyah Display';
+    src: url('../assets/fonts/thmanyahserifdisplay-Light.woff2') format('woff2');
+    font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Display';
+    src: url('../assets/fonts/thmanyahserifdisplay-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Display';
+    src: url('../assets/fonts/thmanyahserifdisplay-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Display';
+    src: url('../assets/fonts/thmanyahserifdisplay-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Display';
+    src: url('../assets/fonts/thmanyahserifdisplay-Black.woff2') format('woff2');
+    font-weight: 900; font-style: normal; font-display: swap;
+}
+
+/* --- Thmanyah Text (جسم المقالات) --- */
+@font-face {
+    font-family: 'Thmanyah Text';
+    src: url('../assets/fonts/thmanyahseriftext-Light.woff2') format('woff2');
+    font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Text';
+    src: url('../assets/fonts/thmanyahseriftext-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Text';
+    src: url('../assets/fonts/thmanyahseriftext-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Text';
+    src: url('../assets/fonts/thmanyahseriftext-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Text';
+    src: url('../assets/fonts/thmanyahseriftext-Black.woff2') format('woff2');
+    font-weight: 900; font-style: normal; font-display: swap;
+}
+
+/* --- Thmanyah Sans (الواجهة) --- */
+@font-face {
+    font-family: 'Thmanyah Sans';
+    src: url('../assets/fonts/thmanyahsans-Light.woff2') format('woff2');
+    font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Sans';
+    src: url('../assets/fonts/thmanyahsans-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Sans';
+    src: url('../assets/fonts/thmanyahsans-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Sans';
+    src: url('../assets/fonts/thmanyahsans-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Thmanyah Sans';
+    src: url('../assets/fonts/thmanyahsans-Black.woff2') format('woff2');
+    font-weight: 900; font-style: normal; font-display: swap;
+}
+
 :root {
     --bg-primary: #0a0e1a;
     --bg-secondary: #141927;
@@ -27,7 +113,41 @@
     --border-radius: 8px;
     --border-radius-lg: 12px;
     
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* انتقال الواجهة: خصائص محدّدة على الـ GPU فقط — لا "all"
+       (كان transition: all يحرّك خصائص غير مقصودة خارج الـ GPU) */
+    --transition-ui:
+        transform 0.25s var(--ease-out),
+        box-shadow 0.25s var(--ease-out),
+        border-color 0.25s var(--ease-out),
+        background-color 0.2s ease,
+        color 0.2s ease,
+        opacity 0.25s var(--ease-out);
+    /* اسم قديم للتوافق (article.css / project.css) — نفس القيمة المحدّدة */
+    --transition: var(--transition-ui);
+
+    /* الخطوط: خط ثمانية مع Tajawal كخط احتياطي */
+    --font-display: 'Thmanyah Display', 'Tajawal', sans-serif;
+    --font-text: 'Thmanyah Text', 'Tajawal', sans-serif;
+    --font-sans: 'Thmanyah Sans', 'Tajawal', sans-serif;
+
+    /* ===== Visual-effects tokens ("Data as Art" layer) ===== */
+    --accent-tertiary: #8b5cf6;              /* بنفسجي — الطرف الثالث للشفق */
+    --accent-primary-rgb: 59, 130, 246;
+    --accent-secondary-rgb: 16, 185, 129;
+    --accent-tertiary-rgb: 139, 92, 246;
+    --bg-card-rgb: 30, 40, 57;
+    --bg-secondary-rgb: 20, 25, 39;
+
+    /* منحنيات قوية (معيار Emil) — أقوى من الـ easings المدمجة */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);       /* ease-out قوي للواجهة */
+    --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);  /* كشف العناصر */
+    --ease-spring: cubic-bezier(0.34, 1.35, 0.64, 1); /* تجاوز خفيف لرفع البطاقات */
+
+    --aurora-gradient: linear-gradient(120deg,
+        var(--accent-primary),
+        var(--accent-secondary),
+        var(--accent-tertiary),
+        var(--accent-primary));
 }
 
 * {
@@ -41,12 +161,22 @@ html {
 }
 
 body {
-    font-family: 'Tajawal', sans-serif;
+    font-family: var(--font-sans);
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.7;
     direction: rtl;
     overflow-x: hidden;
+}
+
+/* العناوين (h1–h6) بخط العرض Thmanyah Display */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+}
+
+/* الشعار عنوان بصري → خط العرض */
+.logo {
+    font-family: var(--font-display);
 }
 
 .container {
@@ -76,7 +206,7 @@ body {
     font-weight: 700;
     color: var(--text-primary);
     text-decoration: none;
-    transition: var(--transition);
+    transition: var(--transition-ui);
 }
 
 .logo:hover {
@@ -93,7 +223,7 @@ body {
     color: var(--text-secondary);
     text-decoration: none;
     font-weight: 500;
-    transition: var(--transition);
+    transition: var(--transition-ui);
     position: relative;
     padding: 0.5rem 0;
 }
@@ -106,7 +236,7 @@ body {
     width: 0;
     height: 2px;
     background-color: var(--accent-primary);
-    transition: var(--transition);
+    transition: var(--transition-ui);
 }
 
 .nav-link:hover,
@@ -133,7 +263,7 @@ body {
     width: 25px;
     height: 2px;
     background-color: var(--text-primary);
-    transition: var(--transition);
+    transition: var(--transition-ui);
 }
 
 .hero {
@@ -159,6 +289,13 @@ body {
 
 .name-ar {
     display: block;
+    /* مسافة أسفل الاسم العربي لإبراز نقطتَي حرف "ي" دون تداخل مع الاسم الإنجليزي */
+    margin-bottom: var(--spacing-xs);
+    /* line-height كافية + padding سفلي + overflow ظاهر: تمنع قصّ النقاط
+       السفلية للحروف النازلة مع background-clip: text (حالة الاحتياطي بلا JS) */
+    line-height: 1.3;
+    padding-bottom: 0.2em;
+    overflow: visible;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -196,7 +333,7 @@ body {
     border-radius: var(--border-radius);
     font-weight: 600;
     text-decoration: none;
-    transition: var(--transition);
+    transition: var(--transition-ui);
     display: inline-block;
     cursor: pointer;
     border: 2px solid transparent;
@@ -302,14 +439,50 @@ section {
     padding: var(--spacing-lg);
     border-radius: var(--border-radius-lg);
     text-align: center;
-    transition: var(--transition);
+    transition: var(--transition-ui);
     border: 1px solid var(--border-color);
 }
 
 .skill-card:hover {
-    transform: translateY(-8px);
+    /* ميلان ثلاثي الأبعاد يتبع المؤشر (±6° من effects.js) + الرفع */
+    transform:
+        perspective(700px)
+        rotateX(var(--tilt-y, 0deg))
+        rotateY(var(--tilt-x, 0deg))
+        translateY(-8px);
     box-shadow: var(--shadow-lg);
     border-color: var(--accent-primary);
+}
+
+/* بعد انتهاء كشف الاستقرار: نحرّر التحويل ليعمل الـ hover
+   (خصوصية أعلى من .fade-in.animate لإلغاء تثبيت الأنيميشن) */
+.skill-card.fade-in.animate.card-ready {
+    animation: none;
+    opacity: 1;
+}
+
+/* توهّج الأيقونة عند المرور */
+.skill-card:hover .skill-icon svg {
+    filter: drop-shadow(0 0 10px rgba(var(--accent-primary-rgb), 0.7));
+}
+
+/* موجة نقر لمسية (بديل الميلان على اللمس) */
+.tap-ripple {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(var(--accent-primary-rgb), 0.55), transparent 70%);
+    transform: scale(0);
+    pointer-events: none;
+    z-index: 3;
+    animation: tapRipple 0.6s var(--ease-out) forwards;
+}
+
+@keyframes tapRipple {
+    to { transform: scale(14); opacity: 0; }
 }
 
 .skill-icon {
@@ -341,7 +514,7 @@ section {
     background-color: var(--bg-card);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    transition: var(--transition);
+    transition: var(--transition-ui);
     border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -438,7 +611,7 @@ section {
     text-decoration: none;
     border-radius: var(--border-radius);
     text-align: center;
-    transition: var(--transition);
+    transition: var(--transition-ui);
     border: 1px solid var(--border-color);
 }
 
@@ -480,7 +653,7 @@ section {
     gap: var(--spacing-sm);
     text-decoration: none;
     color: var(--text-primary);
-    transition: var(--transition);
+    transition: var(--transition-ui);
     border: 1px solid var(--border-color);
 }
 
@@ -527,10 +700,10 @@ section {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     color: var(--text-primary);
-    font-family: 'Tajawal', sans-serif;
+    font-family: var(--font-sans);
     font-size: 1rem;
     resize: vertical;
-    transition: var(--transition);
+    transition: var(--transition-ui);
 }
 
 .contact-form textarea::placeholder {
@@ -591,8 +764,8 @@ section {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: var(--transition);
-    font-family: 'Tajawal', sans-serif;
+    transition: var(--transition-ui);
+    font-family: var(--font-sans);
     font-weight: 500;
 }
 
@@ -682,4 +855,679 @@ section {
 
 .project-card.hidden {
     display: none;
+}
+
+/* ============================================================
+   VISUAL EFFECTS LAYER — "Data as Art"
+   طبقة جمالية بحتة فوق النظام الحالي. كل الألوان عبر المتغيرات.
+   الحركة كلها transform/opacity + تُعطَّل تلقائياً مع
+   prefers-reduced-motion (القاعدة الشاملة في animations.css).
+   ============================================================ */
+
+/* ---------- 1. Hero: سماء بيانات + توهجات محيطية ---------- */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#heroCanvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* توهجان محيطيان يكسران عتمة الخلفية — "ضوء البيانات" */
+.hero::before,
+.hero::after {
+    content: '';
+    position: absolute;
+    width: 55vw;
+    height: 55vw;
+    max-width: 700px;
+    max-height: 700px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(90px);
+}
+
+.hero::before {
+    top: -20%;
+    right: -15%;
+    background: radial-gradient(circle,
+        rgba(var(--accent-primary-rgb), 0.10), transparent 65%);
+    animation: glowDrift 16s ease-in-out infinite alternate;
+}
+
+.hero::after {
+    bottom: -25%;
+    left: -12%;
+    background: radial-gradient(circle,
+        rgba(var(--accent-secondary-rgb), 0.08), transparent 65%);
+    animation: glowDrift 20s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes glowDrift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(-4%, 6%, 0) scale(1.15); }
+}
+
+/* هالة أورورا خلف الصورة الشخصية */
+.hero-image::before {
+    content: '';
+    position: absolute;
+    inset: -12%;
+    z-index: -1;
+    border-radius: 50%;
+    background:
+        radial-gradient(closest-side at 30% 30%,
+            rgba(var(--accent-primary-rgb), 0.35), transparent 70%),
+        radial-gradient(closest-side at 70% 65%,
+            rgba(var(--accent-secondary-rgb), 0.28), transparent 70%),
+        radial-gradient(closest-side at 50% 90%,
+            rgba(var(--accent-tertiary-rgb), 0.22), transparent 70%);
+    filter: blur(55px);
+    animation: meshPulse 9s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+.profile-img {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes meshPulse {
+    from { transform: rotate(0deg) scale(1); opacity: 0.75; }
+    to   { transform: rotate(12deg) scale(1.08); opacity: 1; }
+}
+
+/* الاسم اللاتيني: عزل اتجاهي — تقسيم الكلمات لعناصر inline-block
+   يجعلها "محايدة" لدى خوارزمية bidi فتنعكس داخل سياق RTL.
+   direction:ltr يثبّت ترتيب الكلمات، وmatch-parent يحفظ المحاذاة. */
+.hero-title .name-en {
+    direction: ltr;
+    text-align: right; /* يبقى تحت الاسم العربي يميناً (RTL layout) */
+    unicode-bidi: isolate;
+}
+
+/* ---------- 2. الشفق (Aurora): تدرّج حي متحرك ---------- */
+
+.name-ar {
+    /* احتياطي بلا JS: تدرّج ثابت. مع JS تُقسَّم لكلمات تتنفّس (name-word) */
+    background: var(--aurora-gradient);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* اللمعان أثناء تنفّس التدرّج يحتاج امتداداً — مضمون عبر background-size.
+   العنصر الفعلي الذي يحمل التدرّج والقصّ هو الكلمة (name-word)، لذا تُوسَّع
+   مساحته السفلية لتمتد خلفية التدرّج أسفل خط الأساس فتغطّي نقطتَي "الياء". */
+.name-ar .name-word {
+    padding-bottom: 0.2em;   /* بدل 0.05em — يكفي لتغطية النقاط السفلية */
+    line-height: 1.35;
+    overflow: visible;       /* ضمان عدم قصّ الأجزاء النازلة */
+}
+
+.section-title::after {
+    background: var(--aurora-gradient);
+    background-size: 300% 100%;
+    animation: aurora 6s linear infinite;
+    /* يرسم نفسه من اليمين (RTL) عند دخول العنوان — transform لا يتعارض
+       مع aurora (التي تحرّك background-position فقط) */
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.7s var(--ease-out);
+}
+
+.section-title.title-drawn::after {
+    transform: scaleX(1);
+}
+
+@keyframes aurora {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ---------- 3. توهجات محيطية للأقسام — تتلاشى للداخل عند الدخول ---------- */
+/* كل قسم "فصل": توهجه المحيطي يظهر تدريجياً عند دخوله الشاشة (Area 2) */
+
+.about,
+.skills,
+.contact,
+.page-header {
+    position: relative;
+}
+
+.about > .container,
+.skills > .container,
+.contact > .container,
+.page-header > .container {
+    position: relative;
+    z-index: 1; /* فوق طبقات التوهّج/الشبكة */
+}
+
+.about::before,
+.skills::before,
+.contact::before,
+.page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-out);
+}
+
+.about.section-lit::before,
+.skills.section-lit::before,
+.contact.section-lit::before,
+.page-header.section-lit::before {
+    opacity: 1;
+}
+
+.about::before {
+    background: radial-gradient(700px 380px at 88% 15%,
+        rgba(var(--accent-primary-rgb), 0.08), transparent 70%);
+}
+
+.skills::before {
+    background: radial-gradient(650px 400px at 10% 85%,
+        rgba(var(--accent-tertiary-rgb), 0.07), transparent 70%);
+}
+
+.contact::before {
+    background:
+        radial-gradient(600px 350px at 15% 20%,
+            rgba(var(--accent-secondary-rgb), 0.08), transparent 70%),
+        radial-gradient(500px 300px at 90% 90%,
+            rgba(var(--accent-primary-rgb), 0.06), transparent 70%);
+}
+
+.page-header::before {
+    background: radial-gradient(800px 300px at 50% 0%,
+        rgba(var(--accent-primary-rgb), 0.10), transparent 70%);
+}
+
+/* ---------- 3b. كشف بطاقات المهارات بميلان ثلاثي الأبعاد يستقرّ مستوياً ---------- */
+/* نُلغي fadeIn التلقائي على .fade-in الأساسي حتى لا يحدث كشف مزدوج */
+.skill-card.fade-in {
+    animation: none;
+}
+
+.skill-card.fade-in.animate {
+    animation: cardSettle 0.7s var(--ease-out-expo) both;
+}
+
+@keyframes cardSettle {
+    from {
+        opacity: 0;
+        transform: perspective(1000px) rotateX(14deg) translateY(26px);
+        filter: blur(6px);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1000px) rotateX(0deg) translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* ---------- 4. زجاجية (Glassmorphism) ---------- */
+
+/* النافبار: زجاج مثبّت */
+.navbar {
+    background-color: rgba(var(--bg-secondary-rgb), 0.72);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    backdrop-filter: blur(14px) saturate(1.3);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .navbar { background-color: var(--bg-secondary); }
+}
+
+/* البطاقات: سطح شبه شفاف + طبقات */
+.skill-card,
+.project-card,
+.article-card,
+.contact-item {
+    position: relative;
+    background-color: rgba(var(--bg-card-rgb), 0.55);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .skill-card, .project-card, .article-card, .contact-item {
+        background-color: var(--bg-card);
+    }
+}
+
+/* حدّ متدرّج 1px — حلقة مقنّعة فوق الحواف */
+.skill-card::before,
+.project-card::before,
+.article-card::before,
+.contact-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+        rgba(var(--accent-primary-rgb), 0.45),
+        transparent 35%,
+        transparent 65%,
+        rgba(var(--accent-secondary-rgb), 0.45));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.skill-card:hover::before,
+.project-card:hover::before,
+.article-card:hover::before,
+.contact-item:hover::before {
+    opacity: 1;
+}
+
+/* توهج يتبع المؤشر — بطاقات المهارات والتواصل فقط (يُغذّى من effects.js) */
+.skill-card::after,
+.contact-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    background: radial-gradient(380px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+        rgba(var(--accent-primary-rgb), 0.13), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.skill-card:hover::after,
+.contact-item:hover::after {
+    opacity: 1;
+}
+
+/* لمعة بيانات — كسحة ضوء قطرية تعبر بطاقة المشروع/المقال مرّة واحدة
+   عند المرور (RTL: من اليمين لليسار). transform فقط. */
+.project-card::after,
+.article-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 55%;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(100deg,
+        transparent,
+        rgba(255, 255, 255, 0.10) 44%,
+        rgba(255, 255, 255, 0.22) 50%,
+        rgba(255, 255, 255, 0.10) 56%,
+        transparent);
+    transform: translateX(200%) skewX(-12deg);
+    opacity: 0;
+}
+
+.project-card:hover::after,
+.article-card:hover::after {
+    animation: cardShine 0.9s var(--ease-out) forwards;
+}
+
+@keyframes cardShine {
+    0%   { transform: translateX(200%) skewX(-12deg); opacity: 0; }
+    12%  { opacity: 1; }
+    100% { transform: translateX(-220%) skewX(-12deg); opacity: 0; }
+}
+
+/* ---------- 5. لمعة العناوين عند الدخول (Shimmer) ---------- */
+
+.title-shimmer.title-shimmer {
+    opacity: 1;
+    transform: none;
+    background-image: linear-gradient(100deg,
+        var(--text-primary) 40%,
+        var(--accent-primary) 50%,
+        var(--text-primary) 60%);
+    background-size: 250% 100%;
+    background-position: -50% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerSweep 1.1s ease-out forwards;
+}
+
+@keyframes shimmerSweep {
+    from { background-position: 200% 0; }
+    to   { background-position: -50% 0; }
+}
+
+/* ---------- 6. شريط تقدّم القراءة (صفحات المقال/المشروع) ---------- */
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    z-index: 2000;
+    pointer-events: none;
+    background: transparent;
+}
+
+.reading-progress-fill {
+    height: 100%;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: right center; /* RTL: يمتلئ من اليمين */
+    background: linear-gradient(90deg,
+        var(--accent-secondary), var(--accent-primary));
+    box-shadow: 0 0 8px rgba(var(--accent-primary-rgb), 0.5);
+}
+
+/* رأس متوهّج عند حافة التقدّم الأمامية (يُحرَّك بـ translateX من effects.js) */
+.reading-progress-head {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(var(--accent-primary-rgb), 0.65), transparent 62%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* ---------- طبقة الأتمتة: شبكة نقاط خافتة في الأقسام المتناوبة ---------- */
+.about,
+.contact {
+    overflow: hidden;
+}
+
+.about::after,
+.contact::after {
+    content: '';
+    position: absolute;
+    inset: -40px; /* أكبر من القسم كي لا تظهر حواف عند الانزياح */
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle,
+        rgba(var(--accent-primary-rgb), 1) 1px, transparent 1.6px);
+    background-size: 26px 26px;
+    opacity: 0.03; /* بالكاد مرئية — توحي بشبكة رسم بياني */
+    animation: gridDrift 30s linear infinite;
+}
+
+@keyframes gridDrift {
+    to { transform: translate(26px, 26px); } /* تُزيح خلية كاملة → التفاف سلس */
+}
+
+/* ---------- تنقّل: خط سفلي منزلق (FLIP) بين الروابط ---------- */
+.nav-links {
+    position: relative;
+}
+
+.nav-underline {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    width: 100px; /* قاعدة ثابتة — نُحجّمها بـ scaleX (GPU فقط، بلا layout) */
+    border-radius: 1px;
+    background: var(--accent-primary);
+    transform-origin: left center;
+    transform: translateX(0) scaleX(0);
+    opacity: 0;
+    transition: transform 0.28s var(--ease-out), opacity 0.2s ease;
+    pointer-events: none;
+}
+
+/* عند تفعيل المنزلق نُخفي الخطوط الفردية لكل رابط */
+.nav-links.slider-ready .nav-link::after,
+.nav-links.slider-ready .nav-link::before {
+    display: none;
+}
+
+/* ---------- الفوتر: خط علوي يلمع بتدرّج الأكسنت ---------- */
+.footer {
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--aurora-gradient);
+    background-size: 300% 100%;
+    animation: aurora 7s linear infinite;
+    opacity: 0.7;
+    pointer-events: none;
+}
+/* ============================================================
+   رحلة البيانات — قسم المهارات (4 مراحل، كل بطاقة لوحة فن توليدي)
+   يعيد استخدام: الزجاجية، تدرّج الشفق، توهّج المؤشر، --ease-spring
+   ============================================================ */
+
+.journey-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    max-width: 1100px;
+    margin-inline: auto;
+}
+
+/* خط الأنابيب الواصل بين المراحل (RTL: أزرق يميناً → أخضر يساراً)
+   يظهر أساساً في الفجوات بين البطاقات؛ يُخفى دون تخطيط 4 أعمدة */
+.journey-grid::before {
+    content: '';
+    position: absolute;
+    top: 3.4rem;
+    right: 6%;
+    left: 6%;
+    height: 2px;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(to left,
+        rgba(var(--accent-primary-rgb), 0.55),
+        rgba(var(--accent-tertiary-rgb), 0.4),
+        rgba(var(--accent-secondary-rgb), 0.55));
+    background-size: 250% 100%;
+    opacity: 0.6;
+    animation: aurora 8s linear infinite; /* تدفّق خفيف على طول الأنبوب */
+}
+
+.stage-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg) var(--spacing-md);
+    display: flex;
+    min-height: 320px;
+    background-color: rgba(var(--bg-card-rgb), 0.5);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    transition:
+        transform 0.4s var(--ease-spring),
+        box-shadow 0.4s var(--ease-out),
+        border-color 0.3s var(--ease-out);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .stage-card { background-color: var(--bg-card); }
+}
+
+.stage-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-primary);
+}
+
+/* لوحة الفن التوليدي — خلف كل شيء */
+.stage-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* حدّ متدرّج 1px (فوق كل شيء) */
+.stage-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+        rgba(var(--accent-primary-rgb), 0.5),
+        transparent 40%,
+        transparent 60%,
+        rgba(var(--accent-secondary-rgb), 0.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0.4;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.stage-card:hover::before { opacity: 1; }
+
+/* حجاب قابلية القراءة + توهّج يتبع المؤشر (يُغذّى من effects.js) */
+.stage-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        radial-gradient(260px circle at var(--glow-x, 50%) var(--glow-y, 20%),
+            rgba(var(--accent-primary-rgb), 0.10), transparent 60%),
+        linear-gradient(to top,
+            rgba(var(--bg-card-rgb), 0.90) 0%,
+            rgba(var(--bg-card-rgb), 0.55) 45%,
+            rgba(var(--bg-card-rgb), 0.15) 100%);
+}
+
+.stage-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+}
+
+/* رقم المرحلة — علامة مائية كبيرة بتدرّج الشفق */
+.stage-number {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 4.5rem;
+    line-height: 0.9;
+    margin-bottom: 0.4rem;
+    background: var(--aurora-gradient);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.32;
+    transition: opacity 0.4s ease;
+}
+
+.stage-card:hover .stage-number { opacity: 0.55; }
+
+.stage-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.stage-desc {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.stage-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0;
+    margin: auto 0 0; /* تُدفع الوسوم لأسفل البطاقة */
+}
+
+.stage-tag {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    color: var(--accent-primary);
+    background: rgba(var(--accent-primary-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-primary-rgb), 0.3);
+    white-space: nowrap;
+}
+
+/* كشف متدرّج للبطاقات عند الدخول */
+.stage-card.fade-in:nth-child(1) { animation-delay: 0s; }
+.stage-card.fade-in:nth-child(2) { animation-delay: 0.08s; }
+.stage-card.fade-in:nth-child(3) { animation-delay: 0.16s; }
+.stage-card.fade-in:nth-child(4) { animation-delay: 0.24s; }
+
+/* ===== استجابة ===== */
+@media (max-width: 968px) {
+    .journey-grid { grid-template-columns: repeat(2, 1fr); }
+    .journey-grid::before { display: none; } /* الأنبوب الأفقي بلا معنى في شبكة 2×2 */
+}
+
+@media (max-width: 600px) {
+    .journey-grid { grid-template-columns: 1fr; }
+    .stage-card { min-height: 0; }
+}
+
+/* الزجاجية مكلفة على الجوال → سطح صلب */
+@media (max-width: 768px) {
+    .stage-card {
+        background-color: var(--bg-card);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
 }

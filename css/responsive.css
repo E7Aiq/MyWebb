@@ -3,6 +3,11 @@
         grid-template-columns: 1fr;
         text-align: center;
     }
+
+    /* الاسم اللاتيني يتوسّط مع باقي النص في العمود الواحد */
+    .hero-title .name-en {
+        text-align: center;
+    }
     
     .hero-text {
         order: 2;
@@ -198,6 +203,32 @@
         text-align: center !important;
     }
 
+    /* المنزلق الأفقي بلا معنى في overlay عمودي */
+    .nav-underline {
+        display: none !important;
+    }
+
+    /* دخول متدرّج لعناصر القائمة عند فتح الـ overlay
+       (RTL: تدخل من اليمين — نفس اتجاه انزلاق الـ overlay) */
+    .nav-links li {
+        opacity: 0;
+        transform: translateX(28px);
+    }
+
+    .nav-links.active li {
+        animation: navItemIn 0.4s var(--ease-out) both;
+    }
+
+    .nav-links.active li:nth-child(1) { animation-delay: 0.15s; }
+    .nav-links.active li:nth-child(2) { animation-delay: 0.21s; }
+    .nav-links.active li:nth-child(3) { animation-delay: 0.27s; }
+    .nav-links.active li:nth-child(4) { animation-delay: 0.33s; }
+
+    @keyframes navItemIn {
+        from { opacity: 0; transform: translateX(28px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
     /* Nav link touch targets */
     .nav-link {
         display: flex !important;
@@ -386,8 +417,77 @@
     .project-card:hover {
         transform: none;
     }
-    
+
     .btn:hover {
         transform: none;
+    }
+
+    /* اللمس يطلق :hover زائفاً عند النقر ويبقى عالقاً —
+       نُلغي توهجات الـ hover الجديدة (الحدّ المتدرّج + توهج المؤشر) */
+    .skill-card:hover::before,
+    .project-card:hover::before,
+    .article-card:hover::before,
+    .contact-item:hover::before {
+        opacity: 0.35;
+    }
+
+    .skill-card:hover::after,
+    .project-card:hover::after,
+    .article-card:hover::after,
+    .contact-item:hover::after {
+        opacity: 0;
+    }
+
+    /* بدلاً من الرفع (المُعطّل على اللمس): تغذية راجعة ضغط حقيقية
+       — الأزرار المغناطيسية معطّلة على اللمس فلا تعارض */
+    .btn:active,
+    .filter-btn:active {
+        transform: scale(0.97);
+        transition: transform 0.1s var(--ease-out);
+    }
+}
+
+/* ==========================================================
+   VISUAL EFFECTS — تخفيف الجوال (أداء 60fps)
+   الكانفس أصلاً لا يُنشأ ≤768px (بوابة في effects.js)
+   ========================================================== */
+@media (max-width: 768px) {
+
+    /* الزجاجية مكلفة على الجوال → أسطح صلبة */
+    .navbar {
+        background-color: var(--bg-secondary);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    .skill-card,
+    .project-card,
+    .article-card,
+    .contact-item {
+        background-color: var(--bg-card);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    /* توهج المؤشر بلا معنى على اللمس */
+    .skill-card::after,
+    .project-card::after,
+    .article-card::after,
+    .contact-item::after {
+        display: none;
+    }
+
+    /* توهجات الهيرو الضبابية الكبيرة مكلفة → نصغّرها ونثبّتها */
+    .hero::before,
+    .hero::after {
+        animation: none;
+        filter: blur(60px);
+        width: 80vw;
+        height: 80vw;
+    }
+
+    .hero-image::before {
+        animation: none;
+        filter: blur(40px);
     }
 }

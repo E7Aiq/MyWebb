@@ -44,12 +44,12 @@ function staggerAnimation(selector, delay = 100) {
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     
-    // Stagger skill cards
-    staggerAnimation('.skill-card', 150);
+    // Stagger skill cards (70ms — ضمن نطاق 30–80ms؛ 150ms يبدو بطيئاً)
+    staggerAnimation('.skill-card', 70);
     
     // Observe project cards when they're loaded
     const projectObserver = new MutationObserver(() => {
-        staggerAnimation('.project-card', 100);
+        staggerAnimation('.project-card', 70);
         const projectCards = document.querySelectorAll('.project-card');
         projectCards.forEach(card => {
             if (!card.classList.contains('observed')) {
@@ -68,22 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Parallax effect for hero section (subtle)
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const heroImage = document.querySelector('.hero-image');
-    
-    if (heroImage && scrolled < window.innerHeight) {
-        heroImage.style.transform = `translateY(${scrolled * 0.3}px)`;
-    }
-});
+// (أُزيل بارالاكس التمرير: كان غير مُقيّد بـ rAF ويتعارض مع أنيميشن
+//  float على نفس العنصر — العمق الآن يأتي من الكانفس + float + meshPulse)
 
 // Add entrance animation to page
 document.addEventListener('DOMContentLoaded', () => {
+    // احترام تفضيل تقليل الحركة: لا تعتيم للصفحة إطلاقاً
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     document.body.style.opacity = '0';
-    
+
     setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease-in';
+        // ease-out لا ease-in: ease-in يؤخّر اللحظة التي يراقبها المستخدم
+        document.body.style.transition = 'opacity 0.4s var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1))';
         document.body.style.opacity = '1';
     }, 100);
 });

@@ -38,11 +38,12 @@
     height: 200px;
     object-fit: cover;
     background: var(--bg-secondary);
-    transition: var(--transition);
+    /* Ken Burns: تكبير بطيء مستمر أثناء المرور */
+    transition: transform 6s var(--ease-out);
 }
 
 .article-card:hover .article-card-image {
-    transform: scale(1.05);
+    transform: scale(1.12);
 }
 
 .article-card-image-wrapper {
@@ -142,6 +143,14 @@
 .article-tag:hover {
     background: rgba(59, 130, 246, 0.2);
 }
+
+/* رفع متدرّج للوسوم عند المرور على بطاقة المقال */
+.article-card:hover .article-tag {
+    transform: translateY(-3px);
+}
+.article-card:hover .article-tag:nth-child(1) { transition-delay: 0ms; }
+.article-card:hover .article-tag:nth-child(2) { transition-delay: 45ms; }
+.article-card:hover .article-tag:nth-child(3) { transition-delay: 90ms; }
 
 .article-read-time {
     display: flex;
@@ -290,6 +299,7 @@
 .article-body {
     max-width: 800px;
     margin: 0 auto;
+    font-family: var(--font-text);
 }
 
 .article-content p,
@@ -756,4 +766,35 @@
     .article-share {
         justify-content: center;
     }
+}
+
+/* ============================================================
+   Area 7: كشف صورة غلاف المقال — من تكبير خفيف إلى استقرار،
+   مع تدرّج سفلي يذوّبها في خلفية الصفحة (عمق + تباين للعنوان).
+   ============================================================ */
+.article-cover-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.article-cover-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 45%;
+    background: linear-gradient(to top, var(--bg-primary), transparent);
+    pointer-events: none;
+}
+
+.article-cover {
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out);
+}
+
+.article-cover.cover-in {
+    opacity: 1;
+    transform: scale(1);
 }
