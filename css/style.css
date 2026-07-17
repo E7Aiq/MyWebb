@@ -1531,3 +1531,179 @@ section {
         backdrop-filter: none;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE CLASSICAL OBSERVATORY OF DATA — إعادة توجيه فني
+   دمج فن البيانات مع الحرفية الكلاسيكية (نهضوية/إسلامية هندسية):
+   خرائط فلكية، حفر علمي، تأطير مخطوطة، ذهب عتيق للزخرفة فقط.
+   طبقة مُلحقة — لا تلمس المحتوى، كل الألوان عبر متغيرات.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* الذهب العتيق — لخطوط الزخرفة والتأطير فقط، لا للمساحات */
+    --accent-gold: #c8a45c;
+    --accent-gold-rgb: 200, 164, 92;
+    --gold-line: rgba(200, 164, 92, 0.30);   /* حدّ شعري ذهبي */
+    --gold-faint: rgba(200, 164, 92, 0.14);
+    --ink-draw: cubic-bezier(0.65, 0, 0.35, 1);   /* حبر يُرسم على ورق */
+
+    /* نسب ذهبية للإيقاع الرأسي */
+    --phi-space: clamp(4rem, 8vw, 8rem);
+    --phi-space-lg: clamp(6.5rem, 13vw, 13rem);
+}
+
+/* نسيج "لوح عتيق بالنيجاتيف" — تشويش خفيف جداً فوق الخلفية */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+/* المحتوى فوق النسيج */
+body > * { position: relative; z-index: 1; }
+
+/* ركيزة هندسية باهتة (خطوط إنشاء بالفرجار) على الأقسام المتناوبة */
+.about,
+.contact {
+    background-image:
+        linear-gradient(rgba(var(--accent-gold-rgb), 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--accent-gold-rgb), 0.025) 1px, transparent 1px);
+    background-size: 46px 46px, 46px 46px;
+}
+
+/* ═══════════ الطبقة الكلاسيكية: طباعة + زخرفة مخطوطة + ألواح أطلس ═══════════ */
+
+:root {
+    /* زخرفة ماسية ذهبية (خلفيتها لون الصفحة كي "تكسر" الخط) */
+    --ornament-diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Crect x='2.6' y='2.6' width='5.8' height='5.8' transform='rotate(45 5.5 5.5)' fill='%230a0e1a' stroke='%23c8a45c' stroke-width='1'/%3E%3C/svg%3E");
+    /* زوايا لوح الأطلس (border-image) */
+    --plate-corners: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' fill='none' stroke='%23c8a45c' stroke-opacity='0.5' stroke-width='1'%3E%3Cpath d='M1 13 V1 H13'/%3E%3Cpath d='M27 1 H39 V13'/%3E%3Cpath d='M39 27 V39 H27'/%3E%3Cpath d='M13 39 H1 V27'/%3E%3C/svg%3E");
+}
+
+/* ── طباعة كلاسيكية: عناوين مسنّنة كبيرة، تتبّع مصقول، إيقاع فسيح ── */
+.about,
+.contact { padding-block: var(--phi-space-lg); }
+
+.section-title {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(2.75rem, 5vw, 4.5rem);
+}
+
+/* زخرفة ماسية فوق عنوان القسم (علامة لوح) */
+.section-title::before {
+    content: '';
+    display: block;
+    width: 11px;
+    height: 11px;
+    margin: 0 auto var(--spacing-md);
+    background: var(--ornament-diamond) center / contain no-repeat;
+}
+
+/* الخط السفلي يصبح قاعدة ذهبية كلاسيكية تُرسم بنفسها (يحافظ على scaleX) */
+.section-title::after {
+    width: clamp(160px, 22vw, 240px) !important;
+    height: 11px !important;
+    border-radius: 0 !important;
+    background:
+        var(--ornament-diamond) center center / 11px no-repeat,
+        linear-gradient(90deg, transparent, var(--accent-gold), transparent) center / 100% 1px no-repeat !important;
+}
+
+/* ── البيت الشعري: نقش مخطوطة مُذهّب (النص كما هو، العرض فقط يرتقي) ── */
+.poetry-line {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.9vw, 2rem);
+    line-height: 1.95;
+    letter-spacing: 0.01em;
+    color: var(--text-primary);
+    text-align: center;
+    max-width: 44ch;
+    margin: var(--spacing-2xl) auto 0;
+    padding-block: var(--spacing-lg);
+    position: relative;
+}
+/* قاعدتان ذهبيتان بزخرفة ماسية مركزية أعلى وأسفل النقش */
+.poetry-line::before,
+.poetry-line::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(70%, 320px);
+    height: 11px;
+    background:
+        var(--ornament-diamond) center center / 11px no-repeat,
+        linear-gradient(90deg, transparent, var(--gold-line) 25%, var(--gold-line) 75%, transparent) center / 100% 1px no-repeat;
+}
+.poetry-line::before { top: 0; }
+.poetry-line::after { bottom: 0; }
+
+/* ── ألواح أطلس: إطار ذهبي شعري + زوايا مزخرفة (تأطير مخطوطة) ── */
+.atlas-plate { position: relative; }
+.atlas-plate::before {
+    content: '';
+    position: absolute;
+    inset: clamp(1rem, 2.5vw, 2rem);
+    border: 14px solid transparent;
+    border-image: var(--plate-corners) 13 stretch;
+    pointer-events: none;
+}
+.atlas-plate::after {
+    content: '';
+    position: absolute;
+    inset: clamp(1.4rem, 3vw, 2.4rem);
+    border: 1px solid rgba(var(--accent-gold-rgb), 0.10);
+    pointer-events: none;
+}
+
+/* رؤوس الصفحات + صندوق "عني" تُصبح ألواحاً */
+.page-title {
+    font-size: clamp(2.8rem, 6vw, 4.6rem);
+    letter-spacing: -0.01em;
+}
+
+/* القاعدة الذهبية لا تحتاج حركة aurora (كانت تدرّجاً متحركاً) */
+.section-title::after { animation: none !important; }
+
+/* لوح "عني": حشو داخلي كي لا يلامس النص الإطار الذهبي */
+.about-content.atlas-plate {
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(2rem, 5vw, 4rem);
+}
+
+/* ── رؤوس صفحات المشاريع/المقالات: زخرفة كلاسيكية (ماسة + قاعدة ذهبية) ── */
+.page-title::before {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: 0 auto var(--spacing-md);
+    background: var(--ornament-diamond) center / contain no-repeat;
+}
+.page-subtitle {
+    position: relative;
+    padding-bottom: var(--spacing-xl);
+}
+.page-subtitle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(180px, 24vw, 260px);
+    height: 11px;
+    background:
+        var(--ornament-diamond) center center / 11px no-repeat,
+        linear-gradient(90deg, transparent, var(--accent-gold), transparent) center / 100% 1px no-repeat;
+}
+
+/* ── بطاقات المشاريع/المقالات: خيط ذهبي علوي رفيع (لمسة لوح محفور) ── */
+.project-card,
+.article-card { position: relative; }
+.project-card > *:first-child,
+.article-card > *:first-child { position: relative; }

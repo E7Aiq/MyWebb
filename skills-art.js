@@ -29,7 +29,8 @@
         const COLORS = {
             primary: (rs.getPropertyValue('--accent-primary-rgb') || '59,130,246').trim(),
             secondary: (rs.getPropertyValue('--accent-secondary-rgb') || '16,185,129').trim(),
-            tertiary: (rs.getPropertyValue('--accent-tertiary-rgb') || '139,92,246').trim()
+            tertiary: (rs.getPropertyValue('--accent-tertiary-rgb') || '139,92,246').trim(),
+            gold: (rs.getPropertyValue('--accent-gold-rgb') || '200,164,92').trim()
         };
 
         const renderers = cards.map((card) => {
@@ -110,8 +111,24 @@
 
     const TAU = Math.PI * 2;
 
+    /** إطار "لوح علمي" محفور: مستطيل ذهبي رفيع + شرطات زوايا (نقش عتيق) */
+    function plate(s, C) {
+        const ctx = s.ctx, m = 10;
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(${C.gold}, 0.20)`;
+        ctx.strokeRect(m, m, s.w - 2 * m, s.h - 2 * m);
+        ctx.strokeStyle = `rgba(${C.gold}, 0.55)`;
+        const k = 9;
+        const corners = [[m, m, 1, 1], [s.w - m, m, -1, 1], [m, s.h - m, 1, -1], [s.w - m, s.h - m, -1, -1]];
+        for (const c of corners) {
+            ctx.beginPath();
+            ctx.moveTo(c[0] + c[2] * k, c[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(c[0], c[1] + c[3] * k);
+            ctx.stroke();
+        }
+    }
+
     // ============================================================
-    // المرحلة ١ — "أبدأ بالسؤال": نقاط متناثرة تتصل أحياناً بعقدة مركزية
+    // المرحلة ١ — "أبدأ بالسؤال": نقاط متناثرة تتصل بعقدة (محفورة كأداة علمية)
     // ============================================================
 
     const question = {
@@ -129,6 +146,7 @@
         draw(s, C, t) {
             const { ctx } = s;
             ctx.clearRect(0, 0, s.w, s.h);
+            plate(s, C);
             const spd = s.hovered ? 1.7 : 1;
             const cx = s.center.x, cy = s.center.y;
             const CONNECT = Math.min(s.w, s.h) * 0.6;
@@ -151,15 +169,22 @@
                 ctx.fillStyle = `rgba(${C.primary}, 0.5)`;
                 ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, TAU); ctx.fill();
             }
-            // العقدة المركزية النابضة
-            const pulse = 2.6 + Math.sin(t * 0.002 * spd) * 0.7;
-            const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulse * 5);
-            g.addColorStop(0, `rgba(${C.primary}, 0.6)`);
-            g.addColorStop(1, `rgba(${C.primary}, 0)`);
-            ctx.fillStyle = g;
-            ctx.beginPath(); ctx.arc(cx, cy, pulse * 5, 0, TAU); ctx.fill();
+            // العقدة المركزية كأداة رصد محفورة: حلقتان + تصليب (crosshair)
+            const pr = 3 + Math.sin(t * 0.002 * spd) * 0.6;
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(${C.gold}, 0.6)`;
+            ctx.beginPath(); ctx.arc(cx, cy, pr + 4, 0, TAU); ctx.stroke();
+            ctx.beginPath(); ctx.arc(cx, cy, pr, 0, TAU); ctx.stroke();
+            ctx.strokeStyle = `rgba(${C.gold}, 0.4)`;
+            const cr = pr + 10;
+            ctx.beginPath();
+            ctx.moveTo(cx - cr, cy); ctx.lineTo(cx - pr - 2, cy);
+            ctx.moveTo(cx + pr + 2, cy); ctx.lineTo(cx + cr, cy);
+            ctx.moveTo(cx, cy - cr); ctx.lineTo(cx, cy - pr - 2);
+            ctx.moveTo(cx, cy + pr + 2); ctx.lineTo(cx, cy + cr);
+            ctx.stroke();
             ctx.fillStyle = `rgba(${C.primary}, 0.9)`;
-            ctx.beginPath(); ctx.arc(cx, cy, pulse, 0, TAU); ctx.fill();
+            ctx.beginPath(); ctx.arc(cx, cy, 1.4, 0, TAU); ctx.fill();
         }
     };
 
@@ -181,6 +206,7 @@
         draw(s, C, t) {
             const { ctx } = s;
             ctx.clearRect(0, 0, s.w, s.h);
+            plate(s, C);
             const spd = s.hovered ? 1.7 : 1;
             const colW = s.w / (s.cols + 1);
             for (const p of s.parts) {
@@ -217,6 +243,7 @@
         draw(s, C, t) {
             const { ctx } = s;
             ctx.clearRect(0, 0, s.w, s.h);
+            plate(s, C);
             const spd = s.hovered ? 1.6 : 1;
             const LINK = Math.min(s.w, s.h) * 0.52;
             for (const nd of s.nodes) {
@@ -258,6 +285,7 @@
         draw(s, C, t) {
             const { ctx } = s;
             ctx.clearRect(0, 0, s.w, s.h);
+            plate(s, C);
             const spd = s.hovered ? 1.7 : 1;
             // ترتفع نحو هدف يتغيّر ببطء ثم تستقرّ (القصة تنحلّ إلى خلاصة)
             if (Math.random() < 0.005) s.riseTarget = 0.32 + Math.random() * 0.5;

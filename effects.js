@@ -49,15 +49,19 @@
         const rootStyles = getComputedStyle(document.documentElement);
         const RGB_A = (rootStyles.getPropertyValue('--accent-primary-rgb') || '59,130,246').trim();
         const RGB_B = (rootStyles.getPropertyValue('--accent-secondary-rgb') || '16,185,129').trim();
+        const GOLD = (rootStyles.getPropertyValue('--accent-gold-rgb') || '200,164,92').trim();
 
-        const COUNT = 70;          // عدد النقاط
-        const LINK_DIST = 130;     // مسافة رسم الخط بين نقطتين
-        const SPEED = 0.25;
+        const TAU = Math.PI * 2;
+        const COUNT = 58;          // نجوم
+        const LINK_DIST = 118;     // مسافة خطوط الأبراج
+        const SPEED = 0.16;        // انجراف بطيء كلاسيكي
 
         let w = 0, h = 0;
         let particles = [];
         let rafId = null;
         let inView = true;
+        // مركز الأسطرلاب + حلقاته + زاوية الدوران البطيء
+        let cx = 0, cy = 0, rings = [], rot = 0;
         const mouse = { x: null, y: null };
         const parallax = { x: 0, y: 0 };
 
@@ -74,35 +78,74 @@
         }
 
         function seed() {
+            // مركز الخريطة الفلكية ونظام حلقاتها المتحدة المركز
+            cx = w * 0.5;
+            cy = h * 0.46;
+            const maxR = Math.hypot(w, h) * 0.44;
+            rings = [0.34, 0.56, 0.78, 1.0].map((f) => maxR * f);
             particles = Array.from({ length: COUNT }, (_, i) => ({
                 x: Math.random() * w,
                 y: Math.random() * h,
                 vx: (Math.random() - 0.5) * SPEED,
                 vy: (Math.random() - 0.5) * SPEED,
-                r: Math.random() * 1.6 + 0.6,
-                rgb: i % 3 === 0 ? RGB_B : RGB_A,   // ثلث النقاط خضراء
-                depth: Math.random() * 0.6 + 0.4    // للبارالاكس
+                r: Math.random() * 1.4 + 0.5,
+                rgb: i % 3 === 0 ? RGB_B : RGB_A,
+                depth: Math.random() * 0.6 + 0.4,   // للبارالاكس
+                mag: Math.random() * 0.4 + 0.35     // لمعان النجم
             }));
         }
 
+        /* الخريطة الفلكية العتيقة (أسطرلاب): حلقات متحدة المركز + تقسيمات
+           شعاعية + شرطات درجات ذهبية باهتة تدور ببطء، ونجوم مع خطوط أبراج.
+           دمج: الشبكة الفلكية ذهبية كلاسيكية، النجوم/الروابط بلون البيانات. */
         function draw(animate) {
             ctx.clearRect(0, 0, w, h);
 
-            // تنعيم حركة البارالاكس نحو موضع الفأرة
             if (animate && mouse.x !== null) {
                 parallax.x += ((mouse.x - w / 2) * 0.02 - parallax.x) * 0.05;
                 parallax.y += ((mouse.y - h / 2) * 0.02 - parallax.y) * 0.05;
             }
+            if (animate) rot += 0.0008;   // دوران بطيء جداً كأسطرلاب
 
-            // الخطوط أولاً (تحت النقاط)
+            // ── الشبكة الفلكية الذهبية (تدور) ──
+            ctx.save();
+            ctx.translate(cx + parallax.x * 0.3, cy + parallax.y * 0.3);
+            ctx.rotate(rot);
+            ctx.lineWidth = 1;
+            for (let ri = 0; ri < rings.length; ri++) {
+                ctx.strokeStyle = `rgba(${GOLD}, ${0.42 - ri * 0.06})`;
+                ctx.beginPath(); ctx.arc(0, 0, rings[ri], 0, TAU); ctx.stroke();
+            }
+            // تقسيمات شعاعية كل 30° (كأقسام دائرة البروج)
+            ctx.strokeStyle = `rgba(${GOLD}, 0.16)`;
+            const inner = rings[0], outer = rings[rings.length - 1];
+            for (let a = 0; a < 12; a++) {
+                const ang = a * Math.PI / 6;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(ang) * inner, Math.sin(ang) * inner);
+                ctx.lineTo(Math.cos(ang) * outer, Math.sin(ang) * outer);
+                ctx.stroke();
+            }
+            // شرطات الدرجات على الحلقة الخارجية (كل 6°، أطول كل 30°)
+            ctx.strokeStyle = `rgba(${GOLD}, 0.34)`;
+            for (let a = 0; a < 60; a++) {
+                const ang = a * Math.PI / 30;
+                const t = (a % 5 === 0) ? 9 : 4;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(ang) * outer, Math.sin(ang) * outer);
+                ctx.lineTo(Math.cos(ang) * (outer - t), Math.sin(ang) * (outer - t));
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // ── خطوط الأبراج (شبكة البيانات كخريطة نجوم) ──
             for (let i = 0; i < particles.length; i++) {
                 const a = particles[i];
                 for (let j = i + 1; j < particles.length; j++) {
                     const b = particles[j];
-                    const dx = a.x - b.x, dy = a.y - b.y;
-                    const dist = Math.hypot(dx, dy);
+                    const dist = Math.hypot(a.x - b.x, a.y - b.y);
                     if (dist < LINK_DIST) {
-                        ctx.strokeStyle = `rgba(${a.rgb}, ${(1 - dist / LINK_DIST) * 0.12})`;
+                        ctx.strokeStyle = `rgba(${a.rgb}, ${(1 - dist / LINK_DIST) * 0.10})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(a.x + parallax.x * a.depth, a.y + parallax.y * a.depth);
@@ -111,18 +154,16 @@
                     }
                 }
             }
-
-            // النقاط
+            // ── النجوم ──
             for (const p of particles) {
                 if (animate) {
-                    p.x += p.vx;
-                    p.y += p.vy;
+                    p.x += p.vx; p.y += p.vy;
                     if (p.x < 0) p.x = w; else if (p.x > w) p.x = 0;
                     if (p.y < 0) p.y = h; else if (p.y > h) p.y = 0;
                 }
-                ctx.fillStyle = `rgba(${p.rgb}, ${0.35 + p.depth * 0.25})`;
+                ctx.fillStyle = `rgba(${p.rgb}, ${p.mag})`;
                 ctx.beginPath();
-                ctx.arc(p.x + parallax.x * p.depth, p.y + parallax.y * p.depth, p.r, 0, Math.PI * 2);
+                ctx.arc(p.x + parallax.x * p.depth, p.y + parallax.y * p.depth, p.r, 0, TAU);
                 ctx.fill();
             }
         }
