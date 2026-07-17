@@ -1707,3 +1707,279 @@ body > * { position: relative; z-index: 1; }
 .article-card { position: relative; }
 .project-card > *:first-child,
 .article-card > *:first-child { position: relative; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   REBUILD · LINE-ART FOUNDATION  (Line Art × Data × Classical Observatory)
+   يوسّع النظام دون إعادة تسمية أي فئة/معرّف. كل الألوان عبر متغيرات.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* ── لوحة كلاسيكية موسّعة (أسماء واضحة، بلا hex في المكوّنات) ── */
+    --parchment: #e9e0cb;              /* عاجي دافئ نبيل للتباين */
+    --parchment-rgb: 233, 224, 203;
+    --bronze: #9c7b3f;                 /* برونز عتيق */
+    --bronze-rgb: 156, 123, 63;
+    --ink-deep: #06090f;               /* حبر أعمق من الخلفية */
+
+    /* ── أوزان خطوط الفن الخطّي ── */
+    --line-hair: 1px;
+    --line-fine: 1.5px;
+
+    /* ── مدد الحركة (Emil: 180–320ms للتفاصيل، أبطأ للكشف) ── */
+    --dur-press: 120ms;
+    --dur-micro: 240ms;
+    --dur-reveal: 720ms;
+
+    /* ── زخرفة البوصلة/النجمة الثمانية (علامة أداة علمية) ── */
+    --ornament-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' fill='none' stroke='%23c8a45c' stroke-width='1'%3E%3Ccircle cx='13' cy='13' r='6.5'/%3E%3Cpath d='M13 1 V25 M1 13 H25 M5 5 L21 21 M21 5 L5 21' stroke-opacity='0.7'/%3E%3C/svg%3E");
+}
+
+/* ── تغذية راجعة ضغط كلاسيكية على كل عنصر قابل للنقر (Apple/Emil) ── */
+.btn:active,
+.filter-btn:active,
+.contact-item:active,
+.project-card:active,
+.article-card:active {
+    transform: scale(0.985);
+    transition: transform var(--dur-press) var(--ease-out);
+}
+
+/* ── النافبار: مادة شفّافة + حافّة ذهبية شعرية (Apple materials) ── */
+.navbar {
+    background-color: rgba(var(--bg-secondary-rgb), 0.60);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
+    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.16);
+}
+.logo { letter-spacing: 0.02em; }
+.nav-link { letter-spacing: 0.04em; }
+/* الخط المنزلق يتحوّل إلى قصبة ذهبية (يحافظ على منطق FLIP في effects.js) */
+.nav-underline {
+    background: linear-gradient(90deg,
+        rgba(var(--accent-gold-rgb), 0.2),
+        var(--accent-gold),
+        rgba(var(--accent-gold-rgb), 0.2));
+    height: var(--line-fine);
+    box-shadow: 0 0 6px rgba(var(--accent-gold-rgb), 0.35);
+}
+
+/* ── الأزرار: طابع فن خطّي، حدود شعرية، حركة ناعمة ── */
+.btn {
+    letter-spacing: 0.015em;
+    transition:
+        transform var(--dur-micro) var(--ease-out),
+        background-color var(--dur-micro) ease,
+        border-color var(--dur-micro) ease,
+        box-shadow var(--dur-reveal) var(--ease-out),
+        color var(--dur-micro) ease;
+}
+.btn-secondary,
+.btn-outline {
+    border-color: rgba(var(--accent-gold-rgb), 0.30);
+}
+.btn-secondary:hover {
+    border-color: var(--accent-gold);
+    color: var(--parchment);
+    transform: translateY(-2px);
+}
+.btn-outline {
+    color: var(--accent-gold);
+}
+.btn-outline:hover {
+    background-color: transparent;
+    border-color: var(--accent-gold);
+    color: var(--parchment);
+    box-shadow: 0 0 0 1px rgba(var(--accent-gold-rgb), 0.25), 0 14px 40px -18px rgba(var(--accent-gold-rgb), 0.5);
+}
+
+/* ── الفوتر: خط علوي ذهبي شعري بنجمة بوصلة مركزية (بدل شفق) ── */
+.footer {
+    border-top: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.16);
+}
+.footer::before {
+    background: linear-gradient(90deg, transparent, rgba(var(--accent-gold-rgb), 0.5), transparent) !important;
+    height: var(--line-hair) !important;
+    animation: none !important;
+    opacity: 0.8 !important;
+}
+.footer::after {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 26px;
+    background: var(--ornament-star) center / contain no-repeat;
+    opacity: 0.75;
+    pointer-events: none;
+}
+.footer p { letter-spacing: 0.03em; color: var(--text-secondary); }
+
+/* ═══════════════ REBUILD · بطاقات القوائم كألواح أطلس محفورة ═══════════════ */
+/* CSS فقط — لا تغيير في منطق العرض (projects.js / articles-list.js). */
+
+/* السطح: لوح داكن بحدّ ذهبي شعري، زوايا مسطّحة أقرب للوح علمي */
+.project-card,
+.article-card {
+    background-color: rgba(var(--bg-secondary-rgb), 0.55);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    border-radius: 6px;
+}
+
+/* الحدّ المتدرّج الزجاجي → إطار ذهبي شعري يشتدّ عند المرور (ink-in) */
+.project-card::before,
+.article-card::before {
+    background: linear-gradient(135deg,
+        rgba(var(--accent-gold-rgb), 0.5),
+        transparent 38%,
+        transparent 62%,
+        rgba(var(--accent-gold-rgb), 0.5)) !important;
+    opacity: 0.28;
+}
+.project-card:hover::before,
+.article-card:hover::before { opacity: 0.95; }
+
+/* لمعة البيانات → مسحة خط ذهبي رفيع تعبر مرّة (RTL) */
+.project-card::after,
+.article-card::after {
+    background: linear-gradient(100deg,
+        transparent,
+        rgba(var(--accent-gold-rgb), 0.08) 46%,
+        rgba(var(--accent-gold-rgb), 0.20) 50%,
+        rgba(var(--accent-gold-rgb), 0.08) 54%,
+        transparent) !important;
+}
+
+.project-card:hover,
+.article-card:hover {
+    border-color: rgba(var(--accent-gold-rgb), 0.42);
+    box-shadow: 0 22px 55px -26px rgba(0, 0, 0, 0.75);
+}
+
+/* الوسوم كرقائق محفورة (حدّ ذهبي، حبر فاتح) */
+.project-card .category-tag,
+.article-card .article-tag {
+    background: rgba(var(--accent-gold-rgb), 0.06);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.32);
+    color: var(--parchment);
+    border-radius: 3px;
+}
+.project-card:hover .category-tag,
+.article-card:hover .article-tag {
+    border-color: rgba(var(--accent-gold-rgb), 0.5);
+}
+
+/* شارة تصنيف المقال المملوءة → مخطّطة ذهبية (فن خطّي) */
+.article-card-category {
+    background: transparent !important;
+    color: var(--accent-gold) !important;
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.45);
+}
+
+/* أيقونات meta الخطّية بلون ذهبي */
+.project-card-date svg,
+.article-card-date svg,
+.article-read-time svg,
+.project-card-meta svg,
+.article-card-meta svg { color: var(--accent-gold); }
+
+/* عناوين البطاقات: تتبّع مصقول + تحوّل إلى عاجي عند المرور */
+.project-card-title,
+.article-card-title { letter-spacing: -0.005em; }
+.project-card:hover .project-card-title,
+.article-card:hover .article-card-title { color: var(--parchment); }
+
+/* أزرار البطاقة → فن خطّي (حدّ ذهبي، حبر) */
+.project-card-btn-details {
+    background: transparent;
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.35);
+    color: var(--text-primary);
+}
+.project-card-btn-details:hover {
+    background: rgba(var(--accent-gold-rgb), 0.10);
+    border-color: var(--accent-gold);
+    color: var(--parchment);
+}
+.project-card-btn-preview {
+    background: rgba(var(--accent-gold-rgb), 0.12);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.5);
+    color: var(--parchment);
+}
+.project-card-btn-preview:hover {
+    background: rgba(var(--accent-gold-rgb), 0.22);
+    border-color: var(--accent-gold);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+/* ── شريط الفلاتر ورؤوس الصفحات: فن خطّي ── */
+.filter-btn {
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.22);
+    letter-spacing: 0.01em;
+}
+.filter-btn:hover,
+.filter-btn.active {
+    background: rgba(var(--accent-gold-rgb), 0.12);
+    border-color: var(--accent-gold);
+    color: var(--parchment);
+}
+
+/* ═══════════════ REBUILD · التواصل كلوح أطلس ═══════════════ */
+.contact-content { position: relative; }
+
+.contact-methods { gap: var(--spacing-lg); }
+
+.contact-item {
+    background-color: rgba(var(--bg-card-rgb), 0.5);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    border-radius: 6px;
+    padding: var(--spacing-lg) var(--spacing-md);
+}
+.contact-item:hover {
+    border-color: rgba(var(--accent-gold-rgb), 0.5);
+    box-shadow: 0 18px 44px -24px rgba(0, 0, 0, 0.7);
+}
+/* أيقونات التواصل الخطّية بلون ذهبي */
+.contact-item svg { color: var(--accent-gold); }
+
+/* نموذج الرسالة: حقل محفور */
+.contact-form textarea {
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.22);
+    border-radius: 6px;
+}
+.contact-form textarea:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 1px rgba(var(--accent-gold-rgb), 0.25);
+}
+
+/* ═══════════════ REBUILD · شريط تقدّم القراءة كمسطرة محفورة ═══════════════ */
+.reading-progress {
+    /* شرطات مسطرة ذهبية باهتة على المسار */
+    background: repeating-linear-gradient(90deg,
+        transparent, transparent 47px,
+        rgba(var(--accent-gold-rgb), 0.16) 47px,
+        rgba(var(--accent-gold-rgb), 0.16) 48px);
+}
+.reading-progress-fill {
+    background: linear-gradient(90deg,
+        rgba(var(--accent-gold-rgb), 0.45),
+        var(--accent-gold)) !important;
+    box-shadow: 0 0 8px rgba(var(--accent-gold-rgb), 0.5) !important;
+}
+.reading-progress-head {
+    background: radial-gradient(circle,
+        rgba(var(--accent-gold-rgb), 0.7), transparent 62%) !important;
+}
+
+/* شريط المشاركة: أزرار خطّية ذهبية */
+.share-buttons-container .share-icon-btn,
+.article-share .share-btn {
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.3);
+}
+.share-buttons-container .share-icon-btn:hover,
+.article-share .share-btn:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    background: rgba(var(--accent-gold-rgb), 0.08);
+}

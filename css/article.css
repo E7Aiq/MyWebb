@@ -798,3 +798,123 @@
     opacity: 1;
     transform: scale(1);
 }
+
+/* ═══════════ REBUILD · لوح المقال المحفور (يُحمَّل بعد style.css فيسود) ═══════════ */
+.article-card {
+    background: rgba(var(--bg-secondary-rgb), 0.55);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    border-radius: 6px;
+}
+.article-card:hover {
+    border-color: rgba(var(--accent-gold-rgb), 0.42);
+    box-shadow: 0 22px 55px -26px rgba(0, 0, 0, 0.75);
+}
+.article-card:hover .article-card-title { color: var(--parchment); }
+.article-card-title { letter-spacing: -0.005em; }
+.article-card-category {
+    background: transparent;
+    color: var(--accent-gold);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.45);
+}
+.article-tag {
+    background: rgba(var(--accent-gold-rgb), 0.06);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.32);
+    color: var(--parchment);
+    border-radius: 3px;
+}
+
+/* ═══════════════ REBUILD · طباعة المقال/المشروع بلغة الفن الخطّي ═══════════════ */
+/* يُحمَّل بعد style.css على صفحتَي التفاصيل → يسود. لا تغيير في المحتوى. */
+
+/* العناوين: عاجية بخطّ سفلي محفور (كترويسة لوح) */
+.article-body h2,
+.article-body h3,
+.project-detail-body h2,
+.project-detail-body h3 {
+    color: var(--parchment);
+    letter-spacing: -0.01em;
+}
+.article-body h2,
+.project-detail-body h2 {
+    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.22);
+    padding-bottom: 0.35em;
+    margin-top: 1.6em;
+}
+
+/* الاقتباس كنقش مخطوطة: قصبة ذهبية + خط العرض المسنّن */
+.article-body blockquote,
+.project-detail-body blockquote {
+    border-right: 2px solid var(--accent-gold);
+    border-left: none;
+    background: rgba(var(--accent-gold-rgb), 0.05);
+    font-family: var(--font-display);
+    color: var(--parchment);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 4px;
+}
+
+/* الروابط بلون ذهبي عتيق */
+.article-body a,
+.project-detail-body a {
+    color: var(--accent-gold);
+    text-decoration-color: rgba(var(--accent-gold-rgb), 0.5);
+}
+
+/* الجداول كشبكة محفورة (تُطبَّق على صفحتَي التفاصيل) */
+.article-body table,
+.project-detail-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--spacing-lg) 0;
+    background: rgba(var(--bg-secondary-rgb), 0.55);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.28);
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 0.95rem;
+}
+.article-body thead,
+.project-detail-body thead {
+    background: rgba(var(--accent-gold-rgb), 0.07);
+}
+.article-body th,
+.project-detail-body th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: right;
+    font-weight: 700;
+    color: var(--parchment);
+    border-bottom: 2px solid rgba(var(--accent-gold-rgb), 0.55);
+}
+.article-body td,
+.project-detail-body td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-secondary);
+    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.12);
+}
+.article-body tr:hover td,
+.project-detail-body tr:hover td {
+    background: rgba(var(--accent-gold-rgb), 0.05);
+}
+
+/* أكواد محفورة */
+.article-body pre,
+.project-detail-body pre {
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    border-radius: 4px;
+}
+
+/* عنوان المقال + الغلاف بإطار ذهبي */
+.article-title,
+.project-detail-header .article-title {
+    letter-spacing: -0.015em;
+}
+.article-cover,
+.project-detail-cover {
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.2);
+    border-radius: 6px;
+}
+.article-category,
+.article-header-category {
+    background: transparent !important;
+    color: var(--accent-gold) !important;
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.45);
+}

@@ -567,3 +567,44 @@
     opacity: 1;
     transform: scale(1);
 }
+
+/* ═══════════ REBUILD · لوح المشروع المحفور (يُحمَّل بعد style.css فيسود) ═══════════ */
+.project-card {
+    background-color: rgba(var(--bg-secondary-rgb), 0.55);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    border-radius: 6px;
+}
+.project-card:hover {
+    border-color: rgba(var(--accent-gold-rgb), 0.42);
+    box-shadow: 0 22px 55px -26px rgba(0, 0, 0, 0.75);
+}
+.project-card:hover .project-card-title { color: var(--parchment); }
+.project-card-title { letter-spacing: -0.005em; }
+
+.project-card-btn-details {
+    background: transparent;
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.35);
+    color: var(--text-primary);
+}
+.project-card-btn-details:hover {
+    background: rgba(var(--accent-gold-rgb), 0.10);
+    border-color: var(--accent-gold);
+    color: var(--parchment);
+}
+.project-card-btn-preview {
+    background: rgba(var(--accent-gold-rgb), 0.12);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.5);
+    color: var(--parchment);
+}
+.project-card-btn-preview:hover {
+    background: rgba(var(--accent-gold-rgb), 0.22);
+    border-color: var(--accent-gold);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+.category-tag {
+    background: rgba(var(--accent-gold-rgb), 0.06);
+    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.32);
+    color: var(--parchment);
+    border-radius: 3px;
+}
