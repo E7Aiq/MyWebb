@@ -88,11 +88,13 @@
         factory(s);
         sizeCanvas(s);
         if (s.init) s.init();
-        // الإطار الأول دائماً (وهو الوضع النهائي للحركة المقلّلة/الجوال)
+        // الإطار الأول دائماً (وهو الوضع النهائي لتقليل الحركة فقط)
         s.ctx.clearRect(0, 0, s.w, s.h);
         s.draw(s.ctx, s.w, s.h, 0, s);
 
-        if (reduced || mobileNow()) return; // ساكن — لا تسجيل في الحلقة
+        // الجوال يتحرّك بنفس جودة اللابتوب — الأداء مضبوط بعدد نقاط يتناسب
+        // مع المساحة + إيقاف خارج الشاشة/عند إخفاء التبويب. الساكن لتقليل الحركة فقط.
+        if (reduced) return;
 
         scenes.push(s);
         new IntersectionObserver((entries) => {
@@ -109,10 +111,12 @@
     // ============================================================
 
     function heroScene(s) {
-        const N = 108;
+        let N = 0;
         let pts = [];
         s.init = () => {
             const r = rand(7);
+            // عدد النقاط يتبع مساحة الكانفس: ~48 على الجوال، حتى 108 على اللابتوب
+            N = Math.round(Math.min(108, Math.max(46, (s.w * s.h) / 9200)));
             pts = Array.from({ length: N }, (_, i) => ({
                 x: r() * s.w,
                 y: r() * s.h,
@@ -438,8 +442,8 @@
             if (f) mount(c, f);
         });
 
-        if (!reduced && !mobileNow()) {
-            // مؤشر البطل (زخرفي — استجابة لطيفة فقط)
+        if (!reduced) {
+            // مؤشر البطل (زخرفي — لأجهزة المؤشر الدقيق فقط؛ اللمس يتخطّاه)
             const heroCanvas = document.querySelector('.hero-canvas');
             if (heroCanvas && finePointer) {
                 const hero = heroCanvas.closest('.hero');
