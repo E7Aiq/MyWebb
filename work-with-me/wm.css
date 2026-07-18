@@ -431,29 +431,59 @@ body::after {
 @media (max-width: 968px) {
     .svc {
         grid-template-columns: minmax(0, 1fr);
-        gap: 1.25rem;
-        padding-block: calc(var(--band) * 0.75);
+        gap: 1.15rem;
+        padding-block: calc(var(--band) * 0.7);
     }
+    /* رأس الخدمة يصبح فاصلاً تحريرياً: رقم قرمزي كبير + مسطرة شعرية
+       تمتدّ إلى حافّة العمود اليسرى (يملأ الفراغ الأخرق، سويسري صريح) */
     .svc-side {
         flex-direction: row;
-        align-items: baseline;
-        gap: 1.1rem;
+        align-items: center;
+        gap: 1.2rem;
+        margin-bottom: 0.15rem;
     }
-    .svc-num { font-size: 2.1rem; }
-    .svc-num-rule { flex: 1; max-width: 90px; align-self: center; }
-    .svc-art { justify-content: flex-start; margin-top: 0.75rem; }
-    .svc-canvas { width: min(100%, 340px); height: 130px; }
+    .svc-num {
+        font-size: clamp(2.5rem, 10vw, 3.15rem);
+        line-height: 0.82;
+    }
+    .svc-num-rule {
+        flex: 1;
+        max-width: none;
+        align-self: center;
+        background: linear-gradient(to left, rgba(var(--ink-rgb), 0.4), rgba(var(--ink-rgb), 0.08));
+    }
+    /* شريط البيانات: عرض كامل، مؤطّر بخيط شعري علوي كأنه "شكل" تحريري */
+    .svc-art {
+        justify-content: stretch;
+        margin-top: 1.35rem;
+        padding-top: 1.35rem;
+        border-top: var(--hair) solid rgba(var(--ink-rgb), 0.09);
+    }
+    .svc-canvas { width: 100%; height: 122px; }
     .why-follow { padding-right: 0; }
     .dot-stamp { display: none; }
 }
 
 @media (max-width: 768px) {
     .grid-line-end { display: none; } /* خط واحد يكفي — انضباط دون زحام */
+    /* البطل: تنفّس أعلى/أسفل كي يهبط العنوان كبياناً لا كسطر عائم */
+    .hero { min-height: 92vh; min-height: 92svh; }
     .hero-title { max-width: none; }
     .hero-sub { max-width: none; }
     .hero-cue { display: none; }
-    .foot-canvas { height: 110px; }
+    /* نطاقات أهدأ على الجوال — فراغ درامي دون فراغ ميّت */
+    .why { margin-top: calc(var(--band) * 0.85); }
+    .why-inner { padding-block: calc(var(--band) * 0.82); }
+    .cta { padding-block: calc(var(--band) * 0.92); }
+    .foot-canvas { height: 108px; }
     body::after { opacity: 0.35; }
+}
+
+@media (max-width: 480px) {
+    /* أصغر الشاشات: إحكام الإيقاع مع بقاء الدراما الطباعية */
+    .svc { padding-block: calc(var(--band) * 0.62); }
+    .svc-num { font-size: clamp(2.3rem, 12vw, 2.8rem); }
+    .cta-btn { padding-inline: 1.6em; } /* يبقى معزولاً بعرض تلقائي أنيق */
 }
 
 /* ═══════════════ تقليل الحركة: كل شيء ساكن فوراً ═══════════════ */
