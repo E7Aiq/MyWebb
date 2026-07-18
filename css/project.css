@@ -608,3 +608,35 @@
     color: var(--parchment);
     border-radius: 3px;
 }
+
+/* ═══════════ ATELIER · تحرير سويسري لصفحات المشاريع (طبقة مُلحقة) ═══════════ */
+
+/* ترقيم تحريري لبطاقات المشاريع عبر عدّادات CSS (زخرفة إضافية) */
+.projects-grid { counter-reset: ed-plate; }
+.projects-grid .project-card { counter-increment: ed-plate; }
+.projects-grid .project-card-content { position: relative; }
+.projects-grid .project-card-content::before {
+    content: counter(ed-plate, arabic-indic);
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--editorial-vermilion);
+    letter-spacing: 0.08em;
+    padding-bottom: 3px;
+    border-bottom: 2px solid rgba(var(--editorial-vermilion-rgb), 0.55);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+/* صف الإجراءات: مسطرة شعرية علوية (انضباط أعمدة سويسري) */
+.project-card-actions {
+    border-top: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.14);
+    padding-top: var(--spacing-sm);
+}
+
+/* قسم المشاريع يستضيف سكّة جانبية زخرفية */
+.projects-section { position: relative; }

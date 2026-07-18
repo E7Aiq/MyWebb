@@ -7,10 +7,10 @@
     <title>المقالات | محمد الزبيدي</title>
     
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r2">
+    <link rel="stylesheet" href="css/style.css?v=r4">
     <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/article.css?v=r2">
-    <link rel="stylesheet" href="css/responsive.css?v=r2">
+    <link rel="stylesheet" href="css/article.css?v=r3">
+    <link rel="stylesheet" href="css/responsive.css?v=r4">
 </head>
 <body>
     <!-- Navigation -->
@@ -38,6 +38,7 @@
         <!-- Page Header -->
         <section class="page-header">
             <div class="container">
+                <span class="ed-ghost" aria-hidden="true">المقالات</span>
                 <h1 class="page-title fade-in">المقالات</h1>
                 <p class="page-subtitle fade-in">     أكتب لأن الفكرة التي لا تُناقش تموت صامتة</p>
             </div>
@@ -45,7 +46,9 @@
 
         <!-- Articles Section -->
         <section class="articles-section">
+            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠٣</span><span class="ed-rail-word">المقالات</span></span>
             <div class="container">
+                <div class="ed-divider" aria-hidden="true"></div>
                 <div id="articles-grid" class="articles-grid">
                     <!-- سيتم تحميل المقالات هنا عبر JavaScript -->
                     <div class="articles-loading">
@@ -69,5 +72,6 @@
     <script src="animations.js?v=r2"></script>
     <script src="js/articles-list.js?v=r2"></script>
     <script src="effects.js?v=r2"></script>
+    <script src="gen-art.js?v=r4"></script>
 </body>
 </html>

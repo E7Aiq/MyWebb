@@ -6,10 +6,10 @@
     <meta name="description" content="مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد">
     <title>المشاريع | محمد الزبيدي</title>
 
-    <link rel="stylesheet" href="css/style.css?v=r2">
+    <link rel="stylesheet" href="css/style.css?v=r4">
     <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/project.css?v=r2">
-    <link rel="stylesheet" href="css/responsive.css?v=r2">
+    <link rel="stylesheet" href="css/project.css?v=r3">
+    <link rel="stylesheet" href="css/responsive.css?v=r4">
 </head>
 <body>
     <!-- Navigation -->
@@ -37,6 +37,7 @@
         <!-- Page Header -->
         <section class="page-header">
             <div class="container">
+                <span class="ed-ghost" aria-hidden="true">المشاريع</span>
                 <h1 class="page-title fade-in">المشاريع</h1>
                 <p class="page-subtitle fade-in">       مشاريع حقيقية، نتائج قابلة للقياس      </p>
             </div>
@@ -44,11 +45,14 @@
 
         <!-- Projects Section -->
         <section class="projects-section">
+            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠٢</span><span class="ed-rail-word">المشاريع</span></span>
             <div class="container">
                 <!-- Dynamic Filters (built from data) -->
                 <div class="filters slide-up" id="projectFilters">
                     <button class="filter-btn active" data-filter="all">الكل</button>
                 </div>
+
+                <div class="ed-divider" aria-hidden="true"></div>
 
                 <!-- Projects Grid -->
                 <div class="projects-grid" id="projectsGrid">
@@ -81,5 +85,6 @@
     <script src="animations.js?v=r2"></script>
     <script src="projects.js?v=r2"></script>
     <script src="effects.js?v=r2"></script>
+    <script src="gen-art.js?v=r4"></script>
 </body>
 </html>

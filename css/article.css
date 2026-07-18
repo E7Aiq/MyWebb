@@ -918,3 +918,61 @@
     color: var(--accent-gold) !important;
     border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.45);
 }
+
+/* ═══════════ ATELIER · تحرير سويسري لصفحات المقالات (طبقة مُلحقة) ═══════════ */
+
+/* ترقيم تحريري للبطاقات عبر عدّادات CSS (زخرفة إضافية — لا تغيير في العرض) */
+.articles-grid { counter-reset: ed-leaf; }
+.articles-grid .article-card { counter-increment: ed-leaf; }
+.articles-grid .article-card-content { position: relative; }
+.articles-grid .article-card-content::before {
+    content: counter(ed-leaf, arabic-indic);
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--editorial-vermilion);
+    letter-spacing: 0.08em;
+    padding-bottom: 3px;
+    border-bottom: 2px solid rgba(var(--editorial-vermilion-rgb), 0.55);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+/* صف الميتا في رأس المقال: تأطير مجلّة بمسطرتين شعريتين */
+.article-meta,
+.project-detail-meta {
+    border-top: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
+    padding-block: 0.6rem;
+    letter-spacing: 0.02em;
+}
+
+/* الفقرة الافتتاحية: معالجة مجلّة (lede) — حجم أكبر وحبر أفتح */
+.article-body > p:first-of-type {
+    font-size: 1.22em;
+    line-height: 2.05;
+    color: var(--text-primary);
+}
+
+/* عناوين h2: شرطة قرمزية جريئة فوق نهاية الخط المحفور (RTL: يمين) */
+.article-body h2,
+.project-detail-body h2 { position: relative; }
+.article-body h2::after,
+.project-detail-body h2::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    width: 34px;
+    height: var(--rule-bold);
+    background: var(--editorial-vermilion);
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+/* قسم المقالات يستضيف سكّة جانبية زخرفية */
+.articles-section { position: relative; }

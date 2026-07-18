@@ -491,3 +491,33 @@
         filter: blur(40px);
     }
 }
+/* ==========================================================
+   ATELIER · GENERATIVE × EDITORIAL — تبسيط رشيق للشاشات الصغيرة
+   ========================================================== */
+
+/* ≤968px: السكك والفهارس الضخمة تزاحم المحتوى → تُخفى */
+@media (max-width: 968px) {
+    .ed-rail,
+    .ed-index,
+    .ed-cropmarks {
+        display: none;
+    }
+}
+
+/* ≤768px: لا كانفس على الجوال (بوابة gen-art.js) — نخفي أوعيتها الفارغة
+   والطباعة التحريرية تتقلّص بلطف */
+@media (max-width: 768px) {
+    .ed-ghost,
+    .gen-margin {
+        display: none;
+    }
+
+    .ed-divider {
+        padding-inline: var(--spacing-md);
+    }
+
+    .article-body > p:first-of-type {
+        font-size: 1.1em;
+        line-height: 1.95;
+    }
+}

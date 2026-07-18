@@ -1983,3 +1983,195 @@ body > * { position: relative; z-index: 1; }
     color: var(--accent-gold);
     background: rgba(var(--accent-gold-rgb), 0.08);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ATELIER · GENERATIVE × EDITORIAL  (فن توليدي × إخراج سويسري RTL)
+   طبقة إثرائية مُلحقة: لا حذف، لا إعادة تسمية، كل الألوان عبر متغيرات.
+   للتراجع: احذف هذه الكتلة المعلّمة كاملة.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* اللكنة التحريرية القرمزية — ترقيم وفواصل وخطوط توليدية فقط، لا مساحات */
+    --editorial-vermilion: #e2472e;
+    --editorial-vermilion-rgb: 226, 71, 46;
+    --vermilion-dim: rgba(226, 71, 46, 0.55);
+    --vermilion-faint: rgba(226, 71, 46, 0.16);
+
+    /* أوزان المساطر السويسرية (شعري مقابل جريء) */
+    --rule-bold: 3px;
+
+    /* مقاسات الطباعة التحريرية */
+    --ed-index-size: clamp(5.5rem, 12vw, 10rem);
+    --ed-ghost-size: clamp(6rem, 16vw, 12rem);
+}
+
+/* ── قاعدة الكانفس التوليدي: زخرفة خالصة، لا يعترض النقر أبداً ── */
+.gen-host { position: relative; }
+.gen-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    z-index: 0;
+}
+/* أمان تراصف: الأقسام المضيفة فوق كانفسها */
+.about, .skills, .contact, .footer { position: relative; }
+.footer .container { position: relative; z-index: 1; }
+
+/* ── أثر القراءة الهامشي (صفحات التفاصيل) — يظهر فقط حين يتسع الهامش ── */
+.gen-margin {
+    position: fixed;
+    left: clamp(14px, 2vw, 44px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 44vh;
+    pointer-events: none;
+    z-index: 60;
+    opacity: 0.9;
+}
+.gen-margin canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+@media (max-width: 1379px) {
+    .gen-margin { display: none; }
+}
+
+/* ── الفهرس التحريري الضخم: رقم القسم كجسم غرافيكي (RTL: مرساة يمين) ── */
+.ed-index {
+    position: absolute;
+    top: clamp(1.5rem, 4vw, 3.5rem);
+    right: clamp(1rem, 4vw, 4rem);
+    z-index: 0;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--ed-index-size);
+    line-height: 0.85;
+    color: rgba(var(--editorial-vermilion-rgb), 0.05);
+    -webkit-text-stroke: 1px rgba(var(--editorial-vermilion-rgb), 0.28);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ── السكة الرأسية الجانبية: نص مُدوَّر شعري + قصبة (تكرار زخرفي لنص موجود) ── */
+.ed-rail {
+    position: absolute;
+    top: 50%;
+    right: clamp(0.5rem, 1.4vw, 1.6rem);
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    color: rgba(var(--parchment-rgb), 0.38);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+.ed-rail::before {
+    content: '';
+    inline-size: 64px;
+    block-size: var(--line-hair);
+    background: linear-gradient(to bottom, transparent, var(--gold-line));
+}
+.ed-rail .ed-rail-num {
+    color: var(--editorial-vermilion);
+    opacity: 0.85;
+    letter-spacing: 0.2em;
+}
+
+/* ── الفاصل التحريري: [مسطرة جريئة قرمزية]─[خط شعري ذهبي] ── */
+.ed-divider {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+.ed-divider::before {
+    content: '';
+    order: 1;
+    flex: none;
+    width: 34px;
+    height: var(--rule-bold);
+    background: var(--editorial-vermilion);
+    opacity: 0.85;
+}
+.ed-divider::after {
+    content: '';
+    order: 2;
+    flex: 1;
+    height: var(--line-hair);
+    background: linear-gradient(to left, var(--gold-line), var(--gold-faint) 60%, transparent);
+}
+
+/* ── علامات ضبط سويسرية في زوايا الهيرو (registration marks) ── */
+.ed-cropmarks {
+    position: absolute;
+    inset: clamp(1rem, 3vw, 2.2rem);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+    background-image:
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion)),
+        linear-gradient(var(--editorial-vermilion), var(--editorial-vermilion));
+    background-repeat: no-repeat;
+    background-size: 14px 1px, 1px 14px, 14px 1px, 1px 14px,
+                     14px 1px, 1px 14px, 14px 1px, 1px 14px;
+    background-position:
+        top left, top left,
+        top right, top right,
+        bottom left, bottom left,
+        bottom right, bottom right;
+}
+
+/* ── العنوان الشبح: تكرار زخرفي ضخم مُخطّط خلف عناوين صفحات القوائم ── */
+.page-header { overflow: hidden; }
+.ed-ghost {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -54%);
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--ed-ghost-size);
+    line-height: 1;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(var(--accent-gold-rgb), 0.10);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+.page-title { position: relative; z-index: 1; }
+
+/* ── لمسات قرمزية منضبطة (ترقيم لا فيض) ── */
+/* شرطة قرمزية تحت رقم المرحلة في بطاقات المهارات */
+.stage-number::after {
+    content: '';
+    display: block;
+    width: 26px;
+    height: 2px;
+    margin-top: 5px;
+    background: var(--editorial-vermilion);
+    opacity: 0.75;
+}
+/* الفلتر النشط: قاعدة قرمزية سفلية (فهرس تحريري) */
+.filter-btn.active {
+    box-shadow: inset 0 calc(var(--rule-bold) * -1) 0 var(--vermilion-dim);
+}
