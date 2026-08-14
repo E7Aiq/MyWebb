@@ -19,15 +19,66 @@
     // ── قائمة الجوال ──────────────────────────────────────────────────────
     const mobileToggle = document.getElementById('mobileToggle');
     const navLinks = document.getElementById('navLinks');
+    const MOBILE_NAV_MQ = window.matchMedia('(max-width: 48rem)');
 
     if (mobileToggle && navLinks) {
+        let navLinksHome = null;
+        let navLinksBefore = null;
+        let lockedScrollY = 0;
+
+        // fixed داخل navbar + backdrop-filter يُقصّ اللوح في Safari الحقيقي
+        const mountNavOverlay = () => {
+            if (!MOBILE_NAV_MQ.matches || navLinks.parentElement === document.body) return;
+            navLinksHome = navLinks.parentElement;
+            navLinksBefore = navLinks.nextElementSibling;
+            document.body.appendChild(navLinks);
+        };
+
+        const unmountNavOverlay = () => {
+            if (!navLinksHome || navLinks.parentElement !== document.body) return;
+            navLinksHome.insertBefore(navLinks, navLinksBefore);
+        };
+
+        const lockPageScroll = () => {
+            lockedScrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${lockedScrollY}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.width = '100%';
+        };
+
+        const unlockPageScroll = () => {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.width = '';
+            window.scrollTo(0, lockedScrollY);
+        };
+
         const setOpen = (open) => {
             mobileToggle.classList.toggle('active', open);
             navLinks.classList.toggle('active', open);
             document.documentElement.classList.toggle('nav-open', open);
             mobileToggle.setAttribute('aria-expanded', String(open));
-            if (open) navLinks.scrollTop = 0;
+            if (open) {
+                mountNavOverlay();
+                navLinks.scrollTop = 0;
+                lockPageScroll();
+            } else {
+                unlockPageScroll();
+            }
         };
+
+        const syncNavOverlay = () => {
+            if (MOBILE_NAV_MQ.matches) mountNavOverlay();
+            else {
+                if (navLinks.classList.contains('active')) setOpen(false);
+                unmountNavOverlay();
+            }
+        };
+
         mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.setAttribute('aria-controls', 'navLinks');
 
@@ -50,6 +101,9 @@
                 mobileToggle.focus();
             }
         });
+
+        syncNavOverlay();
+        MOBILE_NAV_MQ.addEventListener('change', syncNavOverlay);
     }
 
     // ── إبراز الرابط النشط ────────────────────────────────────────────────

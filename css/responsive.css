@@ -14,6 +14,15 @@
 /* ── ≤48rem (768px): قائمة الجوال ─────────────────────────────────────── */
 @media (max-width: 48rem){
 
+  /* backdrop-filter على النافبار يجعل position:fixed للقائمة نسبياً
+     لارتفاع الشريط (~4rem) في Safari الحقيقي — يُقصّ اللوح ويحتاج تمريراً
+     داخلياً. خلفية صلبة على الجوال بدل الزجاج. */
+  .navbar{
+    background: var(--bg-canvas);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   .mobile-toggle{
     display: flex;
     align-items: center;
@@ -28,48 +37,48 @@
   .mobile-toggle.active span:nth-child(2){ opacity: 0; }
   .mobile-toggle.active span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
 
-  /* لوح منزلق يبدأ تحت الشريط العلوي فيبقى الشعار ظاهراً، وخلفيّته صلبة لا
-     زجاجية كي لا يظهر محتوى الصفحة خلفه — كان زجاج الـ٧٠٪ يكشف الهيرو
-     فتبدو القائمة مكسورة ومزدحمة. قائمة عمودية من الأعلى بفواصل رفيعة. */
+  /* لوح كامل الشاشة: dvh/svh + safe-area — لا inset:0 مع 100vh (يُقصّ في
+     Safari). يُنقل إلى body من main.js ليتخطّى أي containing block متبقٍ.
+     blur/dim للصفحة خلفه؛ البنود الأربعة تتوسّط بلا تمرير داخلي. */
   .nav-links{
     position: fixed;
-    inset: 0;
+    inset-block-start: 0;
+    inset-inline: 0;
+    inline-size: 100%;
+    block-size: 100svh;
+    max-block-size: 100svh;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
     z-index: 1050;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
     gap: var(--s-2);
-    padding:
-      calc(var(--nav-h) + env(safe-area-inset-top) + var(--s-4))
-      var(--gutter)
-      calc(var(--s-12) + env(safe-area-inset-bottom));
-    background: color-mix(in oklab, var(--bg-canvas) 52%, transparent);
+    padding-inline: var(--gutter);
+    padding-block:
+      calc(env(safe-area-inset-top, 0px) + var(--s-4))
+      calc(env(safe-area-inset-bottom, 0px) + var(--s-4));
+    background: color-mix(in oklab, var(--bg-canvas) 58%, transparent);
     -webkit-backdrop-filter: saturate(180%) blur(24px);
     backdrop-filter: saturate(180%) blur(24px);
     box-shadow: var(--shadow-2);
     transform: translateX(100%);      /* RTL: يدخل من اليمين */
     visibility: hidden;
-    max-block-size: 100dvh;
-    max-block-size: 100svh;
     transition:
       transform var(--dur-mid) var(--ease-out),
       visibility var(--dur-mid) linear;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
   .nav-links.active{ transform: translateX(0); visibility: visible; }
 
-  html.nav-open,
+  html.nav-open{
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   html.nav-open body{
     overflow: hidden;
-  }
-
-  /* الشريط العلوي يصير صلباً عند فتح القائمة فلا يتسرّب الهيرو من خلفه */
-  .navbar:has(.nav-links.active){
-    background: var(--bg-canvas);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+    overscroll-behavior: none;
   }
 
   .nav-links li{ inline-size: 100%; }
