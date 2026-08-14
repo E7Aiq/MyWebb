@@ -413,54 +413,6 @@ p:lang(en), li:lang(en), .article-body:lang(en){ letter-spacing: 0; }
 .lang-toggle:active{ transform: scale(0.94); transition-duration: var(--dur-fast); }
 
 
-/* ── الوضع الداكن: تُعاد ربط البدائيات فقط، والدلالات لا تتغيّر ────────────
-   الموقع فاتح لكل زائر مهما كان تفضيل النظام؛ الكتلة خلف سمة يدوية على
-   <html> فقط. لا prefers-color-scheme في الملف. */
-[data-theme="dark"]{
-  --n-1:  oklch(17.8% 0.007 265);   /* #101216 — أرضية الليل */
-  --n-2:  oklch(20.8% 0.008 265);
-  --n-3:  oklch(24.2% 0.009 265);
-  --n-4:  oklch(27.8% 0.010 265);
-  --n-5:  oklch(31.5% 0.010 265);
-  --n-6:  oklch(35.5% 0.011 265);
-  --n-7:  oklch(43.0% 0.012 265);
-  --n-8:  oklch(56.0% 0.013 265);
-  --n-9:  oklch(62.0% 0.013 265);
-  --n-10: oklch(68.0% 0.012 265);
-  --n-11: oklch(73.5% 0.011 265);
-  --n-12: oklch(94.5% 0.004  95);
-
-  --a-2:  oklch(22.0% 0.030 268);
-  --a-3:  oklch(25.5% 0.045 268);
-  --a-4:  oklch(29.0% 0.058 268);
-  --a-5:  oklch(33.0% 0.070 268);
-  --a-6:  oklch(40.0% 0.085 268);
-  --a-7:  oklch(50.0% 0.100 270);
-  --a-8:  oklch(62.0% 0.110 272);
-  --a-9:  oklch(72.7% 0.104 274);   /* #93A9F2 */
-  --a-10: oklch(79.0% 0.090 274);
-  --a-11: oklch(78.0% 0.095 274);
-  --a-12: oklch(92.0% 0.040 274);
-
-  --text-on-solid: var(--n-1);
-  --bg-glass: color-mix(in oklab, var(--n-1) 70%, transparent);
-
-  /* الظلّ في الوضع الداكن أسود لا مصبوغ — الصبغ على أرضية داكنة يُقرأ ضباباً */
-  --shadow-l: 0%;
-  --shadow-chroma: 0;
-  --shadow-1:
-    0 0 0 1px oklch(100% 0 0 / .06),
-    0 1px 2px -1px oklch(0% 0 0 / .40),
-    0 6px 12px -8px oklch(0% 0 0 / .50);
-  --shadow-2:
-    0 0 0 1px oklch(100% 0 0 / .07),
-    0 2px 4px -2px oklch(0% 0 0 / .45),
-    0 18px 32px -18px oklch(0% 0 0 / .60);
-  --shadow-glass: 0 1px 0 oklch(100% 0 0 / .07);
-
-  color-scheme: dark;
-}
-
 
 /* ============================================================================
    3. تصفير وأساسيات
@@ -825,23 +777,6 @@ time, .article-read-time, .article-card-date, .project-card-date,
       0 18px 32px -18px rgba(22,24,28,.26);
     --shadow-glass: 0 1px 0 rgba(22,24,28,.08);
   }
-  [data-theme="dark"]{
-    --n-1:#101216; --n-2:#16181C; --n-3:#1E2024; --n-4:#26282D;
-    --n-5:#2F3237; --n-6:#393C42; --n-7:#4D5057; --n-8:#71747C;
-    --n-9:#82868E; --n-10:#9598A0; --n-11:#A6A9B0; --n-12:#EDEDEA;
-    --a-2:#151A29; --a-3:#192239; --a-4:#1F2A48; --a-5:#263359;
-    --a-6:#344575; --a-7:#4D5F9C; --a-8:#6F81C8; --a-9:#93A9F2;
-    --a-10:#A8B7F5; --a-11:#A4B3F5; --a-12:#DCE3FF;
-    --shadow-1:
-      0 0 0 1px rgba(255,255,255,.06),
-      0 1px 2px -1px rgba(0,0,0,.40),
-      0 6px 12px -8px rgba(0,0,0,.50);
-    --shadow-2:
-      0 0 0 1px rgba(255,255,255,.07),
-      0 2px 4px -2px rgba(0,0,0,.45),
-      0 18px 32px -18px rgba(0,0,0,.60);
-    --shadow-glass: 0 1px 0 rgba(255,255,255,.07);
-  }
   .brand-dhura{
     --accent-text:#AF2E13; --solid:#B6351B; --solid-hover:#9F2206;
     --accent-line:#FFB5A5; --accent-quiet:#FFE9E3;
@@ -856,7 +791,6 @@ time, .article-read-time, .article-card-date, .project-card-date,
    ولا تعرف color-mix)، فيُحرَس الزجاج على حدة بلون شبه صلب بديل. */
 @supports not (color: color-mix(in oklab, red, blue)){
   :root{ --bg-glass: rgba(249,248,246,.72); }
-  [data-theme="dark"]{ --bg-glass: rgba(16,18,22,.72); }
 }
 
 /* رمز القسم داخل الزرّ (شعار مفرّغ صغير يسبق الاسم) */
