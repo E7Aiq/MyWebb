@@ -33,23 +33,29 @@
      فتبدو القائمة مكسورة ومزدحمة. قائمة عمودية من الأعلى بفواصل رفيعة. */
   .nav-links{
     position: fixed;
-    inset: var(--nav-h) 0 0 0;
+    inset: 0;
     z-index: 1050;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
     gap: var(--s-2);
-    padding: clamp(2rem, 10vh, 4.5rem) var(--gutter) var(--s-16);
+    padding:
+      calc(var(--nav-h) + env(safe-area-inset-top) + var(--s-4))
+      var(--gutter)
+      calc(var(--s-12) + env(safe-area-inset-bottom));
     background: color-mix(in oklab, var(--bg-canvas) 52%, transparent);
     -webkit-backdrop-filter: saturate(180%) blur(24px);
     backdrop-filter: saturate(180%) blur(24px);
     box-shadow: var(--shadow-2);
     transform: translateX(100%);      /* RTL: يدخل من اليمين */
     visibility: hidden;
+    max-block-size: 100dvh;
     transition:
       transform var(--dur-mid) var(--ease-out),
       visibility var(--dur-mid) linear;
-    overflow: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
   .nav-links.active{ transform: translateX(0); visibility: visible; }
 
@@ -73,10 +79,10 @@
   .nav-link{
     position: relative;
     justify-content: flex-start;
-    min-block-size: 4rem;
+    min-block-size: 3.5rem;
     padding-inline: var(--s-4);
     font-family: var(--font-sans);
-    font-size: clamp(1.5rem, 4.6vw, 1.75rem);
+    font-size: clamp(1.35rem, 4.1vw, 1.6rem);
     font-weight: 700;
     text-align: center;
     color: var(--text);
