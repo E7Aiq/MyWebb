@@ -24,7 +24,9 @@
         const setOpen = (open) => {
             mobileToggle.classList.toggle('active', open);
             navLinks.classList.toggle('active', open);
+            document.documentElement.classList.toggle('nav-open', open);
             mobileToggle.setAttribute('aria-expanded', String(open));
+            if (open) navLinks.scrollTop = 0;
         };
         mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.setAttribute('aria-controls', 'navLinks');
