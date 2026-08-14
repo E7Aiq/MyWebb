@@ -434,6 +434,7 @@ body{
   font-size: var(--t-ui);
   line-height: var(--lh-ui);
   min-block-size: 100vh;
+  min-block-size: 100svh;
   /* ملاحظة: لا -webkit-font-smoothing: antialiased في أي مكان — يُنحّف
      الحروف فتضعف النقاط والتشكيل على الشاشات غير عالية الكثافة. */
 }

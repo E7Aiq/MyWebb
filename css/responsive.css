@@ -50,6 +50,7 @@
     transform: translateX(100%);      /* RTL: يدخل من اليمين */
     visibility: hidden;
     max-block-size: 100dvh;
+    max-block-size: 100svh;
     transition:
       transform var(--dur-mid) var(--ease-out),
       visibility var(--dur-mid) linear;
