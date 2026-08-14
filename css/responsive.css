@@ -28,19 +28,20 @@
   .mobile-toggle.active span:nth-child(2){ opacity: 0; }
   .mobile-toggle.active span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
 
-  /* لوح منزلق — مادة زجاجية، لا لون صلب */
+  /* لوح منزلق يبدأ تحت الشريط العلوي فيبقى الشعار ظاهراً، وخلفيّته صلبة لا
+     زجاجية كي لا يظهر محتوى الصفحة خلفه — كان زجاج الـ٧٠٪ يكشف الهيرو
+     فتبدو القائمة مكسورة ومزدحمة. قائمة عمودية من الأعلى بفواصل رفيعة. */
   .nav-links{
     position: fixed;
-    inset: 0;
+    inset: var(--nav-h) 0 0 0;
     z-index: 1050;
     flex-direction: column;
     align-items: stretch;
-    justify-content: center;
-    gap: var(--s-2);
-    padding: var(--nav-h) var(--gutter) var(--s-16);
-    background: var(--bg-glass);
-    -webkit-backdrop-filter: saturate(180%) blur(24px);
-    backdrop-filter: saturate(180%) blur(24px);
+    justify-content: flex-start;
+    gap: 0;
+    padding: var(--s-3) var(--gutter) var(--s-16);
+    background: var(--bg-canvas);
+    box-shadow: var(--shadow-2);
     transform: translateX(100%);      /* RTL: يدخل من اليمين */
     visibility: hidden;
     transition:
@@ -48,34 +49,42 @@
       visibility var(--dur-mid) linear;
     overflow-y: auto;
   }
-  @supports not (backdrop-filter: blur(1px)){
-    .nav-links{ background: var(--bg-canvas); }
-  }
-
   .nav-links.active{ transform: translateX(0); visibility: visible; }
 
-  .nav-links li{ inline-size: 100%; }
+  /* الشريط العلوي يصير صلباً عند فتح القائمة فلا يتسرّب الهيرو من خلفه */
+  .navbar:has(.nav-links.active){
+    background: var(--bg-canvas);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 
-  /* 24px — دون عتبة الـ28px، والعنصر يُنقر لا يُقرأ. الدور Sans لا Display
-     مهما كبر المقاس: كان هذا الموضع يقلب دور الخط على الجوال وحده. */
+  .nav-links li{ inline-size: 100%; }
+  /* فاصل رفيع بين البنود يمنح القائمة إيقاع «قائمة» منظّمة لا كتلاً عائمة */
+  .nav-links li + li{ border-block-start: 1px solid var(--border-subtle); }
+
+  /* عنصر يُنقر لا يُقرأ: Sans لا Display مهما كبر المقاس. */
   .nav-link{
+    position: relative;
     justify-content: flex-start;
-    min-block-size: 3.25rem;
-    padding-inline: var(--s-2);
+    min-block-size: 3.5rem;
+    padding-inline: var(--s-3);
     font-family: var(--font-sans);
     font-size: var(--t-h3);
     font-weight: 700;
     color: var(--text);
   }
-  /* الخط السفلي لا معنى له تحت عنصر بعرض الشاشة في لوح عمودي */
-  .nav-link::after{ display: none; }
-  .nav-link.active{ color: var(--accent-text); }
+  .nav-link::after{ display: none; }   /* لا خطّ سفليّ في لوح عمودي */
 
-  /* زرّ الإغلاق يستقرّ أعلى بداية السطر (RTL: اليسار) فوق اللوح */
-  .mobile-toggle.active{
-    position: fixed;
-    inset-block-start: calc((var(--nav-h) - 2.75rem) / 2);
-    inset-inline-end: var(--gutter);
+  /* الحالة النشطة: لون اللكنة + شريط رفيع عند بداية السطر (يمين في RTL) */
+  .nav-link.active{ color: var(--accent-text); }
+  .nav-link.active::before{
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block: 0.9rem;
+    inline-size: 3px;
+    border-radius: 2px;
+    background: var(--accent-line);
   }
 
   /* بلا جافاسكربت لا يعمل زرّ الفتح، فيبقى اللوح مغلقاً إلى الأبد ولا سبيل

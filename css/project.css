@@ -99,30 +99,21 @@
   padding-block: var(--s-12) var(--s-24);
 }
 
-/* ── شريط الفلاتر: زجاج ملتصق ─────────────────────────────────────────────
-   الطبقة الثانية من ثلاث تستحق backdrop-filter فعلاً: مضمار يبقى ظاهراً
-   أثناء التمرير وتمرّ البطاقات من تحته. التمييز يأتي بالسطح والارتفاع لا
-   بالإطار: مضمار غائر، والقطعة النشطة سطح مرتفع بظلّ خفيف وحبر داكن.
-   ثلاث إشارات متزامنة (تعبئة + ارتفاع + لون النص) فلا يكون النشط تخميناً. */
+/* ── شريط الفلاتر: مضمار ثابت في مكانه ────────────────────────────────────
+   ثابت (static) لا ملتصق (sticky): يمرّ مع الصفحة أثناء التمرير ولا يبقى
+   معلّقاً فوق البطاقات فيغطّيها. التمييز يأتي بالسطح لا بالإطار: مضمار غائر
+   مصمت، والقطعة النشطة سطح مرتفع بظلّ خفيف وحبر داكن — ثلاث إشارات متزامنة
+   (تعبئة + ارتفاع + لون النص) فلا يكون النشط تخميناً. */
 .filters{
-  position: sticky;
-  inset-block-start: calc(var(--nav-h) + var(--s-2));
-  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-1);
   padding: var(--s-1);
-  background: var(--bg-glass);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: var(--shadow-1);
+  background: var(--bg-element);
   border-radius: var(--r-card);
   margin-block-end: var(--s-12);
   /* يلتفّ بلطف عند 320px بدل أن يصير شريط تمرير */
   max-inline-size: 100%;
-}
-@supports not (backdrop-filter: blur(1px)){
-  .filters{ background: var(--bg-element); }
 }
 
 /* حشو المضمار 4px داخل نصف قطر 16px ⇒ نصف القطر الداخلي 12px. متحدّ المركز. */
