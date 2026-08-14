@@ -1,86 +1,83 @@
-// Intersection Observer for Scroll Animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+/**
+ * Scroll reveal.
+ *
+ * يضيف فئة «تم الكشف» فقط — لا يُخفي شيئاً أبداً. الإخفاء يعيش كلّه في
+ * animations.css خلف بوابتَي .js و prefers-reduced-motion، فإن لم يعمل هذا
+ * الملف بقي كل المحتوى ظاهراً (انظر عقد «CSS لا يُخفي المحتوى»).
+ *
+ * أُزيل: تعتيم <body> عند التحميل (كان يومض صفحة فارغة على الاتصالات
+ * البطيئة)، وتتابع .skill-card (لا وجود لهذه الفئة في أي صفحة).
+ */
 
-const animateOnScroll = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-            
-            // For staggered animations
-            if (entry.target.classList.contains('stagger-parent')) {
-                const children = entry.target.querySelectorAll('.stagger-child');
-                children.forEach((child, index) => {
-                    setTimeout(() => {
-                        child.classList.add('animate');
-                    }, index * 100);
-                });
-            }
-        }
-    });
-}, observerOptions);
+(function () {
+    'use strict';
 
-// Observe all elements with animation classes
-function initScrollAnimations() {
-    const animatedElements = document.querySelectorAll('.fade-in, .slide-up, .slide-left, .slide-right, .scale-in');
-    
-    animatedElements.forEach(element => {
-        animateOnScroll.observe(element);
-    });
-}
+    const SELECTOR = '.rv, .fade-in, .slide-up, .slide-left, .slide-right, .scale-in';
+    // الأب المتتابع يُراقَب أيضاً وإن لم يحمل فئة كشف: أبناؤه يُكشفون منه
+    // وحده، فلو لم يُراقَب بقيت البطاقات مخفيّة (بالضبط كعلّة .slide-up).
+    const OBSERVE = SELECTOR + ', .stagger-parent';
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Stagger animation for multiple elements
-function staggerAnimation(selector, delay = 100) {
-    const elements = document.querySelectorAll(selector);
-    
-    elements.forEach((element, index) => {
-        element.style.animationDelay = `${index * delay}ms`;
-    });
-}
+    document.addEventListener('DOMContentLoaded', () => {
+        if (prefersReduced) return;   // CSS يُبقيها ظاهرة أصلاً
 
-// Apply stagger to skill cards and project cards
-document.addEventListener('DOMContentLoaded', () => {
-    initScrollAnimations();
-    
-    // Stagger skill cards (70ms — ضمن نطاق 30–80ms؛ 150ms يبدو بطيئاً)
-    staggerAnimation('.skill-card', 70);
-    
-    // Observe project cards when they're loaded
-    const projectObserver = new MutationObserver(() => {
-        staggerAnimation('.project-card', 70);
-        const projectCards = document.querySelectorAll('.project-card');
-        projectCards.forEach(card => {
-            if (!card.classList.contains('observed')) {
-                animateOnScroll.observe(card);
-                card.classList.add('observed');
-            }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('animate');
+
+                if (entry.target.classList.contains('stagger-parent')) {
+                    entry.target.querySelectorAll('.stagger-child').forEach((child, i) => {
+                        setTimeout(() => child.classList.add('animate'), i * 70);
+                    });
+                }
+                observer.unobserve(entry.target);
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        // ما هو ظاهر أصلاً عند التركيب يُكشف فوراً بلا انتظار المراقب:
+        // المحتوى فوق حدّ الشاشة يجب ألا ينتظر دورة IntersectionObserver.
+        const inViewport = (el) => {
+            const r = el.getBoundingClientRect();
+            return r.top < window.innerHeight && r.bottom > 0;
+        };
+
+        const observe = (root) => {
+            root.querySelectorAll(OBSERVE).forEach((el) => {
+                if (el.classList.contains('observed')) return;
+                el.classList.add('observed');
+                if (inViewport(el)) {
+                    el.classList.add('animate');
+                    // الأب الظاهر يكشف أبناءه فوراً كذلك
+                    if (el.classList.contains('stagger-parent')) {
+                        el.querySelectorAll('.stagger-child').forEach((c) => c.classList.add('animate'));
+                    }
+                    return;
+                }
+                observer.observe(el);
+            });
+        };
+
+        observe(document);
+
+        // شبكة أمان: لو لم يُطلق المراقب إطلاقاً (تبويب في الخلفية، أو بيئة
+        // تُعلّق rAF/IO، أو خطأ في مكان آخر) يظهر كل شيء بعد مهلة قصيرة.
+        // مبدأ العقد: قد نخسر الحركة، ولا نخسر المحتوى أبداً.
+        //
+        // لا بدّ أن تشمل .stagger-child أيضاً: هؤلاء يُكشفون من الأب لا
+        // بالمراقبة المباشرة، فلو لم يتقاطع الأب بقيت البطاقات الأربع في
+        // «رحلة البيانات» مخفيّة إلى الأبد — وهي نفس علّة .slide-up القديمة.
+        setTimeout(() => {
+            document.querySelectorAll(SELECTOR + ', .stagger-child')
+                .forEach((el) => el.classList.add('animate'));
+        }, 1500);
+
+        // البطاقات تُبنى بعد جلب JSON — راقب الأوعية الديناميكية
+        ['projectsGrid', 'featuredProjectsGrid', 'articles-grid'].forEach((id) => {
+            const host = document.getElementById(id);
+            if (!host) return;
+            new MutationObserver(() => observe(host))
+                .observe(host, { childList: true, subtree: true });
         });
     });
-    
-    const projectsGrid = document.getElementById('projectsGrid') || document.getElementById('featuredProjectsGrid');
-    if (projectsGrid) {
-        projectObserver.observe(projectsGrid, {
-            childList: true,
-            subtree: true
-        });
-    }
-});
-
-// (أُزيل بارالاكس التمرير: كان غير مُقيّد بـ rAF ويتعارض مع أنيميشن
-//  float على نفس العنصر — العمق الآن يأتي من الكانفس + float + meshPulse)
-
-// Add entrance animation to page
-document.addEventListener('DOMContentLoaded', () => {
-    // احترام تفضيل تقليل الحركة: لا تعتيم للصفحة إطلاقاً
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    document.body.style.opacity = '0';
-
-    setTimeout(() => {
-        // ease-out لا ease-in: ease-in يؤخّر اللحظة التي يراقبها المستخدم
-        document.body.style.transition = 'opacity 0.4s var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1))';
-        document.body.style.opacity = '1';
-    }, 100);
-});
+})();

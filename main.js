@@ -1,123 +1,113 @@
-// Mobile Navigation Toggle
-const mobileToggle = document.getElementById('mobileToggle');
-const navLinks = document.getElementById('navLinks');
+/**
+ * Shared chrome: mobile nav, active link, smooth scroll, nav scroll state.
+ * لا منطق بيانات هنا إطلاقاً.
+ */
 
-if (mobileToggle) {
-    mobileToggle.addEventListener('click', () => {
-        mobileToggle.classList.toggle('active');
-        navLinks.classList.toggle('active');
-    });
+(function () {
+    'use strict';
 
-    // Close mobile menu when clicking a link
-    const links = navLinks.querySelectorAll('.nav-link');
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            mobileToggle.classList.remove('active');
-            navLinks.classList.remove('active');
+    // ارتفاع النافبار من مصدر واحد (--nav-h) بدل 80px مكرّرة في JS وCSS
+    function navHeight() {
+        const v = getComputedStyle(document.documentElement).getPropertyValue('--nav-h');
+        const px = parseFloat(v);
+        if (!px) return 64;
+        return v.trim().endsWith('rem')
+            ? px * parseFloat(getComputedStyle(document.documentElement).fontSize)
+            : px;
+    }
+
+    // ── قائمة الجوال ──────────────────────────────────────────────────────
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (mobileToggle && navLinks) {
+        const setOpen = (open) => {
+            mobileToggle.classList.toggle('active', open);
+            navLinks.classList.toggle('active', open);
+            mobileToggle.setAttribute('aria-expanded', String(open));
+        };
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.setAttribute('aria-controls', 'navLinks');
+
+        mobileToggle.addEventListener('click', () => {
+            setOpen(!navLinks.classList.contains('active'));
+        });
+
+        navLinks.querySelectorAll('.nav-link').forEach((link) => {
+            link.addEventListener('click', () => setOpen(false));
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target)) setOpen(false);
+        });
+
+        // Esc يغلق القائمة — سلوك متوقّع لأي overlay
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                setOpen(false);
+                mobileToggle.focus();
+            }
+        });
+    }
+
+    // ── إبراز الرابط النشط ────────────────────────────────────────────────
+    // صفحات التفاصيل تنتمي إلى قسمها: article.html تحت «المقالات»،
+    // و project-details.html تحت «المشاريع». المطابقة بالاسم وحدها كانت
+    // تترك هاتين الصفحتين بلا رابط نشط إطلاقاً.
+    const SECTION_OF = {
+        'article.html': 'articles.html',
+        'project-details.html': 'projects.html'
+    };
+
+    function setActiveNavLink() {
+        let current = window.location.pathname.split('/').pop() || 'index.html';
+        current = SECTION_OF[current] || current;
+
+        document.querySelectorAll('.nav-link').forEach((link) => {
+            const href = (link.getAttribute('href') || '').split('#')[0];
+            const isActive = href === current;
+            link.classList.toggle('active', isActive);
+            if (isActive) link.setAttribute('aria-current', 'page');
+            else link.removeAttribute('aria-current');
+        });
+    }
+
+    // ── تمرير سلس للمراسي ─────────────────────────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (!href || href === '#') return;
+
+            const target = document.querySelector(href);
+            if (!target) return;
+
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - navHeight();
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
         });
     });
 
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target)) {
-            mobileToggle.classList.remove('active');
-            navLinks.classList.remove('active');
-        }
-    });
-}
-
-// Active Navigation Link Highlighting
-function setActiveNavLink() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinksElements = document.querySelectorAll('.nav-link');
-    
-    navLinksElements.forEach(link => {
-        link.classList.remove('active');
-        const linkHref = link.getAttribute('href');
-        
-        if (linkHref === currentPage || 
-            (currentPage === '' && linkHref === 'index.html') ||
-            linkHref.includes(currentPage)) {
-            link.classList.add('active');
-        }
-    });
-}
-
-// Smooth Scroll for Anchor Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        
-        // Skip if href is just "#" or has been changed to a non-anchor URL
-        if (!href || href === '#' || !href.startsWith('#')) return;
-        
-        e.preventDefault();
-        const target = document.querySelector(href);
-        
-        if (target) {
-            const offsetTop = target.offsetTop - 80;
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Navbar Background on Scroll
-const navbar = document.getElementById('navbar');
-let lastScroll = 0;
-
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-    
-    if (currentScroll > 100) {
-        navbar.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
-    } else {
-        navbar.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-    }
-    
-    lastScroll = currentScroll;
-});
-
-// Initialize on Page Load
-document.addEventListener('DOMContentLoaded', () => {
-    setActiveNavLink();
-    loadFeaturedProjects(); // Ensure projects load correctly
-});
-
-// Utility: Debounce Function
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
+    // ── حالة النافبار عند التمرير ─────────────────────────────────────────
+    // فئة تُبدَّل مع rAF ومستمع passive — بدل ضبط box-shadow سطرياً في كل
+    // حدث تمرير (كان يتجاوز الـ CSS ويعمل بلا تقييد).
+    const navbar = document.getElementById('navbar');
+    if (navbar) {
+        let ticking = false;
+        const update = () => {
+            ticking = false;
+            navbar.classList.toggle('is-scrolled', window.scrollY > 8);
         };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Handle External Links
-document.querySelectorAll('a[target="_blank"]').forEach(link => {
-    if (!link.hasAttribute('rel')) {
-        link.setAttribute('rel', 'noopener noreferrer');
+        window.addEventListener('scroll', () => {
+            if (!ticking) { ticking = true; requestAnimationFrame(update); }
+        }, { passive: true });
+        update();
     }
-});
 
-// Fix for infinite loading in projects section
-function loadFeaturedProjects() {
-    const featuredProjectsGrid = document.getElementById('featuredProjectsGrid');
+    // ── روابط خارجية آمنة ─────────────────────────────────────────────────
+    document.querySelectorAll('a[target="_blank"]').forEach((link) => {
+        if (!link.hasAttribute('rel')) link.setAttribute('rel', 'noopener noreferrer');
+    });
 
-    if (featuredProjectsGrid) {
-        // Simulate loading projects
-        setTimeout(() => {
-            featuredProjectsGrid.innerHTML = `
-                <div class="project-card">مشروع 1</div>
-                <div class="project-card">مشروع 2</div>
-                <div class="project-card">مشروع 3</div>
-            `;
-        }, 1000); // Simulate a 1-second delay for loading
-    }
-}
+    document.addEventListener('DOMContentLoaded', setActiveNavLink);
+})();

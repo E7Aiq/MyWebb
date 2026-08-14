@@ -3,89 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مقال في تحليل البيانات - محمد الزبيدي">
-    <title>المقال | محمد الزبيدي</title>
-    
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="مقال في تحليل البيانات - محمد الزبيدي" data-en-content="An article on data analysis — Mohammed Alzobaidi">
+    <title data-en="Article | Mohammed Alzobaidi">المقال | محمد الزبيدي</title>
+
+    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="js/view-transitions.js?v=r27"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r4">
-    <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/article.css?v=r3">
-    <link rel="stylesheet" href="css/responsive.css?v=r4">
-    
+    <link rel="stylesheet" href="css/style.css?v=r27">
+    <link rel="stylesheet" href="css/animations.css?v=r27">
+    <link rel="stylesheet" href="css/article.css?v=r27">
+    <link rel="stylesheet" href="css/responsive.css?v=r27">
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="article">
     <meta property="og:locale" content="ar_SA">
     <meta property="og:site_name" content="محمد الزبيدي">
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <a class="skip-link" data-en="Skip to article" href="#article-body">تخطَّ إلى المقال</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">محمد الزبيدي</a>
-            
-            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html" class="nav-link">الرئيسية</a></li>
-                <li><a href="projects.html" class="nav-link">المشاريع</a></li>
-                <li><a href="articles.html" class="nav-link active">المقالات</a></li>
-                <li><a href="index.html#contact" class="nav-link">تواصل</a></li>
-            </ul>
+            <a href="articles.html" class="logo logo-emblem">
+                <img src="assets/logos/ban.png?v=r27" alt="بان" width="406" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura"><span class="swash">ذُرى</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban active"><span class="swash">بان</span></a></li>
+                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="container" id="articleContainer">
-        <!-- صورة الغلاف -->
-        <div class="article-cover-wrapper">
-            <img id="article-cover" class="article-cover" src="" alt="صورة غلاف المقال" style="display: none;">
+    <main id="articleContainer">
+
+        <!-- حالة التحميل. بلا جافاسكربت لا يوجد محتوى أصلاً (المقال يُجلب من
+             data/articles.json)، فيُخفى المؤشّر عبر html:not(.js) وتظهر رسالة
+             noscript بدل دوّارة تدور إلى الأبد. -->
+        <div id="article-loading" class="article-loading">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p data-en="Loading article…">جاري تحميل المقال...</p>
         </div>
-        
-        <!-- رأس المقال -->
-        <header class="article-header">
-            <h1 id="article-title" class="article-title"></h1>
+
+        <noscript>
+            <div class="article-error" style="display:flex">
+                <h2 class="error-title" data-en="This page needs JavaScript">هذه الصفحة تحتاج جافاسكربت</h2>
+                <p class="error-message" data-en="The article text is fetched from a data file when the page opens.">يُجلب نصّ المقال من ملف بيانات عند فتح الصفحة.</p>
+                <a href="articles.html" class="btn btn-primary" data-en="Browse the writing">تصفّح المقالات</a>
+            </div>
+        </noscript>
+
+        <!-- حالة الخطأ -->
+        <div id="article-error" class="article-error" hidden>
+            <h2 class="error-title" data-en="Sorry!">عذراً!</h2>
+            <p class="error-message" data-en="We could not load this article.">لم نتمكن من تحميل المقال.</p>
+            <a href="articles.html" class="btn btn-primary" data-en="Back to writing">العودة للمقالات</a>
+        </div>
+
+        <!-- المقال: شبكة الاختراق — الغلاف والترويسة كاملا العرض،
+             والمتن على مسار content مع اختراق الصور والجداول والأكواد -->
+            <!-- dir="rtl" مثبَّت في الترميز لا في CSS، ولا يمسّه مبدّل اللغة:
+                 هذا المحتوى مصدره data/ وهو عربيّ كما كتبه صاحبه — العنوان
+                 والميتا والمتن. لغة الواجهة تغيّر ما حول المستند لا المستند
+                 نفسه، فيبقى مقروءاً كما نُشر في الوضعين. -->
+        <article class="article breakout" dir="rtl" lang="ar" id="articleShell" hidden>
+
+            <!-- الغلاف: بعرض wide بنصف القطر نفسه الذي تأخذه كل أغلفة الموقع.
+                 كان u-full (حافة إلى حافة) وهو الشكل الوحيد الذي لا يقبل
+                 نصف قطر، فكان يتناقض مع الصورة الشخصية وأغلفة المشاريع. -->
+            <div class="article-cover-wrapper u-wide">
+                <img id="article-cover" class="article-cover" src="" alt="" hidden>
+            </div>
+
+            <!-- الترويسة على مسار القراءة: حافة واحدة تجمع العنوان بالمتن -->
+            <header class="article-header">
+                <h1 id="article-title" class="article-title"></h1>
+            </header>
+
+            <!-- محفوظ في العقد (§4)، وقد صار display:none: المقياس هو ما
+                 يفصل العنوان عن الميتا، لا خطّ رابع. -->
+            <div class="article-rule" aria-hidden="true"></div>
+
+            <!-- الميتا تسكن الهامش ملتصقةً بجانب المتن (≥76rem) -->
             <div class="article-meta">
                 <span id="article-date" class="article-date"></span>
                 <span id="article-category" class="article-category"></span>
                 <span id="article-read-time" class="article-read-time"></span>
             </div>
-        </header>
-        
-        <!-- محتوى المقال -->
-        <article id="article-body" class="article-body"></article>
 
-        <div class="ed-divider" aria-hidden="true"></div>
-        
-        <!-- حالة التحميل -->
-        <div id="article-loading" class="article-loading">
-            <div class="loading-spinner"></div>
-            <p>جاري تحميل المقال...</p>
-        </div>
-        
-        <!-- حالة الخطأ -->
-        <div id="article-error" class="article-error" style="display: none;">
-            <h2>عذراً!</h2>
-            <p>لم نتمكن من تحميل المقال.</p>
-            <a href="articles.html" class="btn btn-primary">العودة للمقالات</a>
-        </div>
+            <!-- محتوى المقال — هذه الحاوية هي نفسها شبكة الاختراق -->
+            <div id="article-body" class="article-body"></div>
+
+        </article>
+
+        <!-- تذييل النشر: السابق/التالي + مقالات أخرى + العودة للأرشيف -->
+        <nav class="article-footer breakout" id="articleFooter" aria-label="تصفّح المقالات" data-en-label="Browse articles" hidden></nav>
+
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="main.js?v=r2"></script>
-    <script src="animations.js?v=r2"></script>
-    <script src="js/article.js?v=r2"></script>
-    <script src="effects.js?v=r2"></script>
-    <script src="gen-art.js?v=r4"></script>
+    <script src="js/i18n.js?v=r27"></script>
+    <script src="main.js?v=r27"></script>
+    <script src="animations.js?v=r27"></script>
+    <script src="js/article.js?v=r27"></script>
+    <script src="effects.js?v=r27"></script>
 </body>
 </html>

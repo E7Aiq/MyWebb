@@ -3,75 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد">
-    <title>المقالات | محمد الزبيدي</title>
-    
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد" data-en-content="Writing by Mohammed Alzobaidi on data analysis — SQL, Power BI, Python and more">
+    <title data-en="Ban | Mohammed Alzobaidi">بان | محمد الزبيدي</title>
+
+    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="js/view-transitions.js?v=r27"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r4">
-    <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/article.css?v=r3">
-    <link rel="stylesheet" href="css/responsive.css?v=r4">
+    <link rel="stylesheet" href="css/style.css?v=r27">
+    <link rel="stylesheet" href="css/animations.css?v=r27">
+    <link rel="stylesheet" href="css/article.css?v=r27">
+    <link rel="stylesheet" href="css/responsive.css?v=r27">
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <a class="skip-link" data-en="Skip to articles" href="#articles-grid">تخطَّ إلى المقالات</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">محمد الزبيدي</a>
-            
-            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html" class="nav-link">الرئيسية</a></li>
-                <li><a href="projects.html" class="nav-link">المشاريع</a></li>
-                <li><a href="articles.html" class="nav-link active">المقالات</a></li>
-                <li><a href="index.html#contact" class="nav-link">تواصل</a></li>
-            </ul>
+            <a href="articles.html" class="logo logo-emblem">
+                <img src="assets/logos/ban.png?v=r27" alt="بان" width="406" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura"><span class="swash">ذُرى</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban active"><span class="swash">بان</span></a></li>
+                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main>
-        <!-- Page Header -->
-        <section class="page-header">
-            <div class="container">
-                <span class="ed-ghost" aria-hidden="true">المقالات</span>
-                <h1 class="page-title fade-in">المقالات</h1>
-                <p class="page-subtitle fade-in">     أكتب لأن الفكرة التي لا تُناقش تموت صامتة</p>
+    <main class="publication">
+        <!-- رأس الصفحة: ماستهيد مدوّنة «بان» — الشعار، الاسم، تعريفه، ثم المقدّمة -->
+        <header class="page-header breakout ban-masthead">
+            <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
+            <figure class="ban-emblem rv">
+                <img src="assets/logos/ban.png?v=r27"
+                     alt="ريشة زرقاء على ورقة — شعار مدوّنة بان"
+                     width="406" height="440" fetchpriority="high" decoding="async">
+            </figure>
+            <p class="ban-kicker rv" data-en="Reflections &amp; essays">خاطرة ومقال</p>
+            <p class="ban-definition rv" data-en="Bān, in Arabic: to appear and become clear.">
+                <span class="ban-def-label">بان في اللغة:</span> ظهر واتّضح.
+            </p>
+            <div class="ban-intro rv">
+                <p data-en="Here I write about what stirs my curiosity and is worth pausing over — in technology and work, in reading and experience, and in ideas that knock on the mind and do not leave quickly.">أكتب هنا عمّا يثير فضولي ويستحق التوقّف عنده؛ في التقنية والعمل، وفي القراءة والتجارب، وفي الأفكار التي تطرق الذهن ولا تغادره سريعًا.</p>
+                <p data-en="A space for what I learn, what I see from a different angle, and what deserves to be understood deeply — to be written and published with care.">مساحة لما أتعلمه، وما أراه من زاوية مختلفة، وما يستحق أن يُفهم بعمق، ليُكتب ويُنشر بإحسان.</p>
             </div>
-        </section>
+        </header>
 
-        <!-- Articles Section -->
-        <section class="articles-section">
-            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠٣</span><span class="ed-rail-word">المقالات</span></span>
-            <div class="container">
-                <div class="ed-divider" aria-hidden="true"></div>
-                <div id="articles-grid" class="articles-grid">
-                    <!-- سيتم تحميل المقالات هنا عبر JavaScript -->
-                    <div class="articles-loading">
-                        <div class="loading-spinner"></div>
-                        <p>جاري تحميل المقالات...</p>
-                    </div>
+        <!-- الفهرس: مقال الصدارة ثم القائمة — يُبنى كلّه في #articles-grid -->
+        <section class="articles-section breakout" aria-label="فهرس المقالات" data-en-label="Article index">
+            <div id="articles-grid" class="articles-grid">
+                <div class="articles-loading">
+                    <div class="loading-spinner" aria-hidden="true"></div>
+                    <p data-en="Loading articles…">جاري تحميل المقالات...</p>
                 </div>
             </div>
+
+            <noscript>
+                <div class="articles-error" style="display:flex">
+                    <h2 class="error-title" data-en="This page needs JavaScript">هذه الصفحة تحتاج جافاسكربت</h2>
+                    <p class="error-message" data-en="The article list is fetched from a data file when the page opens.">تُجلب قائمة المقالات من ملف بيانات عند فتح الصفحة.</p>
+                </div>
+            </noscript>
         </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="main.js?v=r2"></script>
-    <script src="animations.js?v=r2"></script>
-    <script src="js/articles-list.js?v=r2"></script>
-    <script src="effects.js?v=r2"></script>
-    <script src="gen-art.js?v=r4"></script>
+    <script src="js/i18n.js?v=r27"></script>
+    <script src="main.js?v=r27"></script>
+    <script src="animations.js?v=r27"></script>
+    <script src="js/articles-list.js?v=r27"></script>
 </body>
 </html>

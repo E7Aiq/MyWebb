@@ -3,113 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="تفاصيل المشروع - محمد الزبيدي">
-    <title>المشروع | محمد الزبيدي</title>
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="تفاصيل المشروع - محمد الزبيدي" data-en-content="Project details — Mohammed Alzobaidi">
+    <title data-en="Project | Mohammed Alzobaidi">المشروع | محمد الزبيدي</title>
+
+    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="js/view-transitions.js?v=r27"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r4">
-    <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/article.css?v=r3">
-    <link rel="stylesheet" href="css/project.css?v=r3">
-    <link rel="stylesheet" href="css/responsive.css?v=r4">
+    <link rel="stylesheet" href="css/style.css?v=r27">
+    <link rel="stylesheet" href="css/animations.css?v=r27">
+    <link rel="stylesheet" href="css/article.css?v=r27">
+    <link rel="stylesheet" href="css/project.css?v=r27">
+    <link rel="stylesheet" href="css/responsive.css?v=r27">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="article">
     <meta property="og:locale" content="ar_SA">
     <meta property="og:site_name" content="محمد الزبيدي">
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <a class="skip-link" data-en="Skip to project" href="#project-body">تخطَّ إلى المشروع</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">محمد الزبيدي</a>
+            <a href="projects.html" class="logo logo-emblem">
+                <img src="assets/logos/dhura.png?v=r27" alt="ذُرى" width="360" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura active"><span class="swash">ذُرى</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban"><span class="swash">بان</span></a></li>
+                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
 
-            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
 
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html" class="nav-link">الرئيسية</a></li>
-                <li><a href="projects.html" class="nav-link active">المشاريع</a></li>
-                <li><a href="articles.html" class="nav-link">المقالات</a></li>
-                <li><a href="index.html#contact" class="nav-link">تواصل</a></li>
-            </ul>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="container" id="projectContainer">
-        <!-- صورة الغلاف -->
-        <div class="project-detail-cover-wrapper">
-            <img id="project-cover" class="project-detail-cover" src="" alt="صورة غلاف المشروع" style="display: none;">
+    <main id="projectContainer">
+
+        <!-- حالة التحميل (تُخفى بلا جافاسكربت عبر html:not(.js)) -->
+        <div id="project-loading" class="article-loading">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p data-en="Loading project…">جاري تحميل المشروع...</p>
         </div>
 
-        <!-- رأس المشروع -->
-        <header class="project-detail-header">
-            <h1 id="project-title" class="article-title"></h1>
-            <div class="project-detail-meta">
+        <noscript>
+            <div class="article-error" style="display:flex">
+                <h2 class="error-title" data-en="This page needs JavaScript">هذه الصفحة تحتاج جافاسكربت</h2>
+                <p class="error-message" data-en="The project details are fetched from a data file when the page opens.">تُجلب تفاصيل المشروع من ملف بيانات عند فتح الصفحة.</p>
+                <a href="projects.html" class="btn btn-primary" data-en="Browse the projects">تصفّح المشاريع</a>
+            </div>
+        </noscript>
+
+        <!-- حالة الخطأ -->
+        <div id="project-error" class="article-error" hidden>
+            <h2 class="error-title" data-en="Sorry!">عذراً!</h2>
+            <p class="error-message" data-en="We could not load this project.">لم نتمكن من تحميل تفاصيل المشروع.</p>
+            <a href="projects.html" class="btn btn-primary" data-en="Back to projects">العودة للمشاريع</a>
+        </div>
+
+        <!-- المشروع: نفس شبكة اختراق المقال — كتابات المشاريع أحوج إليها،
+             فجداولها وأكوادها وتضميناتها أعرض من نصّ المقال -->
+            <!-- dir="rtl" مثبَّت في الترميز لا في CSS، ولا يمسّه مبدّل اللغة:
+                 هذا المحتوى مصدره data/ وهو عربيّ كما كتبه صاحبه — العنوان
+                 والميتا والمتن. لغة الواجهة تغيّر ما حول المستند لا المستند
+                 نفسه، فيبقى مقروءاً كما نُشر في الوضعين. -->
+        <article class="article breakout" dir="rtl" lang="ar" id="projectShell" hidden>
+
+            <div class="article-cover-wrapper u-wide">
+                <img id="project-cover" class="project-detail-cover" src="" alt="" hidden>
+            </div>
+
+            <header class="article-header">
+                <h1 id="project-title" class="article-title"></h1>
+            </header>
+
+            <div class="article-rule" aria-hidden="true"></div>
+
+            <div class="article-meta">
                 <span id="project-date" class="project-detail-date"></span>
                 <span id="project-read-time" class="project-detail-read-time"></span>
+                <span id="project-categories" class="project-detail-categories"></span>
             </div>
-            <!-- التصنيفات -->
-            <div id="project-categories" class="project-detail-categories"></div>
-            <!-- زر المعاينة -->
-            <div id="project-preview-wrapper" class="project-detail-preview-wrapper" style="display: none;">
-                <a id="project-preview-link" href="#" class="btn btn-primary project-preview-btn" target="_blank" rel="noopener">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+            <div id="project-preview-wrapper" class="project-detail-preview-wrapper" hidden>
+                <a id="project-preview-link" href="#" class="btn btn-primary project-preview-btn"
+                   target="_blank" rel="noopener">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                         <polyline points="15 3 21 3 21 9"></polyline>
                         <line x1="10" y1="14" x2="21" y2="3"></line>
                     </svg>
-                    معاينة المشروع
+                    <span data-en="Live preview">معاينة المشروع</span>
                 </a>
             </div>
-        </header>
 
-        <!-- محتوى المشروع -->
-        <article id="project-body" class="article-body project-detail-body"></article>
+            <!-- محتوى المشروع — الحاوية نفسها شبكة الاختراق -->
+            <div id="project-body" class="article-body project-detail-body"></div>
 
-        <div class="ed-divider" aria-hidden="true"></div>
+        </article>
 
-        <!-- العودة للمشاريع -->
-        <div class="project-detail-back">
-            <a href="projects.html" class="btn btn-secondary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                العودة لجميع المشاريع
-            </a>
-        </div>
+        <!-- تذييل: السابق/التالي + العودة للأرشيف -->
+        <nav class="article-footer breakout" id="projectFooter" aria-label="تصفّح المشاريع" hidden></nav>
 
-        <!-- حالة التحميل -->
-        <div id="project-loading" class="article-loading">
-            <div class="loading-spinner"></div>
-            <p>جاري تحميل المشروع...</p>
-        </div>
-
-        <!-- حالة الخطأ -->
-        <div id="project-error" class="article-error" style="display: none;">
-            <h2>عذراً!</h2>
-            <p>لم نتمكن من تحميل تفاصيل المشروع.</p>
-            <a href="projects.html" class="btn btn-primary">العودة للمشاريع</a>
-        </div>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="main.js?v=r2"></script>
-    <script src="animations.js?v=r2"></script>
-    <script src="js/project.js?v=r2"></script>
-    <script src="effects.js?v=r2"></script>
-    <script src="gen-art.js?v=r4"></script>
+    <script src="js/i18n.js?v=r27"></script>
+    <script src="main.js?v=r27"></script>
+    <script src="animations.js?v=r27"></script>
+    <script src="js/project.js?v=r27"></script>
+    <script src="effects.js?v=r27"></script>
 </body>
 </html>

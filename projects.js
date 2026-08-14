@@ -1,15 +1,19 @@
 /**
- * Projects List - Frontend Logic
- * Fetches projects from data/projects.json and displays them.
- * Also handles the featured projects grid on the homepage.
+ * Projects List
+ * يقرأ data/projects.json ويبني: شبكة المشاريع + الفلاتر (projects.html)
+ * وشبكة المشاريع المختارة (index.html).
+ * لا يلمس طبقة البيانات — قراءة فقط.
  */
 
 (function () {
     'use strict';
 
-    // ============================================
-    // CONFIGURATION
-    // ============================================
+    /* ── جسر i18n ────────────────────────────────────────────────────────
+       كل نصّ واجهة يمرّ من هنا. الاحتياطي يُبقي الموقع عربياً صحيحاً لو
+       أخفق تحميل js/i18n.js — لا مفاتيح ترجمة عارية في الصفحة. */
+    const T = (ar, en) => (window.I18N ? window.I18N.t(ar, en) : ar);
+    const readTime = (m, w) => (window.I18N ? window.I18N.readTime(m, w) : `${m || 5} دقائق`);
+    const formatDate = (d) => (window.I18N ? window.I18N.date(d) : '');
 
     const CONFIG = {
         dataUrl: 'data/projects.json',
@@ -17,277 +21,211 @@
         filtersId: 'projectFilters',
         featuredGridId: 'featuredProjectsGrid',
         errorStateId: 'errorState',
-        defaultImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop'
+        featuredCount: 1
     };
 
     let allProjects = [];
-    let currentFilter = 'all';
 
-    // ============================================
-    // INITIALIZATION
-    // ============================================
+    document.addEventListener('DOMContentLoaded', boot);
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const projectsGrid = document.getElementById(CONFIG.gridId);
-        const featuredGrid = document.getElementById(CONFIG.featuredGridId);
-
-        if (projectsGrid) {
-            // We are on projects.html
-            loadAllProjects();
-        }
-
-        if (featuredGrid) {
-            // We are on index.html
-            loadFeaturedProjects();
-        }
-    });
-
-    // ============================================
-    // DATA FETCHING
-    // ============================================
+    function boot() {
+        if (document.getElementById(CONFIG.gridId)) loadAllProjects();
+        if (document.getElementById(CONFIG.featuredGridId)) loadFeaturedProjects();
+    }
 
     async function fetchProjects() {
         const response = await fetch(CONFIG.dataUrl);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json();
         return data.projects || [];
     }
 
-    // ============================================
-    // PROJECTS PAGE (projects.html)
-    // ============================================
+    /**
+     * الأحدث تاريخاً أولاً، ومن دون تاريخ في الآخر.
+     * الفارغ يُعزل صراحةً بدل ترك new Date(null) ينتج NaN فيُفسد الفرز صامتاً.
+     */
+    function orderProjects(projects) {
+        return [...projects].sort((a, b) => {
+            const ta = a.date ? new Date(a.date).getTime() : -Infinity;
+            const tb = b.date ? new Date(b.date).getTime() : -Infinity;
+            return tb - ta;
+        });
+    }
 
+    // ── projects.html ────────────────────────────────────────────────────
     async function loadAllProjects() {
         const container = document.getElementById(CONFIG.gridId);
-        if (!container) return;
-
         try {
-            allProjects = await fetchProjects();
-
-            // Sort by date descending
-            allProjects.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            renderProjectsGrid(container, allProjects);
-            buildDynamicFilters(allProjects);
-            initializeFilters();
-
+            allProjects = orderProjects(await fetchProjects());
+            renderGrid(container, allProjects);
+            buildFilters(allProjects);
+            initFilters();
         } catch (error) {
-            console.error('❌ Error loading projects:', error);
+            console.error('Error loading projects:', error);
             showError();
         }
     }
 
-    function renderProjectsGrid(container, projects) {
+    // ── index.html ───────────────────────────────────────────────────────
+    async function loadFeaturedProjects() {
+        const container = document.getElementById(CONFIG.featuredGridId);
+        try {
+            const featured = orderProjects(await fetchProjects()).slice(0, CONFIG.featuredCount);
+            renderGrid(container, featured);
+        } catch (error) {
+            console.error('Error loading featured projects:', error);
+            container.innerHTML = '';   // الصفحة الرئيسية لا تُظهر خطأً مزعجاً
+        }
+    }
+
+    function renderGrid(container, projects) {
         container.innerHTML = '';
 
-        if (!projects || projects.length === 0) {
+        if (!projects.length) {
             container.innerHTML = `
                 <div class="no-projects">
-                    <div class="no-projects-icon">📂</div>
-                    <h3 class="error-title">لا توجد مشاريع حالياً</h3>
-                    <p class="error-message">سيتم إضافة مشاريع قريباً، تابعنا!</p>
-                </div>
-            `;
+                    <h2 class="error-title">${T('لا توجد مشاريع بعد', 'Nothing here yet')}</h2>
+                    <p class="error-message">${T('ستُضاف مشاريع قريباً.', 'New projects are on the way.')}</p>
+                </div>`;
             return;
         }
 
-        projects.forEach((project, index) => {
-            const card = createProjectCard(project, index);
-            container.appendChild(card);
-        });
-
-        animateCards();
+        projects.forEach((project) => container.appendChild(createProjectCard(project)));
     }
 
-    // ============================================
-    // FEATURED PROJECTS (index.html)
-    // ============================================
-
-    async function loadFeaturedProjects() {
-        const container = document.getElementById(CONFIG.featuredGridId);
-        if (!container) return;
-
-        try {
-            const projects = await fetchProjects();
-            // Show latest 3 projects on homepage
-            const featured = projects
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 3);
-
-            renderProjectsGrid(container, featured);
-        } catch (error) {
-            console.error('Error loading featured projects:', error);
-        }
-    }
-
-    // ============================================
-    // PROJECT CARD
-    // ============================================
-
-    function createProjectCard(project, index) {
+    /**
+     * بطاقة مشروع. أسماء الفئات كلها من العقد في §4 — أي تغيير هنا يستلزم
+     * تغييراً مطابقاً في css/project.css.
+     *
+     * البطاقة كلّها قابلة للنقر عبر «الرابط الممدود»: <a> حقيقي («اقرأ
+     * المزيد») يمدّ منطقة نقره فوق البطاقة بـ ::after. البديل السابق كان
+     * <article role="link" tabindex="0"> ومستمع click يدوي — وهو يكسر
+     * النقر بأمر والنقر الأوسط والفتح في تبويب جديد وقائمة السياق ونسخ
+     * الرابط، ولا يعوّضها مستمع. ويُلغي أيضاً الحاجة إلى stopPropagation
+     * على الأزرار: هي فوق الطبقة الممدودة لا داخل حاوية ملتقِطة.
+     */
+    function createProjectCard(project) {
         const card = document.createElement('article');
-        card.className = 'project-card fade-in';
+        card.className = 'project-card rv';
         card.dataset.categories = JSON.stringify(project.categories || []);
-        card.style.animationDelay = `${index * 0.1}s`;
 
-        const coverImage = project.cover || CONFIG.defaultImage;
-        const formattedDate = formatDate(project.date);
+        const href = `project-details.html?id=${encodeURIComponent(project.id)}`;
         const categories = (project.categories || []).slice(0, 4);
-        const summary = escapeHtml(project.summary || '');
+        const latinTitle = isLatin(project.title);
+        // حقل date فارغ في بعض المشاريع، وlast_edited موجود دائماً — فلا
+        // تظهر بطاقة بلا أي إشارة زمنية بينما جارتها تحمل تاريخاً.
+        const when = project.date || project.last_edited;
 
-        // Preview link button
-        const previewBtnHtml = project.preview_link ? `
-            <a href="${escapeHtml(project.preview_link)}" class="project-card-btn project-card-btn-preview" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-                معاينة المشروع
-            </a>
-        ` : '';
+        const cover = project.cover
+            ? `<div class="project-card-image-wrapper">
+                   <img class="project-card-image" src="${escapeAttr(project.cover)}" alt=""
+                        loading="lazy" decoding="async">
+               </div>`
+            : '';
 
+        const preview = project.preview_link
+            ? `<a class="project-card-btn project-card-btn-preview"
+                  href="${escapeAttr(project.preview_link)}" target="_blank" rel="noopener">
+                   ${T('معاينة المشروع', 'Live preview')}
+               </a>`
+            : '';
+
+        // <bdi> يعزل اتجاه العنوان اللاتيني داخل السطر فقط. وضع dir="ltr"
+        // على العنصر نفسه كان يقلب محاذاته إلى اليسار وحده فينفصل عمّا تحته.
         card.innerHTML = `
-            <div class="project-card-image-wrapper">
-                <img
-                    src="${coverImage}"
-                    alt="${escapeHtml(project.title)}"
-                    class="project-card-image"
-                    loading="lazy"
-                    onerror="this.src='${CONFIG.defaultImage}'"
-                >
-            </div>
+            ${cover}
             <div class="project-card-content">
+                <h3 class="project-card-title">${latinTitle
+                    ? `<bdi dir="ltr">${escapeHtml(project.title)}</bdi>`
+                    : escapeHtml(project.title)}</h3>
+                <p class="project-card-summary">${escapeHtml(project.summary || '')}</p>
                 <div class="project-card-meta">
-                    <span class="project-card-date">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        ${formattedDate}
-                    </span>
+                    <span class="project-card-date">${formatDate(when)}</span>
+                    <span class="project-card-read">${project.read_time ? readTime(project.read_time) : ''}</span>
                 </div>
-                <h3 class="project-card-title">${escapeHtml(project.title)}</h3>
-                <p class="project-card-summary">${summary}</p>
                 <div class="project-card-categories">
-                    ${categories.map(cat => `<span class="category-tag">${escapeHtml(cat)}</span>`).join('')}
+                    ${categories.map((c) => `<span class="category-tag">${escapeHtml(c)}</span>`).join('')}
                 </div>
                 <div class="project-card-actions">
-                    <a href="project-details.html?id=${project.id}" class="project-card-btn project-card-btn-details" onclick="event.stopPropagation();">
-                        اقرأ المزيد
-                    </a>
-                    ${previewBtnHtml}
+                    <a class="project-card-btn project-card-btn-details project-card-link"
+                       href="${href}">${T('اقرأ المزيد', 'Read more')}</a>
+                    ${preview}
                 </div>
             </div>
         `;
 
-        // Card click navigates to details
-        card.addEventListener('click', () => {
-            window.location.href = `project-details.html?id=${project.id}`;
-        });
-
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'link');
-        card.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                window.location.href = `project-details.html?id=${project.id}`;
-            }
-        });
-
         return card;
     }
 
-    // ============================================
-    // DYNAMIC FILTERS
-    // ============================================
+    // ── الفلاتر ──────────────────────────────────────────────────────────
+    function buildFilters(projects) {
+        const container = document.getElementById(CONFIG.filtersId);
+        if (!container) return;
 
-    function buildDynamicFilters(projects) {
-        const filtersContainer = document.getElementById(CONFIG.filtersId);
-        if (!filtersContainer) return;
+        const categories = new Set();
+        projects.forEach((p) => (p.categories || []).forEach((c) => categories.add(c)));
 
-        // Collect all unique categories
-        const categoriesSet = new Set();
-        projects.forEach(p => {
-            (p.categories || []).forEach(cat => categoriesSet.add(cat));
-        });
+        // أسماء التصنيفات تأتي من البيانات ولا تُترجَم — «الكل» وحدها نصّ واجهة
+        container.innerHTML =
+            `<button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">${T('الكل', 'All')}</button>`;
 
-        // Keep "الكل" button, then add one button per category
-        filtersContainer.innerHTML = '<button class="filter-btn active" data-filter="all">الكل</button>';
-
-        [...categoriesSet].sort().forEach(cat => {
+        [...categories].sort().forEach((cat) => {
             const btn = document.createElement('button');
+            btn.type = 'button';
             btn.className = 'filter-btn';
             btn.dataset.filter = cat;
+            btn.setAttribute('aria-pressed', 'false');
             btn.textContent = cat;
-            filtersContainer.appendChild(btn);
+            container.appendChild(btn);
         });
     }
 
-    function initializeFilters() {
-        const filtersContainer = document.getElementById(CONFIG.filtersId);
-        if (!filtersContainer) return;
+    function initFilters() {
+        const container = document.getElementById(CONFIG.filtersId);
+        if (!container || container.dataset.wired) return;
+        container.dataset.wired = '1';
 
-        filtersContainer.addEventListener('click', (e) => {
+        container.addEventListener('click', (e) => {
             const btn = e.target.closest('.filter-btn');
             if (!btn) return;
 
-            // Update active state
-            filtersContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            container.querySelectorAll('.filter-btn').forEach((b) => {
+                const on = b === btn;
+                b.classList.toggle('active', on);
+                b.setAttribute('aria-pressed', String(on));
+            });
 
-            currentFilter = btn.dataset.filter;
-            filterProjects(currentFilter);
+            filterProjects(btn.dataset.filter);
         });
     }
 
+    /**
+     * الفلترة بفئة .hidden وحدها — لا أنماط display سطرية.
+     * النسخة السابقة كانت تضبط card.style.display='flex' بعد كل فلترة،
+     * فتتجاوز أي قيمة display في CSS إلى الأبد.
+     */
     function filterProjects(filter) {
         const container = document.getElementById(CONFIG.gridId);
         if (!container) return;
 
-        const cards = container.querySelectorAll('.project-card');
-
-        cards.forEach(card => {
+        container.querySelectorAll('.project-card').forEach((card) => {
             let categories = [];
-            try {
-                categories = JSON.parse(card.dataset.categories);
-            } catch (e) { categories = []; }
-
-            if (filter === 'all' || categories.includes(filter)) {
-                card.classList.remove('hidden');
-                card.style.display = 'flex';
-            } else {
-                card.classList.add('hidden');
-                setTimeout(() => {
-                    if (card.classList.contains('hidden')) {
-                        card.style.display = 'none';
-                    }
-                }, 300);
-            }
+            try { categories = JSON.parse(card.dataset.categories); } catch { categories = []; }
+            const show = filter === 'all' || categories.includes(filter);
+            card.classList.toggle('hidden', !show);
         });
     }
 
-    // ============================================
-    // HELPERS
-    // ============================================
+    function showError() {
+        const grid = document.getElementById(CONFIG.gridId);
+        const errorState = document.getElementById(CONFIG.errorStateId);
+        if (grid) grid.innerHTML = '';
+        if (errorState) errorState.hidden = false;
+    }
 
-    function formatDate(dateString) {
-        if (!dateString) return '';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ar-SA', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch {
-            return dateString;
-        }
+    // ── مساعدات ──────────────────────────────────────────────────────────
+    function isLatin(s) {
+        return /[A-Za-z]/.test(s || '') && !/[؀-ۿ]/.test(s || '');
     }
 
     function escapeHtml(text) {
@@ -297,26 +235,11 @@
         return div.innerHTML;
     }
 
-    function showError() {
-        const errorState = document.getElementById(CONFIG.errorStateId);
-        const projectsGrid = document.getElementById(CONFIG.gridId);
-
-        if (projectsGrid) projectsGrid.innerHTML = '';
-        if (errorState) errorState.style.display = 'block';
+    function escapeAttr(text) {
+        return String(text || '').replace(/"/g, '&quot;');
     }
 
-    function animateCards() {
-        const cards = document.querySelectorAll('.project-card');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        cards.forEach(card => observer.observe(card));
-    }
-
+    /* البطاقات مبنيّة في جافاسكربت فلا يصلها مبدّل النصّ الذي يعمل على
+       السمات data-en — تُعاد بناؤها عند تبديل اللغة. */
+    if (window.I18N) window.I18N.onChange(boot);
 })();

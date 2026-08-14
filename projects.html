@@ -3,88 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد">
-    <title>المشاريع | محمد الزبيدي</title>
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد" data-en-content="Data analysis projects by Mohammed Alzobaidi — Power BI, Python, SQL and more">
+    <title data-en="Dhura | Mohammed Alzobaidi">ذُرى | محمد الزبيدي</title>
 
-    <link rel="stylesheet" href="css/style.css?v=r4">
-    <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/project.css?v=r3">
-    <link rel="stylesheet" href="css/responsive.css?v=r4">
+    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="js/view-transitions.js?v=r27"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="css/style.css?v=r27">
+    <link rel="stylesheet" href="css/animations.css?v=r27">
+    <link rel="stylesheet" href="css/project.css?v=r27">
+    <link rel="stylesheet" href="css/responsive.css?v=r27">
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <a class="skip-link" data-en="Skip to projects" href="#projectsGrid">تخطَّ إلى المشاريع</a>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">محمد الزبيدي</a>
+            <a href="projects.html" class="logo logo-emblem">
+                <img src="assets/logos/dhura.png?v=r27" alt="ذُرى" width="360" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura active"><span class="swash">ذُرى</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban"><span class="swash">بان</span></a></li>
+                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
 
-            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
 
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html" class="nav-link">الرئيسية</a></li>
-                <li><a href="projects.html" class="nav-link active">المشاريع</a></li>
-                <li><a href="articles.html" class="nav-link">المقالات</a></li>
-                <li><a href="index.html#contact" class="nav-link">تواصل</a></li>
-            </ul>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main>
-        <!-- Page Header -->
-        <section class="page-header">
-            <div class="container">
-                <span class="ed-ghost" aria-hidden="true">المشاريع</span>
-                <h1 class="page-title fade-in">المشاريع</h1>
-                <p class="page-subtitle fade-in">       مشاريع حقيقية، نتائج قابلة للقياس      </p>
+    <main class="publication dhura">
+        <!-- ماستهيد «ذُرى» — العنوان، الشعار المفرّغ، الوصف، التعريف، ثم المقدّمة -->
+        <header class="page-header breakout page-masthead">
+            <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
+            <figure class="masthead-emblem rv">
+                <img src="assets/logos/dhura.png?v=r27"
+                     alt="قمم برتقالية متدرّجة — شعار مشاريع ذُرى"
+                     width="360" height="440" fetchpriority="high" decoding="async">
+            </figure>
+            <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
+            <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
+                <span class="masthead-lead-label">ذُرى جمع ذروة؛</span> وهي المساحة التي أوثّق فيها أفضل ما وصلت إليه من مشاريع وتجارب في البيانات والذكاء الاصطناعي.
+            </p>
+            <div class="masthead-intro rv">
+                <p data-en="Every project here is an independent summit; it began with a question worth exploring, and took shape through research, experimentation, decisions, and overcoming challenges — until it reached a clear, usable solution.">كل مشروع هنا هو <strong>ذروة مستقلة</strong>؛ بدأ بسؤال يستحق الاستكشاف، وتشكّل عبر البحث والتجربة واتخاذ القرارات وتجاوز التحديات، حتى وصل إلى حلّ واضح وقابل للاستخدام.</p>
+                <p data-en="I don’t show only the final result, but what led to it: the problem, the approach, the decisions, and what I learned along the way.">لا أعرض النتيجة النهائية فحسب، بل ما قاد إليها: <strong>المشكلة، والمنهج، والقرارات، وما تعلّمته على الطريق.</strong></p>
             </div>
-        </section>
+        </header>
 
-        <!-- Projects Section -->
-        <section class="projects-section">
-            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠٢</span><span class="ed-rail-word">المشاريع</span></span>
-            <div class="container">
-                <!-- Dynamic Filters (built from data) -->
-                <div class="filters slide-up" id="projectFilters">
-                    <button class="filter-btn active" data-filter="all">الكل</button>
-                </div>
+        <section class="projects-section breakout" aria-label="فهرس المشاريع" data-en-label="Project index">
+            <!-- الفلاتر تُبنى من categories[] في البيانات: عددها وطولها متغيّران -->
+            <div class="filters" id="projectFilters" role="group" aria-label="تصفية المشاريع حسب التصنيف" data-en-label="Filter projects by category">
+                <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true" data-en="All">الكل</button>
+            </div>
 
-                <div class="ed-divider" aria-hidden="true"></div>
-
-                <!-- Projects Grid -->
-                <div class="projects-grid" id="projectsGrid">
-                    <div class="loading-state">
-                        <div class="spinner"></div>
-                        <p>جاري تحميل المشاريع...</p>
-                    </div>
-                </div>
-
-                <!-- Error State -->
-                <div class="error-state" id="errorState" style="display: none;">
-                    <div class="error-icon">⚠️</div>
-                    <h3 class="error-title">عذراً</h3>
-                    <p class="error-message">حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
-                    <button class="btn btn-primary" onclick="location.reload()">إعادة المحاولة</button>
+            <div class="projects-grid" id="projectsGrid">
+                <div class="loading-state">
+                    <div class="spinner" aria-hidden="true"></div>
+                    <p data-en="Loading projects…">جاري تحميل المشاريع...</p>
                 </div>
             </div>
+
+            <div class="error-state" id="errorState" hidden>
+                <h2 class="error-title" data-en="Could not load projects">تعذّر تحميل المشاريع</h2>
+                <p class="error-message" data-en="Something went wrong loading the projects. Please try again later.">حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
+                <button class="btn btn-secondary" type="button" onclick="location.reload()" data-en="Try again">إعادة المحاولة</button>
+            </div>
+
+            <noscript>
+                <div class="error-state" style="display:flex">
+                    <h2 class="error-title" data-en="This page needs JavaScript">هذه الصفحة تحتاج جافاسكربت</h2>
+                    <p class="error-message" data-en="The project list is fetched from a data file when the page opens.">تُجلب قائمة المشاريع من ملف بيانات عند فتح الصفحة.</p>
+                </div>
+            </noscript>
         </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="main.js?v=r2"></script>
-    <script src="animations.js?v=r2"></script>
-    <script src="projects.js?v=r2"></script>
-    <script src="effects.js?v=r2"></script>
-    <script src="gen-art.js?v=r4"></script>
+    <script src="js/i18n.js?v=r27"></script>
+    <script src="main.js?v=r27"></script>
+    <script src="animations.js?v=r27"></script>
+    <script src="projects.js?v=r27"></script>
 </body>
 </html>

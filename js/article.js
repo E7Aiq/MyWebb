@@ -1,244 +1,313 @@
 /**
  * Article Viewer
- * Loads article from articles.json and displays it
+ * يقرأ data/articles.json ويعرض مقالاً واحداً حسب ?id=
+ * لا يلمس طبقة البيانات — قراءة فقط.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadArticle();
-});
+(function () {
+    'use strict';
 
-/**
- * Main function to load and display article
- */
-async function loadArticle() {
-    // Get elements
-    const titleEl = document.getElementById('article-title');
-    const dateEl = document.getElementById('article-date');
-    const coverEl = document.getElementById('article-cover');
-    const bodyEl = document.getElementById('article-body');
-    const categoryEl = document.getElementById('article-category');
-    const readTimeEl = document.getElementById('article-read-time');
-    const loadingEl = document.getElementById('article-loading');
-    const errorEl = document.getElementById('article-error');
+    /* ── جسر i18n ────────────────────────────────────────────────────────
+       كل نصّ واجهة يمرّ من هنا. الاحتياطي يُبقي الصفحة عربية صحيحة لو أخفق
+       تحميل js/i18n.js — لا مفاتيح ترجمة عارية. */
+    const T = (ar, en) => (window.I18N ? window.I18N.t(ar, en) : ar);
+    const readTime = (m, w) => (window.I18N ? window.I18N.readTime(m, w) : `${m || 5} دقائق`);
+    const formatDate = (d) => (window.I18N ? window.I18N.date(d) : '');
 
-    // Get article ID from URL
-    const params = new URLSearchParams(window.location.search);
-    const articleId = params.get('id');
+    /* ── أيقونات المشاركة ────────────────────────────────────────────────
+       شعارات العلامات الرسمية مصمتة (fill=currentColor) كي تُعرَف فوراً؛
+       أما «نسخ الرابط» فأيقونة خطّية. style="fill:none" سطريّ يغلب قاعدة
+       `.share-btn svg{fill:currentColor}` في article.css فلا يمتلئ الخط. */
+    const LINK_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" style="fill:none"
+        stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6-6"/><path d="M11 6l1-1a4 4 0 0 1 6 6l-2 2"/><path d="M13 18l-1 1a4 4 0 0 1-6-6l2-2"/></svg>`;
+    const X_ICON = `<svg width="17" height="17" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`;
+    const LINKEDIN_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+    const WHATSAPP_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.359.101 11.945c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a11.882 11.882 0 005.71 1.447h.006c6.585 0 11.946-5.359 11.949-11.945a11.85 11.85 0 00-3.48-8.404"/></svg>`;
 
-    if (!articleId) {
-        showError(loadingEl, errorEl);
-        return;
+    document.addEventListener('DOMContentLoaded', loadArticle);
+
+    /**
+     * ترتيب المقالات — مصدر وحيد للحقيقة، تستعمله صفحة المقال وفهرس المقالات.
+     *
+     * القاعدة: المميّز (featured) أولاً إن وُجد، ثم ترتيب الملف كما هو.
+     *
+     * لماذا ترتيب الملف ولا ترتيب زمني: حقل date فارغ (null) في كل مقال
+     * حالياً، فالفرز الزمني بلا أثر (new Date(null) ينتج NaN وتفشل المقارنة
+     * صامتةً). ترتيب الملف هو ترتيب Notion، وهو حتميّ ومستقرّ — فلا يبدو
+     * «الصدارة» اختياراً عشوائياً. متى امتلأ حقل التاريخ يمكن إدراج الفرز
+     * الزمني هنا وحده فينسحب على الصفحتين معاً.
+     */
+    function orderArticles(articles) {
+        return [...articles].sort((a, b) => (b.featured === true) - (a.featured === true));
     }
 
-    try {
-        // Fetch articles.json
-        const response = await fetch('data/articles.json');
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch articles');
-        }
+    async function loadArticle() {
+        const el = (id) => document.getElementById(id);
+        const shell = el('articleShell');
+        const loadingEl = el('article-loading');
+        const errorEl = el('article-error');
 
-        const data = await response.json();
-        
-        // Find the article by ID
-        const article = data.articles.find(a => a.id === articleId);
+        const articleId = new URLSearchParams(window.location.search).get('id');
+        if (!articleId) return showError(loadingEl, errorEl);
 
-        if (!article) {
+        try {
+            const response = await fetch('data/articles.json');
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+
+            const data = await response.json();
+            const ordered = orderArticles(data.articles || []);
+            const index = ordered.findIndex((a) => a.id === articleId);
+            if (index === -1) return showError(loadingEl, errorEl);
+
+            const article = ordered[index];
+
+            document.title = `${article.title} | ${T('محمد الزبيدي', 'Mohammed Alzobaidi')}`;
+
+            const titleEl = el('article-title');
+            if (titleEl) titleEl.textContent = article.title;
+
+            const dateEl = el('article-date');
+            if (dateEl) dateEl.textContent = formatDate(article.date);
+
+            const categoryEl = el('article-category');
+            if (categoryEl) categoryEl.textContent = article.category || '';
+
+            const readTimeEl = el('article-read-time');
+            if (readTimeEl && article.read_time) {
+                readTimeEl.textContent = readTime(article.read_time);
+            }
+
+            const coverEl = el('article-cover');
+            if (coverEl && article.cover) {
+                coverEl.src = article.cover;
+                coverEl.alt = '';                 // زخرفي: العنوان يليه مباشرة
+                coverEl.hidden = false;
+            }
+
+            const bodyEl = el('article-body');
+            if (bodyEl) {
+                bodyEl.innerHTML = article.content_html || '';
+                enhanceProse(bodyEl, article.title);
+                renderShareSection(bodyEl, article.title);
+            }
+
+            renderArticleFooter(ordered, index);
+            updateMetaTags(article);
+
+            if (loadingEl) loadingEl.hidden = true;
+            if (shell) shell.hidden = false;
+
+        } catch (error) {
+            console.error('Error loading article:', error);
             showError(loadingEl, errorEl);
-            return;
         }
-
-        // Update page title
-        document.title = `${article.title} | محمد الزبيدي`;
-
-        // Inject title
-        if (titleEl) {
-            titleEl.textContent = article.title;
-        }
-
-        // Inject date
-        if (dateEl && article.date) {
-            dateEl.textContent = formatDate(article.date);
-        }
-
-        // Inject category
-        if (categoryEl && article.category) {
-            categoryEl.textContent = article.category;
-        }
-
-        // Inject read time
-        if (readTimeEl && article.read_time) {
-            readTimeEl.textContent = `${article.read_time} دقائق قراءة`;
-        }
-
-        // Inject cover image
-        if (coverEl && article.cover) {
-            coverEl.src = article.cover;
-            coverEl.alt = article.title;
-            coverEl.style.display = 'block';
-        }
-
-        // Inject HTML content
-        if (bodyEl) {
-            bodyEl.innerHTML = article.content_html;
-        }
-
-        // Render share section
-        renderShareSection(bodyEl, article.title);
-
-        // Update meta tags
-        updateMetaTags(article);
-
-        // Hide loading, show content
-        if (loadingEl) {
-            loadingEl.style.display = 'none';
-        }
-
-    } catch (error) {
-        console.error('Error loading article:', error);
-        showError(loadingEl, errorEl);
-    }
-}
-
-/**
- * Format date to Arabic
- */
-function formatDate(dateString) {
-    if (!dateString) return '';
-    
-    const date = new Date(dateString);
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
-    
-    return date.toLocaleDateString('ar-SA', options);
-}
-
-/**
- * Show error state
- */
-function showError(loadingEl, errorEl) {
-    if (loadingEl) {
-        loadingEl.style.display = 'none';
-    }
-    if (errorEl) {
-        errorEl.style.display = 'block';
-    }
-}
-
-/**
- * Render share buttons section after article body
- */
-function renderShareSection(container, title) {
-    if (!container) return;
-
-    const pageUrl = encodeURIComponent(window.location.href);
-    const pageTitle = encodeURIComponent(title || document.title);
-
-    const shareHTML = `
-        <div class="article-share">
-            <span class="article-share-label">شارك المقال:</span>
-            <button class="share-btn" onclick="copyArticleLink()" title="نسخ الرابط">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                </svg>
-            </button>
-            <a class="share-btn" href="https://twitter.com/intent/tweet?text=${pageTitle}&url=${pageUrl}" target="_blank" rel="noopener" title="مشاركة على X">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
-                    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
-                </svg>
-            </a>
-            <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}" target="_blank" rel="noopener" title="مشاركة على LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.342 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
-                </svg>
-            </a>
-            <a class="share-btn" href="https://wa.me/?text=${pageTitle}%20-%20${pageUrl}" target="_blank" rel="noopener" title="مشاركة على WhatsApp">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.049-.197-.099-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-                </svg>
-            </a>
-        </div>
-    `;
-
-    container.insertAdjacentHTML('afterend', shareHTML);
-}
-
-/**
- * Copy current page URL to clipboard with toast feedback
- */
-function copyArticleLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-        showCopyToast();
-    }).catch(() => {
-        // Fallback for older browsers
-        const input = document.createElement('input');
-        input.value = window.location.href;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        showCopyToast();
-    });
-}
-
-/**
- * Show "تم النسخ!" toast notification
- */
-function showCopyToast() {
-    // Remove existing toast if any
-    const existing = document.querySelector('.copy-toast');
-    if (existing) existing.remove();
-
-    const toast = document.createElement('div');
-    toast.className = 'copy-toast';
-    toast.textContent = 'تم النسخ!';
-    document.body.appendChild(toast);
-
-    // Trigger animation
-    requestAnimationFrame(() => {
-        toast.classList.add('copy-toast-visible');
-    });
-
-    setTimeout(() => {
-        toast.classList.remove('copy-toast-visible');
-        setTimeout(() => toast.remove(), 300);
-    }, 2000);
-}
-
-/**
- * Update meta tags for SEO and social sharing
- */
-function updateMetaTags(article) {
-    // Description
-    const descMeta = document.querySelector('meta[name="description"]');
-    if (descMeta && article.description) {
-        descMeta.content = article.description;
     }
 
-    // Open Graph
-    setMetaTag('og:title', article.title);
-    setMetaTag('og:description', article.description);
-    setMetaTag('og:image', article.cover);
-    setMetaTag('og:url', window.location.href);
-}
+    /**
+     * محتوى Notion مسطّح بلا فئات، ولا يمكن تعديل البيانات — فتُضاف الأغلفة
+     * التي يحتاجها التخطيط هنا بعد الحقن.
+     */
+    function enhanceProse(root, pageTitle) {
+        // ١. h1 مكرّر لعنوان الصفحة: يُخفى بصرياً، والبيانات كما هي
+        const firstH1 = root.querySelector('h1');
+        if (firstH1 && normalise(firstH1.textContent) === normalise(pageTitle)) {
+            firstH1.classList.add('is-duplicate-title');
+        }
 
-/**
- * Helper to set meta tag content
- */
-function setMetaTag(property, content) {
-    if (!content) return;
-    
-    let meta = document.querySelector(`meta[property="${property}"]`);
-    
-    if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute('property', property);
-        document.head.appendChild(meta);
+        // ٢. الجداول تُمرَّر داخل وعائها لا داخل الصفحة
+        root.querySelectorAll('table').forEach((table) => {
+            if (table.parentElement === root) {
+                const scroller = document.createElement('div');
+                scroller.className = 'prose-scroll';
+                scroller.setAttribute('tabindex', '0');   // قابل للتمرير بلوحة المفاتيح
+                scroller.setAttribute('role', 'region');
+                scroller.setAttribute('aria-label', T('جدول', 'Table'));
+                table.parentNode.insertBefore(scroller, table);
+                scroller.appendChild(table);
+            }
+        });
+
+        // ٣. الصور تصبح أشكالاً، ونص alt يصير تعليقاً إن كان ذا معنى.
+        //    Notion يلفّ الصورة في <p> غالباً فتبقى حبيسة عمود القراءة ولا
+        //    تبلغ مسار wide — نستبدل تلك الفقرة بـ <figure> كي تخترق.
+        root.querySelectorAll('img').forEach((img) => {
+            img.loading = 'lazy';
+            img.decoding = 'async';
+
+            const parent = img.parentElement;
+            let figure = null;
+
+            if (parent === root) {
+                figure = document.createElement('figure');
+                root.insertBefore(figure, img);
+                figure.appendChild(img);
+            } else if (parent && parent.tagName === 'P'
+                       && parent.parentElement === root
+                       && parent.children.length === 1
+                       && !parent.textContent.trim()) {
+                figure = document.createElement('figure');
+                parent.parentNode.insertBefore(figure, parent);
+                figure.appendChild(img);
+                parent.remove();
+            } else {
+                return;   // صورة داخل نصّ جارٍ — تُترك في مكانها
+            }
+
+            const alt = (img.getAttribute('alt') || '').trim();
+            if (alt && alt.length > 3) {
+                const caption = document.createElement('figcaption');
+                caption.textContent = alt;
+                figure.appendChild(caption);
+            }
+        });
     }
-    
-    meta.content = content;
-}
+
+    function normalise(s) {
+        return (s || '').replace(/[\s‏‎]+/g, ' ')
+            .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
+            .trim();
+    }
+
+    /**
+     * تذييل النشر: السابق/التالي + مقالات أخرى + العودة للأرشيف.
+     * البيانات محمّلة أصلاً — لا طلب شبكة إضافي.
+     */
+    function renderArticleFooter(ordered, index) {
+        const host = document.getElementById('articleFooter');
+        if (!host || ordered.length < 2) return;
+
+        const prev = ordered[index - 1];
+        const next = ordered[index + 1];
+
+        // «مقالات أخرى» تستبعد ما ظهر أصلاً كسابق/تالٍ. مع مقالين فقط لا يبقى
+        // شيء فتُحذف الكتلة كاملة بدل تكرار الرابط نفسه مرّتين في التذييل.
+        const shown = new Set([prev && prev.id, next && next.id, ordered[index].id]);
+        const others = ordered.filter((a) => !shown.has(a.id)).slice(0, 3);
+
+        let html = '';
+
+        if (prev || next) {
+            html += '<div class="article-nav">';
+            if (prev) {
+                html += `<a class="article-nav-item prev" href="article.html?id=${encodeURIComponent(prev.id)}">
+                    <span class="article-nav-label">${T('المقال السابق', 'Previous article')}</span>
+                    <span class="article-nav-title">${escapeHtml(prev.title)}</span></a>`;
+            }
+            if (next) {
+                html += `<a class="article-nav-item next" href="article.html?id=${encodeURIComponent(next.id)}">
+                    <span class="article-nav-label">${T('المقال التالي', 'Next article')}</span>
+                    <span class="article-nav-title">${escapeHtml(next.title)}</span></a>`;
+            }
+            html += '</div>';
+        }
+
+        if (others.length) {
+            html += `<div><h2 class="article-footer-heading">${T('مقالات أخرى', 'More writing')}</h2><div class="article-footer-more">`
+                + others.map((a) => `<a href="article.html?id=${encodeURIComponent(a.id)}">
+                        <span class="article-footer-more-title">${escapeHtml(a.title)}</span>
+                        <span>${readTime(a.read_time, false)}</span></a>`).join('')
+                + '</div></div>';
+        }
+
+        html += `<a class="btn btn-secondary article-footer-back" href="articles.html">${T('كل المقالات', 'All writing')}</a>`;
+
+        host.innerHTML = html;
+        host.hidden = false;
+    }
+
+    function showError(loadingEl, errorEl) {
+        if (loadingEl) loadingEl.hidden = true;
+        if (errorEl) errorEl.hidden = false;
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function renderShareSection(container, title) {
+        if (!container) return;
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(title || document.title);
+
+        container.insertAdjacentHTML('beforeend', `
+            <div class="article-share">
+                <span class="article-share-label">شارك المقال</span>
+                <button class="share-btn" type="button" data-copy-link aria-label="${T('نسخ الرابط', 'Copy link')}">
+                    ${LINK_ICON}
+                </button>
+                <a class="share-btn" href="https://twitter.com/intent/tweet?text=${text}&url=${url}"
+                   target="_blank" rel="noopener" aria-label="${T('مشاركة على X', 'Share on X')}">
+                    ${X_ICON}
+                </a>
+                <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${url}"
+                   target="_blank" rel="noopener" aria-label="${T('مشاركة على LinkedIn', 'Share on LinkedIn')}">
+                    ${LINKEDIN_ICON}
+                </a>
+                <a class="share-btn" href="https://wa.me/?text=${text}%20${url}"
+                   target="_blank" rel="noopener" aria-label="${T('مشاركة على WhatsApp', 'Share on WhatsApp')}">
+                    ${WHATSAPP_ICON}
+                </a>
+            </div>
+        `);
+
+        const copyBtn = container.querySelector('[data-copy-link]');
+        if (copyBtn) copyBtn.addEventListener('click', copyLink);
+    }
+
+    function copyLink() {
+        const done = () => showCopyToast();
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href).then(done).catch(fallback);
+        } else {
+            fallback();
+        }
+        function fallback() {
+            const input = document.createElement('input');
+            input.value = window.location.href;
+            document.body.appendChild(input);
+            input.select();
+            try { document.execCommand('copy'); } catch { /* لا شيء */ }
+            document.body.removeChild(input);
+            done();
+        }
+    }
+
+    function showCopyToast() {
+        document.querySelector('.copy-toast')?.remove();
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast';
+        toast.setAttribute('role', 'status');
+        toast.textContent = T('تم النسخ', 'Link copied');
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add('copy-toast-visible'));
+        setTimeout(() => {
+            toast.classList.remove('copy-toast-visible');
+            setTimeout(() => toast.remove(), 300);
+        }, 2000);
+    }
+
+    function updateMetaTags(article) {
+        const desc = document.querySelector('meta[name="description"]');
+        if (desc && article.description) desc.content = article.description;
+        setMetaTag('og:title', article.title);
+        setMetaTag('og:description', article.description);
+        setMetaTag('og:image', article.cover);
+        setMetaTag('og:url', window.location.href);
+    }
+
+    function setMetaTag(property, content) {
+        if (!content) return;
+        let meta = document.querySelector(`meta[property="${property}"]`);
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.setAttribute('property', property);
+            document.head.appendChild(meta);
+        }
+        meta.content = content;
+    }
+
+})();

@@ -1,978 +1,712 @@
-/* ===================================================
-   نظام المقالات - Styles
-   متوافق مع تصميم الموقع الأصلي
-   =================================================== */
-
-/* ===== صفحة قائمة المقالات ===== */
-.articles-section {
-    padding: var(--spacing-xl) 0 var(--spacing-2xl);
-}
-
-.articles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
-}
-
-/* بطاقة المقال */
-.article-card {
-    background: var(--bg-card);
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    transition: var(--transition);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-}
-
-.article-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
-    border-color: var(--accent-primary);
-}
-
-.article-card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    background: var(--bg-secondary);
-    /* Ken Burns: تكبير بطيء مستمر أثناء المرور */
-    transition: transform 6s var(--ease-out);
-}
-
-.article-card:hover .article-card-image {
-    transform: scale(1.12);
-}
-
-.article-card-image-wrapper {
-    overflow: hidden;
-    height: 200px;
-}
-
-.article-card-content {
-    padding: var(--spacing-md);
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.article-card-meta {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    flex-wrap: wrap;
-}
-
-.article-card-category {
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.article-card-date {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.article-card-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
-    line-height: 1.4;
-    transition: var(--transition);
-}
-
-.article-card:hover .article-card-title {
-    color: var(--accent-primary);
-}
-
-.article-card-title-en {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-sm);
-    font-weight: 400;
-}
-
-.article-card-description {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.7;
-    margin-bottom: var(--spacing-md);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex-grow: 1;
-}
-
-.article-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: var(--spacing-sm);
-    border-top: 1px solid var(--border-color);
-    margin-top: auto;
-}
-
-.article-card-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.article-tag {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-primary);
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    transition: var(--transition);
-}
-
-.article-tag:hover {
-    background: rgba(59, 130, 246, 0.2);
-}
-
-/* رفع متدرّج للوسوم عند المرور على بطاقة المقال */
-.article-card:hover .article-tag {
-    transform: translateY(-3px);
-}
-.article-card:hover .article-tag:nth-child(1) { transition-delay: 0ms; }
-.article-card:hover .article-tag:nth-child(2) { transition-delay: 45ms; }
-.article-card:hover .article-tag:nth-child(3) { transition-delay: 90ms; }
-
-.article-read-time {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    white-space: nowrap;
-}
-
-/* المقالات المميزة */
-.article-card.featured {
-    grid-column: span 2;
-}
-
-.article-card.featured .article-card-image-wrapper {
-    height: 280px;
-}
-
-.article-card.featured .article-card-image {
-    height: 280px;
-}
-
-.article-card.featured .article-card-title {
-    font-size: 1.5rem;
-}
-
-/* ===== صفحة المقال الواحد ===== */
-.article-page {
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-}
-
-.article-header {
-    text-align: center;
-    padding: var(--spacing-xl) 0;
-    margin-bottom: var(--spacing-lg);
-}
-
-.article-header-meta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-    flex-wrap: wrap;
-}
-
-.article-header-category {
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-    padding: 0.5rem 1.25rem;
-    border-radius: 25px;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.article-header-date,
-.article-header-read-time {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-muted);
-}
-
-.article-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 900;
-    color: var(--text-primary);
-    line-height: 1.3;
-    margin-bottom: var(--spacing-sm);
-}
-
-.article-title-en {
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    font-weight: 400;
-    margin-bottom: var(--spacing-md);
-}
-
-.article-description {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    max-width: 750px;
-    margin: 0 auto;
-    line-height: 1.8;
-}
-
-.article-cover {
-    width: 100%;
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: var(--border-radius-lg);
-    margin-bottom: var(--spacing-xl);
-    box-shadow: var(--shadow-lg);
-}
-
-.article-cover-wrapper {
-    margin-bottom: var(--spacing-lg);
-    margin-top: calc(var(--spacing-xl) + 60px); /* Account for fixed navbar */
-}
-
-.article-meta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-.article-date,
-.article-read-time {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.article-category {
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.article-error {
-    text-align: center;
-    padding: var(--spacing-2xl);
-}
-
-.article-error h2 {
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-md);
-}
-
-.article-error p {
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-lg);
-}
-
-/* محتوى المقال */
-.article-content,
-.article-body {
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: var(--font-text);
-}
-
-.article-content p,
-.article-body p {
-    font-size: 1.125rem;
-    line-height: 1.9;
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-md);
-}
-
-.article-content a,
-.article-body a {
-    color: var(--accent-primary);
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 3px;
-    transition: var(--transition);
-}
-
-.article-content a:hover,
-.article-body a:hover {
-    text-decoration-style: solid;
-}
-
-.article-content strong,
-.article-body strong {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-.article-content em,
-.article-body em {
-    font-style: italic;
-    color: var(--text-secondary);
-}
-
-.article-content h2,
-.article-body h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: var(--spacing-xl) 0 var(--spacing-md);
-    padding-right: var(--spacing-sm);
-    border-right: 4px solid var(--accent-primary);
-}
-
-.article-content h3,
-.article-body h3 {
-    font-size: 1.35rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: var(--spacing-lg) 0 var(--spacing-sm);
-}
-
-.article-content ul,
-.article-content ol,
-.article-body ul,
-.article-body ol {
-    margin: var(--spacing-md) 0;
-    padding-right: var(--spacing-lg);
-}
-
-.article-content li,
-.article-body li {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-sm);
-}
-
-.article-content ul li::marker,
-.article-body ul li::marker {
-    color: var(--accent-primary);
-}
-
-.article-content ol li::marker,
-.article-body ol li::marker {
-    color: var(--accent-primary);
-    font-weight: 600;
-}
-
-/* الاقتباسات */
-.article-content blockquote,
-.article-body blockquote {
-    background: var(--bg-card);
-    border-right: 4px solid var(--accent-primary);
-    padding: var(--spacing-md) var(--spacing-lg);
-    margin: var(--spacing-lg) 0;
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
-    font-style: italic;
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
-
-/* الكود */
-.article-content pre,
-.article-body pre {
-    background: var(--bg-secondary);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-md);
-    margin: var(--spacing-lg) 0;
-    overflow-x: auto;
-    border: 1px solid var(--border-color);
-    direction: ltr;
-    text-align: left;
-}
-
-.article-content code,
-.article-body code {
-    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-    font-size: 0.9rem;
-}
-
-.article-content p code,
-.article-content li code,
-.article-body p code,
-.article-body li code {
-    background: var(--bg-card);
-    color: var(--accent-primary);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.article-content pre code,
-.article-body pre code {
-    color: var(--text-primary);
-    background: transparent;
-    padding: 0;
-}
-
-/* الصور */
-.article-content img,
-.article-body img {
-    max-width: 100%;
-    height: auto;
-    border-radius: var(--border-radius);
-    margin: var(--spacing-lg) auto;
-    display: block;
-    box-shadow: var(--shadow-md);
-}
-
-.article-content .image-caption,
-.article-body .image-caption {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-top: calc(var(--spacing-sm) * -1);
-    margin-bottom: var(--spacing-lg);
-}
-
-/* Callout */
-.article-callout {
-    display: flex;
-    gap: var(--spacing-sm);
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-md);
-    margin: var(--spacing-lg) 0;
-}
-
-.article-callout-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-    line-height: 1;
-}
-
-.article-callout-content {
-    color: var(--text-secondary);
-    line-height: 1.7;
-    font-size: 1rem;
-}
-
-/* الفاصل */
-.article-divider {
-    border: none;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
-    margin: var(--spacing-xl) 0;
-}
-
-/* الوسوم في نهاية المقال */
-.article-tags-section {
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--border-color);
-}
-
-.article-tags-section .article-tag {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    margin-left: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs);
-    display: inline-block;
-}
-
-/* أزرار المشاركة */
-.article-share {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-lg);
-    flex-wrap: wrap;
-}
-
-.article-share-label {
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-left: var(--spacing-xs);
-}
-
-.share-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.share-btn:hover {
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-    border-color: var(--accent-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
-}
-
-.share-btn:active {
-    transform: translateY(0);
-}
-
-/* Toast Notification */
-.copy-toast {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--accent-primary);
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-size: 0.95rem;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
-}
-
-.copy-toast-visible {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* التنقل بين المقالات */
-.article-navigation {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-2xl);
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--border-color);
-}
-
-.article-nav-item {
-    background: var(--bg-card);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    transition: var(--transition);
-    text-decoration: none;
-    display: block;
-}
-
-.article-nav-item:hover {
-    border-color: var(--accent-primary);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-}
-
-.article-nav-label {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-xs);
-    display: block;
-}
-
-.article-nav-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.4;
-}
-
-.article-nav-item:hover .article-nav-title {
-    color: var(--accent-primary);
-}
-
-.article-nav-item.next {
-    text-align: left;
-}
-
-.article-nav-item.prev {
-    text-align: right;
-}
-
-/* حالة التحميل */
-.articles-loading,
-.article-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    gap: var(--spacing-md);
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid var(--border-color);
-    border-top-color: var(--accent-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.articles-loading p,
-.article-loading p {
-    color: var(--text-muted);
-    font-size: 1rem;
-}
-
-/* حالة الخطأ */
-.articles-error,
-.article-error {
-    text-align: center;
-    padding: var(--spacing-2xl) var(--spacing-lg);
-}
-
-.error-icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-md);
-}
-
-.error-title {
-    font-size: 1.5rem;
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-sm);
-}
-
-.error-message {
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-lg);
-}
-
-/* حالة لا يوجد مقالات */
-.no-articles {
-    text-align: center;
-    padding: var(--spacing-2xl);
-    color: var(--text-muted);
-}
-
-.no-articles-icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-md);
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-    .articles-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .article-card.featured {
-        grid-column: span 1;
-    }
-    
-    .article-card.featured .article-card-image-wrapper,
-    .article-card.featured .article-card-image {
-        height: 200px;
-    }
-    
-    .article-card.featured .article-card-title {
-        font-size: 1.25rem;
-    }
-    
-    .article-header-meta {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
-    
-    .article-title {
-        font-size: 1.75rem;
-    }
-    
-    .article-content h2 {
-        font-size: 1.5rem;
-    }
-    
-    .article-content h3 {
-        font-size: 1.2rem;
-    }
-    
-    .article-navigation {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .article-nav-item.next {
-        text-align: right;
-    }
-    
-    .article-callout {
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-}
-
-@media (max-width: 480px) {
-    .article-card-content {
-        padding: var(--spacing-sm);
-    }
-    
-    .article-card-meta {
-        gap: var(--spacing-xs);
-    }
-    
-    .article-card-title {
-        font-size: 1.1rem;
-    }
-    
-    .article-title {
-        font-size: 1.5rem;
-    }
-    
-    .article-description {
-        font-size: 1rem;
-    }
-    
-    .article-content p,
-    .article-content li {
-        font-size: 1rem;
-    }
-    
-    .article-content pre {
-        padding: var(--spacing-sm);
-        font-size: 0.8rem;
-    }
-    
-    .article-share {
-        justify-content: center;
-    }
-}
-
-/* ============================================================
-   Area 7: كشف صورة غلاف المقال — من تكبير خفيف إلى استقرار،
-   مع تدرّج سفلي يذوّبها في خلفية الصفحة (عمق + تباين للعنوان).
-   ============================================================ */
-.article-cover-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.article-cover-wrapper::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 45%;
-    background: linear-gradient(to top, var(--bg-primary), transparent);
-    pointer-events: none;
-}
-
-.article-cover {
-    opacity: 0;
-    transform: scale(1.06);
-    transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out);
-}
-
-.article-cover.cover-in {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* ═══════════ REBUILD · لوح المقال المحفور (يُحمَّل بعد style.css فيسود) ═══════════ */
-.article-card {
-    background: rgba(var(--bg-secondary-rgb), 0.55);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
-    border-radius: 6px;
-}
-.article-card:hover {
-    border-color: rgba(var(--accent-gold-rgb), 0.42);
-    box-shadow: 0 22px 55px -26px rgba(0, 0, 0, 0.75);
-}
-.article-card:hover .article-card-title { color: var(--parchment); }
-.article-card-title { letter-spacing: -0.005em; }
-.article-card-category {
-    background: transparent;
-    color: var(--accent-gold);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.45);
-}
-.article-tag {
-    background: rgba(var(--accent-gold-rgb), 0.06);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.32);
-    color: var(--parchment);
-    border-radius: 3px;
-}
-
-/* ═══════════════ REBUILD · طباعة المقال/المشروع بلغة الفن الخطّي ═══════════════ */
-/* يُحمَّل بعد style.css على صفحتَي التفاصيل → يسود. لا تغيير في المحتوى. */
-
-/* العناوين: عاجية بخطّ سفلي محفور (كترويسة لوح) */
+@charset "UTF-8";
+/* ============================================================================
+   MyWebb — صفحة المقال + فهرس المقالات
+
+   المتن قادم من Notion عبر notion-to-md + marked: HTML مسطّح بلا أي فئات.
+   لذلك كل قاعدة طباعة هنا محدِّد عناصر أو محدِّد أبناء تحت #article-body،
+   ولا يمكن الاعتماد على class داخل المحتوى إطلاقاً.
+
+   لا ss01 في هذا الملف ولا في غيره — كانت مطبَّقة على خمسة محدِّدات هنا،
+   منها عناوين متن كاملة، وهو ما تمنعه المهارة صراحةً.
+   ============================================================================ */
+
+
+/* ============================================================================
+   ١. هيكل صفحة المقال
+   ============================================================================ */
+
+/* ── عرض صفحة القراءة ────────────────────────────────────────────────────
+   صفحتا المقال والمشروع تفتحان على عرض الحاوية كاملاً (75rem)، لا على
+   عمود القراءة 28.2rem. النزيف والهامش يُصفَّران هنا فيتساوى content مع
+   wide مع الحاوية، ويصير للصفحة حافّتان اثنتان لا ستّ.
+
+   ملاحظة موثّقة: هذا يخرج عن قاعدة عرض السطر في مهارة thmanyah-typography
+   (٣٨ حرفاً) خروجاً كبيراً — السطر هنا يقارب ١٤٠ حرفاً. رُفع حجم المتن
+   واللِيد معه حتى لا يطول السطر بالحروف بقدر ما طال بالبكسل، وبقي
+   line-height عند 2.0 لأن كنسة العين الراجعة تزداد صعوبة كلما طال السطر.
+   القرار قرار صاحب الموقع بعد عرض المقايضة. */
+/* الهيكل يحمل dir="rtl" lang="ar" في الترميز، ولا يمسّه مبدّل اللغة —
+   محتواه مصدره data/ وهو عربيّ كما نُشر. التوكيد هنا احتياط: لو أضاف
+   سكربت لاحقاً dir على سلف، يبقى المستند نفسه على اتجاهه. */
+.article{
+  direction: rtl;
+  text-align: start;
+
+  --measure: 75rem;
+  --bleed: 0rem;
+  --rail:  0rem;
+  padding-block: var(--s-12) var(--s-16);
+  row-gap: 0;
+}
+
+/* عند العرض الكبير يرتفع المتن درجةً: 21px بدل 18px، واللِيد 24px بدل 21px */
+@media (min-width: 60rem){
+  .article{
+    --t-body: 1.3125rem;
+    --t-lede: 1.5rem;
+  }
+}
+
+/* تذييل النشر أخٌ لا ابن، فلا يرث تجاوزات .article — يُكرَّر عليه صراحةً */
+.article-footer{
+  --measure: 75rem;
+  --bleed: 0rem;
+  --rail:  0rem;
+}
+
+/* ── الغلاف ────────────────────────────────────────────────────────────── */
+/* overflow:clip يحبس تكبير أنيميشن الدخول (scale 1.015) داخل الغلاف.
+   بدونه تتجاوز الصورة الكاملة العرض حدّ النافذة بـ1.5% فيومض شريط تمرير
+   أفقي أثناء الكشف. clip لا ينشئ سياق تمرير خلافاً لـ hidden. */
+.article-cover-wrapper{
+  margin-block-end: var(--s-12);
+  overflow: clip;
+  border-radius: var(--r-card);
+}
+.article-cover-wrapper:has(img[hidden]){ margin-block-end: var(--s-16); }
+
+/* كل غلاف في الموقع يأخذ نصف القطر نفسه وحلقة الحافة نفسها. الحلقة تعرّف
+   الحدّ حين تكون الصورة فاتحة عند أطرافها، فلا تسبح بلا شكل فوق الورق. */
+.article-cover{
+  inline-size: 100%;
+  block-size: clamp(14rem, 42vh, 26rem);
+  object-fit: cover;
+  border-radius: var(--r-card);
+  background: var(--bg-element);
+  box-shadow: inset 0 0 0 1px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .08);
+  /* ظاهرة افتراضاً. .cover-in تضيف أنيميشن دخول ولا تُعيد الظهور —
+     فلا يمكن لإخفاق سكربت أو تقليل حركة أن يترك غلافاً مخفياً. */
+  opacity: 1;
+}
+.article-cover[hidden]{ display: none; }
+
+/* ── الترويسة ──────────────────────────────────────────────────────────── */
+.article-header{ margin-block-end: var(--s-6); }
+
+.article-title{
+  font-family: var(--font-display);
+  font-size: var(--t-title);
+  font-weight: 700;
+  line-height: var(--lh-head);
+  padding-block-end: 0.06em;
+  text-wrap: balance;
+}
+
+/* الفاصل تحت العنوان: أُلغي. المقياس هو ما يفصل العنوان عن الميتا، لا خطّ
+   إضافي. تبقى الفئة معلنة كي لا ينكسر عقد الأسماء في الترميز. */
+.article-rule{ display: none; }
+
+/* ── صف الميتا: يحتمل غياب أي حقل بلا فاصل معلّق ولا شارة فارغة ────────── */
+.article-meta{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  margin-block-start: var(--s-4);
+  margin-block-end: var(--s-16);
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+/* العناصر الفارغة تختفي تماماً … */
+.article-meta > :empty{ display: none; }
+/* … والنقطة الفاصلة تظهر فقط بين عنصرين غير فارغين فعلاً */
+.article-meta > :not(:empty) ~ :not(:empty)::before{
+  content: '·';
+  margin-inline-end: var(--s-4);
+  color: var(--text-faint);
+}
+/* التاريخ تحريري ⇒ أرقام عربية-هندية بخط المتن. البقية واجهة ⇒ Sans/لاتيني. */
+.article-date{ font-family: var(--font-text); }
+.article-category{ color: var(--accent-text); }
+
+/* صفّ الميتا نصّ واجهة يتبع لغة الموقع، لكنه يسكن هيكلاً عربياً ثابت
+   الاتجاه. فحين تكون الواجهة إنجليزية تقع عبارة «2 min read» داخل فقرة
+   RTL فتقلب الخوارزمية ترتيبها إلى «min read 2».
+   ‏plaintext تحدّد اتجاه كل عنصر من أول حرف قويّ فيه: عربيّ فيبقى RTL،
+   لاتينيّ فينقلب إلى LTR داخل حدوده وحدها. */
+.article-meta > *{ unicode-bidi: plaintext; }
+
+/* ملاحظة: كانت الميتا تنتقل إلى عمود هامشي ملتصق عند ≥76rem. أُزيل ذلك.
+   السبب عطب حقيقي لا ذوق: الصور والجداول والأكواد في المتن تشغل مسار
+   wide، وwide يمتدّ تحت مسار الهامش. فكانت الميتا الملتصقة (z-index: 2)
+   تطفو فوق كل صورة وكل جدول أثناء التمرير وتغطّيه. وإزالته تُرجع أيضاً
+   العرض الذي كان يقتطعه من عمود القراءة. الميتا الآن صفّ تحت العنوان في
+   كل المقاسات — موضع واحد لا موضعان. */
+
+
+/* ============================================================================
+   ٢. المتن — شبكة الاختراق + الهامش
+   ============================================================================ */
+
+/* الحاوية نفسها شبكة: أبناء Notion المسطّحون يرثون المسارات مباشرة */
+.article-body,
+.project-detail-body{
+  grid-column: full;
+  display: grid;
+  /* نفس مسارات .breakout مكتوبة صراحةً — انظر تعليق style.css: قيمة
+     الخاصية المخصّصة الوسيطة تُجمّد var(--measure) عند :root. */
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [wide-start] minmax(0, var(--bleed))
+    [content-start] min(var(--measure), 100% - (var(--gutter) * 2))
+    [content-end rail-start] minmax(0, var(--rail))
+    [rail-end wide-end] minmax(var(--gutter), 1fr) [full-end];
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--text);
+}
+
+/* كل شيء على مسار القراءة افتراضاً … */
+.article-body > *,
+.project-detail-body > *{ grid-column: content; }
+
+/* … والصور والجداول والأكواد والتضمينات تخترق إلى wide … */
+.article-body > figure,   .project-detail-body > figure,
+.article-body > img,      .project-detail-body > img,
+.article-body > table,    .project-detail-body > table,
+.article-body > pre,      .project-detail-body > pre,
+.article-body > iframe,   .project-detail-body > iframe,
+.article-body > .prose-scroll, .project-detail-body > .prose-scroll{
+  grid-column: wide;
+}
+
+/* … والفواصل الأفقية تمتدّ عبر عرض wide */
+.article-body > hr,
+.project-detail-body > hr{
+  grid-column: wide;
+  border: none;
+  block-size: 1px;
+  background: var(--border-subtle);
+  margin-block: var(--s-16);
+}
+
+/* ── الإيقاع الرأسي ────────────────────────────────────────────────────── */
+.article-body > * + *,
+.project-detail-body > * + *{ margin-block-start: 1.15em; }
+
+/* أول عنصر في المتن لا يحمل هامشاً علوياً — صفّ الميتا يوفّر الفصل أصلاً */
+.article-body > *:first-child,
+.project-detail-body > *:first-child{ margin-block-start: 0; }
+
+.article-body > h2, .project-detail-body > h2,
+.article-body > h3, .project-detail-body > h3{ margin-block-start: 2em; }
+
+/* ── الفقرات ───────────────────────────────────────────────────────────── */
+.article-body p,
+.project-detail-body p{
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--text);
+}
+
+/* الفقرة الافتتاحية — معالجة مجلّة.
+   مقيّدة بأن تكون ضمن أول عنصرين: في المقالات تبدأ الصفحة بفقرة فعلاً،
+   أما كتابات المشاريع فتبدأ بعنوان ثم فاصل ثم سطر بيانات (👤 تطوير: …)
+   وليس افتتاحية — فلا يليق تكبيره. */
+.article-body > p:first-of-type:nth-child(-n+2),
+.project-detail-body > p:first-of-type:nth-child(-n+2){
+  font-size: var(--t-lede);
+  line-height: var(--lh-lede);
+  color: var(--text);
+}
+
+/* ── العناوين ──────────────────────────────────────────────────────────── */
+/* h1 داخل المحتوى: قد يكرّر عنوان الصفحة. يُخفى إن كان تكراراً (يضع
+   article.js الفئة)، وإلا يُعامَل كعنوان قسم لا كعنوان صفحة ثانٍ. */
+.article-body h1,
+.project-detail-body h1{
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  font-weight: 700;
+  line-height: var(--lh-head);
+}
+.article-body h1.is-duplicate-title,
+.project-detail-body h1.is-duplicate-title{ display: none; }
+
+/* 28px — عند العتبة تماماً، فيبقى Display. لا خطّ فاصل تحته: الفصل من
+   الهامش العلوي (2em) والمقياس، وهو ما كان يفعله الخطّ بلا داعٍ. */
 .article-body h2,
+.project-detail-body h2{
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  font-weight: 700;
+  line-height: var(--lh-head);
+}
+
+/* دون 28px ⇒ Serif Text لا Display */
 .article-body h3,
-.project-detail-body h2,
-.project-detail-body h3 {
-    color: var(--parchment);
-    letter-spacing: -0.01em;
-}
-.article-body h2,
-.project-detail-body h2 {
-    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.22);
-    padding-bottom: 0.35em;
-    margin-top: 1.6em;
+.project-detail-body h3{
+  font-family: var(--font-text);
+  font-size: var(--t-h3);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--text);
 }
 
-/* الاقتباس كنقش مخطوطة: قصبة ذهبية + خط العرض المسنّن */
+/* ── الروابط والتوكيد ──────────────────────────────────────────────────── */
+/* :not(.share-btn) لازمة لا تجميلية: كتلة المشاركة تُحقن داخل #article-body،
+   فمحدِّد `.article-body a` (0,1,1) كان يغلب `.share-btn` (0,1,0) ويصبغ
+   ثلاثة من أزرار المشاركة الأربعة بلون اللكنة في حالة السكون — والرابع
+   <button> فيبقى رمادياً. أربعة أزرار متطابقة الشكل بلونين. */
+.article-body a:not(.share-btn),
+.project-detail-body a:not(.share-btn){
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: color-mix(in oklab, var(--accent-text) 45%, transparent);
+  transition: text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.article-body a:not(.share-btn):hover,
+.project-detail-body a:not(.share-btn):hover{ text-decoration-color: currentColor; }
+
+.article-body strong, .project-detail-body strong{ font-weight: 700; }
+/* لا مائل — خط ثمانية بلا مائل، والمتصفح يميله اصطناعياً فيشوّه العربية */
+.article-body em, .project-detail-body em{
+  font-style: normal; font-weight: 500; color: var(--text);
+}
+
+/* ── القوائم ───────────────────────────────────────────────────────────── */
+.article-body ul, .article-body ol,
+.project-detail-body ul, .project-detail-body ol{
+  padding-inline-start: var(--s-6);
+  list-style-position: outside;
+}
+.article-body ul, .project-detail-body ul{ list-style-type: disc; }
+.article-body ol, .project-detail-body ol{ list-style-type: decimal; }
+
+.article-body li, .project-detail-body li{
+  font-family: var(--font-text);
+  line-height: var(--lh-body);
+  margin-block-end: 0.5em;
+}
+.article-body li::marker, .project-detail-body li::marker{ color: var(--text-faint); }
+
+/* ── الاقتباس: بلا صندوق، قصبة واحدة على حافة البدء ────────────────────── */
 .article-body blockquote,
-.project-detail-body blockquote {
-    border-right: 2px solid var(--accent-gold);
-    border-left: none;
-    background: rgba(var(--accent-gold-rgb), 0.05);
-    font-family: var(--font-display);
-    color: var(--parchment);
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: 4px;
+.project-detail-body blockquote{
+  padding-inline-start: var(--s-6);
+  border-inline-start: 2px solid var(--accent-line);
+  color: var(--text-muted);
+  font-family: var(--font-text);
+}
+.article-body blockquote p,
+.project-detail-body blockquote p{ color: inherit; }
+
+/* ── الكود ─────────────────────────────────────────────────────────────── */
+.article-body code, .project-detail-body code{
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+.article-body :not(pre) > code,
+.project-detail-body :not(pre) > code{
+  padding: 0.15em 0.4em;
+  background: var(--bg-element);
+  border-radius: var(--r-control);
+  /* الكود دائماً لاتيني ⇒ عزل اتجاهي داخل الجملة العربية */
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+.article-body pre, .project-detail-body pre{
+  padding: var(--s-4) var(--s-6);
+  background: var(--bg-element);
+  border-radius: var(--r-card);
+  overflow-x: auto;
+  direction: ltr;
+  text-align: start;
+  -webkit-overflow-scrolling: touch;
+}
+.article-body pre code, .project-detail-body pre code{
+  background: none; padding: 0; line-height: 1.75;
 }
 
-/* الروابط بلون ذهبي عتيق */
-.article-body a,
-.project-detail-body a {
-    color: var(--accent-gold);
-    text-decoration-color: rgba(var(--accent-gold-rgb), 0.5);
+/* ── الجداول: تُمرَّر داخل وعائها لا داخل الصفحة ───────────────────────── */
+/* يلفّها article.js في .prose-scroll؛ والقواعد التالية تعمل في الحالتين */
+.prose-scroll{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-inline-size: 100%;
+}
+.article-body table, .project-detail-body table{
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  line-height: 1.65;
+  /* أرقام الجداول تجلس في أعمدة ⇒ أرقام جدولية */
+  font-variant-numeric: tabular-nums;
+}
+.article-body th, .project-detail-body th{
+  padding: var(--s-2) var(--s-3);
+  text-align: start;
+  font-weight: 700;
+  color: var(--text);
+  border-block-end: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+.article-body td, .project-detail-body td{
+  padding: var(--s-2) var(--s-3);
+  color: var(--text-muted);
+  border-block-end: 1px solid var(--border-subtle);
+  vertical-align: top;
 }
 
-/* الجداول كشبكة محفورة (تُطبَّق على صفحتَي التفاصيل) */
-.article-body table,
-.project-detail-body table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--spacing-lg) 0;
-    background: rgba(var(--bg-secondary-rgb), 0.55);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.28);
-    border-radius: 4px;
-    overflow: hidden;
-    font-size: 0.95rem;
+/* ── الصور والأشكال ────────────────────────────────────────────────────── */
+.article-body img, .project-detail-body img{
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--r-card);
+  background: var(--bg-element);
+  box-shadow: inset 0 0 0 1px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .08);
 }
-.article-body thead,
-.project-detail-body thead {
-    background: rgba(var(--accent-gold-rgb), 0.07);
-}
-.article-body th,
-.project-detail-body th {
-    padding: var(--spacing-sm) var(--spacing-md);
-    text-align: right;
-    font-weight: 700;
-    color: var(--parchment);
-    border-bottom: 2px solid rgba(var(--accent-gold-rgb), 0.55);
-}
-.article-body td,
-.project-detail-body td {
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--text-secondary);
-    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.12);
-}
-.article-body tr:hover td,
-.project-detail-body tr:hover td {
-    background: rgba(var(--accent-gold-rgb), 0.05);
+.article-body figure, .project-detail-body figure{ margin: 0; }
+.article-body figcaption, .project-detail-body figcaption{
+  margin-block-start: var(--s-3);
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+  text-align: center;
 }
 
-/* أكواد محفورة */
-.article-body pre,
-.project-detail-body pre {
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
-    border-radius: 4px;
+/* ── نص مختلط: عزل الأجزاء اللاتينية داخل سياق RTL ─────────────────────── */
+.article-body :is(p, li, td, th, h1, h2, h3) bdi,
+.project-detail-body :is(p, li, td, th, h1, h2, h3) bdi{ unicode-bidi: isolate; }
+
+
+/* ============================================================================
+   ٣. المشاركة + تذييل النشر
+   ============================================================================ */
+
+.article-share{
+  grid-column: content;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-block-start: var(--s-16);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--border-subtle);
+}
+.article-share-label{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+  margin-inline-end: var(--s-2);
+}
+.share-btn{
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  background: var(--bg-element);
+  color: var(--text-muted);
+  transition: var(--transition-ui);
+}
+.share-btn svg{ fill: currentColor; }
+.share-btn:hover{ background: var(--accent-quiet); color: var(--accent-text); }
+.share-btn:active{ transform: scale(0.94); transition-duration: var(--dur-fast); }
+
+/* ── تذييل النشر: زجاج حقيقي ───────────────────────────────────────────
+   الطبقة الوحيدة غير النافبار التي تستحق backdrop-filter: تعلو نهاية
+   المقال بلوح شفّاف يمرّ من تحته آخر سطر، فيُقرأ «انتهى النصّ، وهذا ما
+   بعده» بدل خطّ فاصل رابع. */
+.article-footer{
+  margin-block-start: var(--s-16);
+  padding-block: var(--s-12);
+  border-radius: var(--r-card);
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: saturate(150%) blur(16px);
+  backdrop-filter: saturate(150%) blur(16px);
+  box-shadow: var(--shadow-1);
+  row-gap: var(--s-12);
+}
+@supports not (backdrop-filter: blur(1px)){
+  .article-footer{ background: var(--bg-surface); }
+}
+.article-footer > *{ grid-column: wide; }
+
+.article-nav{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: var(--s-4);
+}
+/* حشو 16 داخل نصف قطر البطاقة 16 ⇒ لا عنصر داخلي منحنٍ هنا، فلا خرق
+   لقاعدة تحدّ المركز. */
+.article-nav-item{
+  display: block;
+  padding: var(--s-4);
+  border-radius: var(--r-card);
+  background: var(--bg-element);
+  text-decoration: none;
+  transition: var(--transition-ui);
+}
+.article-nav-item:hover{ background: var(--bg-element-hover); box-shadow: var(--shadow-1); }
+.article-nav-label{
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+  margin-block-end: var(--s-1);
+}
+.article-nav-title{
+  font-family: var(--font-text);
+  font-size: var(--t-card);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--text);
+}
+/* السابق يحاذي البدء (الافتراضي) والتالي يحاذي النهاية — الاتجاهان
+   يعكسان اتجاه التنقّل، وكلاهما مُعلَن كي يبقى الاسمان في العقد. */
+.article-nav-item.prev{ text-align: start; }
+.article-nav-item.next{ text-align: end; }
+
+.article-footer-heading{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-block-end: var(--s-4);
+}
+.article-footer-more{ display: grid; gap: var(--s-1); }
+.article-footer-more a{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-4);
+  padding: var(--s-2) var(--s-3);
+  margin-inline: calc(var(--s-3) * -1);
+  border-radius: var(--r-control);
+  font-family: var(--font-text);
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  transition: var(--transition-ui);
+}
+.article-footer-more a:hover{ color: var(--accent-text); background: var(--bg-element); }
+.article-footer-more-title{ min-inline-size: 0; }
+.article-footer-more span{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 400;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.article-footer-back{ justify-self: start; }
+
+
+/* ============================================================================
+   ٤. فهرس المقالات (articles.html) — منشور، لا نتائج بحث
+   ============================================================================
+
+   البيانات فيها مقالان فقط، وبلا وصف ولا تاريخ ولا وسوم. شبكة بطاقات
+   بمصغّرات 88×64 كانت تعرض عنوانين صغيرين وزمنَي قراءة في شريط ضيّق —
+   شكل صفحة نتائج بحث لا شكل منشور. الشكل الصحيح لعدد قليل من العناصر
+   بلا بيانات وصفية هو مدخل تحريري: الغلاف بعرض العمود، والعنوان كبير
+   بخط العرض، وزمن القراءة في الهامش. */
+
+.articles-section{ padding-block: var(--s-16) var(--s-24); }
+
+.articles-grid{ display: grid; gap: var(--s-16); }
+
+/* المدخل — الشكل نفسه للصدارة ولما بعدها، والفرق في مقاس الغلاف فقط */
+.article-lead,
+.article-card{
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+/* الفجوة يوفّرها gap على الشبكة — كان margin هنا يضاعفها إلى 192px */
+.article-lead{ margin-block-end: 0; }
+
+.article-lead-cover,
+.article-card-image-wrapper{
+  display: block;
+  inline-size: 100%;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--bg-element);
+  margin-block-end: var(--s-6);
+  box-shadow: var(--shadow-1);
+  transition: box-shadow var(--dur-mid) var(--ease-out), transform var(--dur-mid) var(--ease-out);
+}
+.article-lead-cover{ block-size: clamp(13rem, 38vh, 24rem); object-fit: cover; }
+.article-card-image-wrapper{ aspect-ratio: 16 / 9; }
+.article-card-image{ inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+.article-lead:hover .article-lead-cover,
+.article-card:hover .article-card-image-wrapper{
+  box-shadow: var(--shadow-2);
+  transform: translateY(-2px);
 }
 
-/* عنوان المقال + الغلاف بإطار ذهبي */
-.article-title,
-.project-detail-header .article-title {
-    letter-spacing: -0.015em;
+/* العنوان هو هدف النقر الحقيقي ⇒ يأخذ المقياس الذي يستحقّه */
+.article-lead-title,
+.article-card-title{
+  font-family: var(--font-display);
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: var(--lh-head);
+  color: var(--text);
+  padding-block-end: 0.06em;
+  text-wrap: balance;
+  transition: color var(--dur-fast) var(--ease-out);
 }
-.article-cover,
-.project-detail-cover {
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.2);
-    border-radius: 6px;
+.article-lead:hover .article-lead-title,
+.article-card:hover .article-card-title{ color: var(--accent-text); }
+
+.article-card-content{ min-inline-size: 0; }
+.article-card-title-en{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+  margin-block-start: var(--s-1);
 }
-.article-category,
-.article-header-category {
-    background: transparent !important;
-    color: var(--accent-gold) !important;
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.45);
+.article-card-description{
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  margin-block-start: var(--s-3);
+  max-inline-size: var(--measure);
+}
+/* الحقول الغائبة لا تترك فراغاً ولا فاصلاً معلّقاً.
+   الوعاء الخارجي ليس :empty (يحوي مسافة بيضاء وعنصراً فارغاً)، فيُفحص
+   بمحتواه الفعلي عبر :has بدل أن يترك صفّاً فارغاً بهامش معلّق. */
+.article-card-title-en:empty,
+.article-card-description:empty,
+.article-card-meta:empty,
+.article-card-tags:empty{ display: none; }
+.article-card-footer:not(:has(.article-tag)){ display: none; }
+.article-card-meta:not(:has(> :not(:empty))){ display: none; }
+
+.article-card-meta,
+.article-card-footer{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  margin-block-start: var(--s-3);
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+}
+.article-card-meta > :empty{ display: none; }
+.article-card-date{ font-family: var(--font-text); }
+.article-card-category{ color: var(--accent-text); }
+
+/* الوسوم غير تفاعلية ⇒ لا تُعطى وعاءً يوحي بأنها تُنقر */
+.article-card-tags{ display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.article-tag{ color: var(--text-muted); font-family: var(--font-sans); }
+.article-tag + .article-tag::before{ content: '·'; margin-inline-end: var(--s-2); color: var(--text-faint); }
+
+.article-read-time{ white-space: nowrap; font-family: var(--font-sans); }
+
+
+/* ============================================================================
+   ٤٫٥ ماستهيد مدوّنة «بان» — صفحة المقالات وحدها
+   الفئات ‎.ban-*‎ لا توجد إلا في articles.html، فلا تمسّ صفحة المقال المفرد
+   وإن شاركتها هذا الملف. يتبع نظام التصميم: نفس الرموز والأقطار والظلال. */
+.ban-masthead{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-3);
+  padding-block: var(--s-24) var(--s-12);
+  padding-inline: var(--gutter);   /* حاشية تمنع لمس الحرف المرسل حافة الشاشة */
 }
 
-/* ═══════════ ATELIER · تحرير سويسري لصفحات المقالات (طبقة مُلحقة) ═══════════ */
+/* الشعار مفرّغ الخلفية: الريشة والورقة تسبحان على الورق بلا إطار، بظلّ ناعم
+   مصبوغ نحو الحبر يرفعهما قليلاً — كأنّهما موضوعتان على الصفحة. */
+.ban-emblem{
+  block-size: clamp(7.5rem, 17vw, 11.5rem);
+  margin: 0 0 var(--s-2);
+  filter: drop-shadow(0 8px 16px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22));
+}
+.ban-emblem img{ block-size: 100%; inline-size: auto; display: block; }
 
-/* ترقيم تحريري للبطاقات عبر عدّادات CSS (زخرفة إضافية — لا تغيير في العرض) */
-.articles-grid { counter-reset: ed-leaf; }
-.articles-grid .article-card { counter-increment: ed-leaf; }
-.articles-grid .article-card-content { position: relative; }
-.articles-grid .article-card-content::before {
-    content: counter(ed-leaf, arabic-indic);
-    position: absolute;
-    top: var(--spacing-sm);
-    left: var(--spacing-sm);
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--editorial-vermilion);
-    letter-spacing: 0.08em;
-    padding-bottom: 3px;
-    border-bottom: 2px solid rgba(var(--editorial-vermilion-rgb), 0.55);
-    opacity: 0.9;
-    pointer-events: none;
+/* «خاطرة ومقال» — سطر واجهة صغير باللكنة، يُمهّد للاسم */
+.ban-kicker{
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  font-weight: 500;
+  color: var(--accent-text);
 }
 
-/* صف الميتا في رأس المقال: تأطير مجلّة بمسطرتين شعريتين */
-.article-meta,
-.project-detail-meta {
-    border-top: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
-    border-bottom: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
-    padding-block: 0.6rem;
-    letter-spacing: 0.02em;
+/* page-title يحمل المقاس؛ نلغي هامشه السفلي هنا. الحرف المرسل (salt) يقع على
+   كلمة «بان» وحدها عبر ‎.swash‎ — لا على «مدونة» — التزاماً بقاعدة عدم تزيين
+   كلمتين متجاورتين. */
+.ban-title{
+  margin: 0;
+  /* «مدوّنة بان» كلمتان — أصغر قليلاً من افتتاحية mega كي يتّسع بلا فيض،
+     مع balance يوزّعه على سطرين بأناقة حين تضيق الشاشة. */
+  font-size: clamp(2.75rem, 8.5vw, 5.5rem);
+  line-height: 1.14;
+  text-wrap: balance;
 }
 
-/* الفقرة الافتتاحية: معالجة مجلّة (lede) — حجم أكبر وحبر أفتح */
-.article-body > p:first-of-type {
-    font-size: 1.22em;
-    line-height: 2.05;
-    color: var(--text-primary);
+/* تعريف لغويّ: «بان في اللغة:» باللكنة، والمعنى بلون المتن */
+.ban-definition{
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-text);
+  font-size: var(--t-lede);
+  line-height: var(--lh-lede);
+  color: var(--text);
 }
+.ban-def-label{ color: var(--accent-text); }
 
-/* عناوين h2: شرطة قرمزية جريئة فوق نهاية الخط المحفور (RTL: يمين) */
-.article-body h2,
-.project-detail-body h2 { position: relative; }
-.article-body h2::after,
-.project-detail-body h2::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    right: 0;
-    width: 34px;
-    height: var(--rule-bold);
-    background: var(--editorial-vermilion);
-    opacity: 0.75;
-    pointer-events: none;
+/* المقدّمة: عمود قراءة مريح، فقرتان بخط المتن */
+.ban-intro{
+  max-inline-size: 44rem;
+  margin-block-start: var(--s-6);
 }
+.ban-intro p{
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+.ban-intro p + p{ margin-block-start: var(--s-4); }
 
-/* قسم المقالات يستضيف سكّة جانبية زخرفية */
-.articles-section { position: relative; }
+
+/* ============================================================================
+   ٥. الاستجابة
+   ============================================================================ */
+
+@media (max-width: 48rem){
+  .article-cover{ block-size: clamp(10rem, 30vh, 15rem); }
+  .article-meta{ margin-block-end: var(--s-12); }
+
+  /* على الجوال ينزل عنوان الصفحة إلى 36px، فلو بقي h2 عند 28px لانهار
+     التدرّج الهرمي. يصغر h2 إلى 24px — ودون عتبة 28px ينتقل من
+     Serif Display إلى Serif Text التزاماً بجدول الأدوار في كل المقاسات. */
+  .article-body h2, .project-detail-body h2{
+    font-size: var(--t-card);
+    font-family: var(--font-text);
+  }
+  .article-body h3, .project-detail-body h3{ font-size: var(--t-card); }
+
+  /* صفّ الميتا يلتفّ على الشاشات الضيّقة، والنقطة الفاصلة تُطبع في بداية
+     السطر الجديد فتُقرأ علامةً شاردة لا فاصلاً. تُحذف ويحلّ محلّها فراغ
+     رأسي — الفصل بالمسافة لا بالعلامة حين ينكسر السطر. */
+  .article-meta{ flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  .article-meta > :not(:empty) ~ :not(:empty)::before{ content: none; }
+
+  .articles-grid{ gap: var(--s-12); }
+
+  .article-nav-item.next{ text-align: start; }
+
+  /* ماستهيد «بان» على الجوال: شعار أصغر وحاشية علوية أقلّ */
+  .ban-masthead{ padding-block: var(--s-16) var(--s-8); }
+  .ban-emblem{ block-size: clamp(6.5rem, 30vw, 9rem); }
+}

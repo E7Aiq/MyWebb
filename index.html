@@ -3,211 +3,607 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="محمد الزبيدي - محلل بيانات متخصص في SQL و Power BI و Python">
-    <title>محمد الزبيدي | محلل بيانات</title>
-    
-    <link rel="stylesheet" href="css/style.css?v=r4">
-    <link rel="stylesheet" href="css/animations.css?v=r2">
-    <link rel="stylesheet" href="css/responsive.css?v=r4">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="محمد الزبيدي - محلل بيانات متخصص في SQL و Power BI و Python" data-en-content="Mohammed Alzobaidi — data analyst working in SQL, Power BI and Python">
+    <title data-en="Mohammed Alzobaidi | Data Analyst">محمد الزبيدي | محلل بيانات</title>
+
+    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="js/view-transitions.js?v=r27"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="css/style.css?v=r27">
+    <link rel="stylesheet" href="css/animations.css?v=r27">
+    <!-- بطاقات المختارات: المشروع في project.css والمقال في article.css -->
+    <link rel="stylesheet" href="css/project.css?v=r27">
+    <link rel="stylesheet" href="css/article.css?v=r27">
+    <link rel="stylesheet" href="css/responsive.css?v=r27">
+
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
 </head>
 <body>
+    <a class="skip-link" data-en="Skip to content" href="#about">تخطَّ إلى المحتوى</a>
+
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">محمد الزبيدي</a>
-            
-            <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html" class="nav-link active">الرئيسية</a></li>
-                <li><a href="projects.html" class="nav-link">المشاريع</a></li>
-                <li><a href="articles.html" class="nav-link">المقالات</a></li>
-                <li><a href="#contact" class="nav-link">تواصل</a></li>
-            </ul>
+            <a href="index.html" class="logo" data-en="Mohammed Alzobaidi">محمد <span class="swash">الزبيدي</span></a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" class="nav-link active" data-en="Home">الرئيسية</a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura"><span class="swash">ذُرى</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban"><span class="swash">بان</span></a></li>
+                    <li><a href="#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <main>
+        <!-- ── الهيرو: الاسم أطروحة، لا قالب ───────────────────────────── -->
         <section class="hero" id="hero">
-            <div class="ed-cropmarks" aria-hidden="true"></div>
-            <div class="container">
-                <div class="hero-content fade-in">
-                    <div class="hero-text">
-                        <h1 class="hero-title">
-                            <span class="name-ar">محمد الزبيدي</span>
-                            <span class="name-en">Mohammed Alzobaidi</span>
-                        </h1>
-                        <p class="hero-role">محلل بيانات | Data Analyst</p>
-                        <p class="hero-tagline">تحويل البيانات إلى قيمة حقيقية  </p>
-                        
-                        <div class="hero-cta">
-                            <a href="projects.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                    <path d="M16 3h-8l-2 4h12l-2-4z"></path>
-                                </svg>
-                                مشاريعي
-                            </a>
-                            <a href="articles.html" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 20h9"></path>
-                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
-                                </svg>
-                                مدونتي
-                            </a>
-                            <a href="#contact" class="btn btn-secondary">تواصل معي</a>
-                        </div>
+            <div class="container hero-inner">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <!-- الاسم وحده. كان تحته سطر لاتيني ثابت «Mohammed
+                             Alzobaidi» يظهر دائماً؛ صار الاسم يتبع لغة
+                             الواجهة فلا تتكرّر الهوية مرّتين في الشاشة.
+                             salt مرّة واحدة في الموقع كلّه، على كلمة واحدة،
+                             ولا تُطبَّق على كلمتين متجاورتين. -->
+                        <span class="name-ar" data-en="Mohammed Alzobaidi">محمد <span class="swash">الزبيدي</span></span>
+                    </h1>
+                    <p class="hero-role" data-en="Data &amp; AI Solutions Developer">مطوّر حلول البيانات والذكاء الاصطناعي</p>
+                    <p class="hero-tagline" data-en="A number without context is noise; a question without a plan is ink on paper.">رقمٌ بلا سياق، ضجيج. وسؤالٌ بلا تخطيط، حبرٌ على ورق</p>
+
+                    <div class="hero-cta">
+                        <a href="projects.html" class="btn btn-outline brand-dhura" aria-label="ذُرى — مشاريعي">
+                            <img class="btn-emblem" src="assets/logos/dhura.png?v=r27" alt="" aria-hidden="true" decoding="async">
+                            <span class="swash">ذُرى</span>
+                        </a>
+                        <a href="articles.html" class="btn btn-outline brand-ban" aria-label="بان — مدوّنتي">
+                            <img class="btn-emblem" src="assets/logos/ban.png?v=r27" alt="" aria-hidden="true" decoding="async">
+                            <span class="swash">بان</span>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary" data-en="Get in touch">تواصل معي</a>
                     </div>
-                    
-                    <div class="hero-image">
-                        <img src="assets/images/profile.jpg" alt="محمد الزبيدي" class="profile-img">
-                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <img src="assets/images/profile.jpg" alt="محمد الزبيدي" class="profile-img"
+                         width="400" height="400" fetchpriority="high">
                 </div>
             </div>
         </section>
 
+        <!-- ── عني ─────────────────────────────────────────────────────── -->
+        <!-- .section-grid: العنوان في هامش البدء ملتصقاً أثناء التمرير،
+             والمحتوى إلى جانبه. دون 76rem يعود عموداً واحداً. -->
         <section class="about" id="about">
-            <span class="ed-index" aria-hidden="true">٠١</span>
-            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠١</span><span class="ed-rail-word">عني</span></span>
-            <div class="container">
-                <h2 class="section-title slide-up">عني </h2>
-                <div class="about-content slide-up atlas-plate">
-                   <p class="about-bio">محلل بيانات أهتم بأدق التفاصيل، وأقدّم أولوية السؤال على أولوية الإجابة. دائماً هناك قصة خلف كل رقم، ولغز لا يسهل اكتشافه. وأعتقد أن أفضل ما يصف محلل البيانات المتميز قول الشاعر:<br><br><span class="poetry-line">له على الرأيِ تنقيبٌ ومطَّلعٌ — وفي المقاصدِ تصويبٌ وتصعيد</span></p>
-                    <a href="assets/Data____CV.pdf" class="btn btn-outline" download style="display:inline-flex;align-items:center;gap:0.5rem;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="container section-grid">
+                <div class="section-head">
+                    <h2 class="section-title rv" data-en="About">عني</h2>
+                    <p class="section-label rv" data-en="Who I am">من أنا؟</p>
+                </div>
+                <div class="about-content section-body rv">
+                    <p class="about-bio" data-en="A Data &amp; AI solutions developer who starts from the impact of the problem before the value of the solution. I turn scattered data into a solid foundation, then build analytics, models, and intelligent apps on top of it — to support decisions, automate work, and improve the experience.">مطوّر حلول البيانات والذكاء الاصطناعي، أبدأ من أثر المشكلة قبل قيمة الحل. أعمل على تحويل البيانات المتفرقة إلى بنية صلبة، ثم أبني فوقها تحليلات ونماذج وتطبيقات ذكية تساعد على اتخاذ القرار، وأتمتة العمل، وتحسين التجربة.</p>
+                    <p class="about-bio" data-en="I care about the smallest details, and I put the question before the answer; because a good solution doesn't start from advanced technology, but from understanding what is truly worth solving.">أهتم بأدق التفاصيل، وأقدّم أولوية السؤال على أولوية الإجابة؛ لأن الحل الجيد لا يبدأ من التقنية المتطورة، بل من فهم ما يستحق أن نعالجه أصلاً.</p>
+                    <p class="about-bio" data-en="Perhaps the best description of a good solutions developer is the poet's words:">ولعل أفضل ما يعبّر عن مطوّر الحلول الجيد قول الشاعر:</p>
+                    <!-- الشطران بلا شرطة بينهما: الفصل يقع بالفراغ لا بعلامة،
+                         كما يُنضَّد البيت في الطباعة العربية. -->
+                    <p class="poetry-line" lang="ar" dir="rtl">
+                        <span class="poetry-hemistich">له على الرأيِ تنقيبٌ ومطَّلعٌ</span>
+                        <span class="poetry-hemistich">وفي المقاصدِ تصويبٌ وتصعيد</span>
+                    </p>
+                    <a href="assets/Data____CV.pdf" class="btn btn-outline" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        تحميل السيرة الذاتية
+                        <span data-en="Download CV">تحميل السيرة الذاتية</span>
                     </a>
                 </div>
             </div>
         </section>
 
-        <div class="ed-divider" aria-hidden="true"></div>
-
+        <!-- ── رحلة البيانات: تسلسل واحد على خطّ واحد (RTL: يمين → يسار) ── -->
+        <!-- بلا هامش جانبي: الهامش يظهر حيث يكون المحتوى عمود قراءة. أربع
+             مراحل على خطّ واحد تحتاج عرض الحاوية كاملاً، وحشرها في 896px
+             يعطي 200px للعمود أي ١٣ حرفاً في السطر. -->
         <section class="skills" id="skills">
-            <span class="ed-index" aria-hidden="true">٠٢</span>
-            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠٢</span><span class="ed-rail-word">المهارات التقنية</span></span>
             <div class="container">
-                <h2 class="section-title slide-up">المهارات التقنية</h2>
-                <div class="journey-grid" id="journeyGrid">
-                    <!-- رحلة البيانات: أربع مراحل، من السؤال إلى القرار (RTL: تُقرأ يميناً→يساراً) -->
+                <h2 class="section-title rv" data-en="The solution journey">رحلة بناء الحل</h2>
+                <p class="section-label rv" data-en="From problem to measurable impact">من المشكلة إلى أثر قابل للقياس</p>
 
-                    <article class="stage-card fade-in" data-motif="question">
-                        <canvas class="stage-canvas" aria-hidden="true"></canvas>
-                        <div class="stage-content">
-                            <span class="stage-number" aria-hidden="true">٠١</span>
-                            <h3 class="stage-title">أبدأ بالسؤال</h3>
-                            <p class="stage-desc">صياغة السؤال الصحيح قبل أي أداة. تحديد المشكلة، فهم السياق، ومعرفة ما الذي يستحق أن يُقاس أصلاً.</p>
-                            <ul class="stage-tags">
-                                <li class="stage-tag">تحليل المتطلبات</li>
-                                <li class="stage-tag">تصميم الأسئلة التحليلية</li>
-                                <li class="stage-tag">فهم الأعمال</li>
-                            </ul>
-                        </div>
-                    </article>
+                <ol class="journey-grid stagger-parent" id="journeyGrid">
+                    <li class="stage-card stagger-child" data-motif="question">
+                        <!-- الكانفس محفوظ في العقد (§4) وإن لم يعد يُرسم عليه -->
+                        <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
+                        <span class="stage-number" aria-hidden="true" data-en="01">٠١</span>
+                        <h3 class="stage-title" data-en="I start with the problem">أبدأ بالمشكلة</h3>
+                        <p class="stage-desc" data-en="Before choosing a tool or a model, I understand the context, identify the user, frame the right question, and agree on the target outcome and how success is measured.">قبل اختيار الأداة أو النموذج، أفهم السياق، وأحدّد المستخدم، وأصوغ السؤال الصحيح، وأتفق على النتيجة المطلوبة ومعيار نجاحها.</p>
+                        <ul class="stage-tags">
+                            <li class="stage-tag" data-en="Requirements analysis">تحليل المتطلبات</li>
+                            <li class="stage-tag" data-en="Business understanding">فهم الأعمال</li>
+                            <li class="stage-tag" data-en="Solution design">تصميم الحلول</li>
+                        </ul>
+                    </li>
 
-                    <article class="stage-card fade-in" data-motif="extract">
-                        <canvas class="stage-canvas" aria-hidden="true"></canvas>
-                        <div class="stage-content">
-                            <span class="stage-number" aria-hidden="true">٠٢</span>
-                            <h3 class="stage-title">أستخرج وأُنقّي</h3>
-                            <p class="stage-desc">جلب البيانات من مصادرها الخام، وبناء الجسور التي تنقلها، وتنقية الفوضى قبل أن تُروى.</p>
-                            <ul class="stage-tags">
-                                <li class="stage-tag">SQL</li>
-                                <li class="stage-tag">Python (Pandas)</li>
-                                <li class="stage-tag">ETL &amp; Data Pipelines</li>
-                                <li class="stage-tag">جودة البيانات</li>
-                            </ul>
-                        </div>
-                    </article>
+                    <li class="stage-card stagger-child" data-motif="extract">
+                        <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
+                        <span class="stage-number" aria-hidden="true" data-en="02">٠٢</span>
+                        <h3 class="stage-title" data-en="I build the data foundation">أبني أساس البيانات</h3>
+                        <p class="stage-desc" data-en="I gather data from its different sources, unify it, clean it, then build reliable pipelines that make it ready for analysis and operation.">أجمع البيانات من مصادرها المختلفة، وأوحّدها، وأنظّفها، ثم أبني مسارات موثوقة تجعلها جاهزة للتحليل والتشغيل.</p>
+                        <ul class="stage-tags">
+                            <li class="stage-tag" data-en="Data engineering">هندسة البيانات</li>
+                            <li class="stage-tag" data-en="Data integration">تكامل البيانات</li>
+                            <li class="stage-tag" data-en="Data quality">جودة البيانات</li>
+                        </ul>
+                    </li>
 
-                    <article class="stage-card fade-in" data-motif="model">
-                        <canvas class="stage-canvas" aria-hidden="true"></canvas>
-                        <div class="stage-content">
-                            <span class="stage-number" aria-hidden="true">٠٣</span>
-                            <h3 class="stage-title">أكشف وأُنمذج</h3>
-                            <p class="stage-desc">تحويل الأرقام المتناثرة إلى بنية ذات معنى — علاقات، أنماط، ونماذج تكشف ما لا تراه العين المجردة.</p>
-                            <ul class="stage-tags">
-                                <li class="stage-tag">نمذجة البيانات</li>
-                                <li class="stage-tag">DAX</li>
-                                <li class="stage-tag">التحليل الإحصائي</li>
-                                <li class="stage-tag">اكتشاف الأنماط والشذوذ</li>
-                            </ul>
-                        </div>
-                    </article>
+                    <li class="stage-card stagger-child" data-motif="model">
+                        <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
+                        <span class="stage-number" aria-hidden="true" data-en="03">٠٣</span>
+                        <h3 class="stage-title" data-en="I build the intelligent solution">أطوّر الحل الذكي</h3>
+                        <p class="stage-desc" data-en="I turn data into usable logic — from analytics and predictive models to generative-AI solutions and apps that connect the model to real business context.">أحوّل البيانات إلى منطق قابل للاستخدام؛ من التحليلات والنماذج التنبؤية إلى حلول الذكاء الاصطناعي التوليدي والتطبيقات التي تربط النموذج بسياق العمل الحقيقي.</p>
+                        <ul class="stage-tags">
+                            <li class="stage-tag" data-en="Machine learning">تعلّم الآلة</li>
+                            <li class="stage-tag" data-en="Generative AI">الذكاء الاصطناعي التوليدي</li>
+                            <li class="stage-tag" data-en="Intelligent app development">تطوير التطبيقات الذكية</li>
+                        </ul>
+                    </li>
 
-                    <article class="stage-card fade-in" data-motif="story">
-                        <canvas class="stage-canvas" aria-hidden="true"></canvas>
-                        <div class="stage-content">
-                            <span class="stage-number" aria-hidden="true">٠٤</span>
-                            <h3 class="stage-title">أروي القرار</h3>
-                            <p class="stage-desc">النقطة التي يتحوّل فيها التحليل إلى قصة، والقصة إلى قرار. لوحات تُقرأ كأنها فصول، وتوصيات تُبنى عليها خطوات.</p>
-                            <ul class="stage-tags">
-                                <li class="stage-tag">Power BI</li>
-                                <li class="stage-tag">السرد البصري</li>
-                                <li class="stage-tag">تصميم لوحات القرار</li>
-                                <li class="stage-tag">صياغة التوصيات</li>
-                            </ul>
-                        </div>
-                    </article>
+                    <li class="stage-card stagger-child" data-motif="story">
+                        <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
+                        <span class="stage-number" aria-hidden="true" data-en="04">٠٤</span>
+                        <h3 class="stage-title" data-en="I ship and measure impact">أطلق وأقيس الأثر</h3>
+                        <p class="stage-desc" data-en="I turn the model into a working solution — an app, an automation, a decision dashboard, or a smart service. Then I monitor performance, measure impact, and improve the solution based on what the results reveal.">أحوّل النموذج إلى حل يعمل؛ تطبيق، أو أتمتة، أو لوحة قرار، أو خدمة ذكية. ثم أراقب الأداء، وأقيس الأثر، وأطوّر الحل بناءً على ما تكشفه النتائج.</p>
+                        <ul class="stage-tags">
+                            <li class="stage-tag" data-en="Deployment">نشر الحلول</li>
+                            <li class="stage-tag" data-en="Process automation">أتمتة العمليات</li>
+                            <li class="stage-tag" data-en="Performance measurement">قياس الأداء</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+
+        <!-- ── الأدوات: شريط لا نهائي ──────────────────────────────────────
+             القائمة مكرّرة أربع مرّات بنفس الترتيب حرفياً، والحركة تزيح
+             المضمار بـ translateX(-50%) أي بمقدار نسختين. فتحلّ النسختان
+             الأخيرتان محلّ الأوليين تماماً عند إعادة التشغيل، ولا يُرى قطع.
+
+             لماذا أربع لا اثنتان: نصف المضمار يجب أن يكون أعرض من الشاشة،
+             وإلا نفد المحتوى قبل نهاية الدورة وظهر فراغ في الطرف. مقيساً
+             بنسختين: صفر فراغ حتى 1600px، ثم 286px عند 1920px و926px عند
+             2560px. بأربع نسخ يصير نصف المضمار 3268px فيغطّي كل شاشة عملية.
+
+             النسخ الثلاث الأخيرة aria-hidden فلا يقرأ قارئ الشاشة الأدوات
+             إلا مرّة واحدة. -->
+        <section class="stack" id="stack" aria-labelledby="stackTitle">
+            <div class="container">
+                <h2 class="section-title rv" id="stackTitle" data-en="Tools I'm fluent in">ما أجيده من أدوات</h2>
+                <p class="section-label rv" data-en="What I reach for to turn an idea into a solution">ما أمدّ يدي إليه لأحوّل الفكرة إلى حل</p>
+            </div>
+
+            <div class="mq">
+                <ul class="mq__track">
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cursor.svg"
+                             alt="Cursor" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cloudflare.svg"
+                             alt="Cloudflare" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/aws.svg"
+                             alt="AWS" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/docker.svg"
+                             alt="Docker" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/claude-code.svg"
+                             alt="Claude Code" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/github.svg"
+                             alt="GitHub" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/huggingface.svg"
+                             alt="Hugging Face" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/n8n.svg"
+                             alt="n8n" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/codex.svg"
+                             alt="Codex" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-apps.svg"
+                             alt="Power Apps" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/pandas.svg"
+                             alt="Pandas" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/numpy.svg"
+                             alt="NumPy" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-bi.svg"
+                             alt="Power BI" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/mongodb.svg"
+                             alt="MongoDB" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/nextjs.svg"
+                             alt="Next.js" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/framer.svg"
+                             alt="Framer" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/linear.svg"
+                             alt="Linear" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/notion.svg"
+                             alt="Notion" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/figma.svg"
+                             alt="Figma" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cursor.svg"
+                             alt="Cursor" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cloudflare.svg"
+                             alt="Cloudflare" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/aws.svg"
+                             alt="AWS" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/docker.svg"
+                             alt="Docker" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/claude-code.svg"
+                             alt="Claude Code" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/github.svg"
+                             alt="GitHub" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/huggingface.svg"
+                             alt="Hugging Face" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/n8n.svg"
+                             alt="n8n" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/codex.svg"
+                             alt="Codex" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-apps.svg"
+                             alt="Power Apps" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/pandas.svg"
+                             alt="Pandas" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/numpy.svg"
+                             alt="NumPy" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-bi.svg"
+                             alt="Power BI" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/mongodb.svg"
+                             alt="MongoDB" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/nextjs.svg"
+                             alt="Next.js" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/framer.svg"
+                             alt="Framer" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/linear.svg"
+                             alt="Linear" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/notion.svg"
+                             alt="Notion" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/figma.svg"
+                             alt="Figma" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cursor.svg"
+                             alt="Cursor" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cloudflare.svg"
+                             alt="Cloudflare" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/aws.svg"
+                             alt="AWS" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/docker.svg"
+                             alt="Docker" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/claude-code.svg"
+                             alt="Claude Code" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/github.svg"
+                             alt="GitHub" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/huggingface.svg"
+                             alt="Hugging Face" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/n8n.svg"
+                             alt="n8n" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/codex.svg"
+                             alt="Codex" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-apps.svg"
+                             alt="Power Apps" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/pandas.svg"
+                             alt="Pandas" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/numpy.svg"
+                             alt="NumPy" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-bi.svg"
+                             alt="Power BI" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/mongodb.svg"
+                             alt="MongoDB" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/nextjs.svg"
+                             alt="Next.js" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/framer.svg"
+                             alt="Framer" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/linear.svg"
+                             alt="Linear" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/notion.svg"
+                             alt="Notion" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/figma.svg"
+                             alt="Figma" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cursor.svg"
+                             alt="Cursor" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/cloudflare.svg"
+                             alt="Cloudflare" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/aws.svg"
+                             alt="AWS" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/docker.svg"
+                             alt="Docker" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/claude-code.svg"
+                             alt="Claude Code" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/github.svg"
+                             alt="GitHub" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/huggingface.svg"
+                             alt="Hugging Face" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/n8n.svg"
+                             alt="n8n" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/codex.svg"
+                             alt="Codex" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-apps.svg"
+                             alt="Power Apps" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/pandas.svg"
+                             alt="Pandas" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/numpy.svg"
+                             alt="NumPy" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/power-bi.svg"
+                             alt="Power BI" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/mongodb.svg"
+                             alt="MongoDB" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/nextjs.svg"
+                             alt="Next.js" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/framer.svg"
+                             alt="Framer" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/linear.svg"
+                             alt="Linear" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/notion.svg"
+                             alt="Notion" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                    <li aria-hidden="true" class="stack-logo-wrap">
+                        <img class="stack-logo" src="assets/logos/figma.svg"
+                             alt="Figma" width="72" height="72" loading="lazy" decoding="async">
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ── مختارات: أحدث مشروع + أحدث مقال (projects.js / articles-list.js) ── -->
+        <section class="selections" id="work">
+            <div class="container">
+                <h2 class="section-title rv" data-en="Selections">مختارات</h2>
+                <p class="section-label rv" data-en="What I built, and what I wrote">ما بنيته، وما كتبته</p>
+                <div class="selections-grid">
+                    <div class="selection-col rv">
+                        <div class="projects-grid" id="featuredProjectsGrid"></div>
+                        <p class="section-more">
+                            <a href="projects.html" class="btn btn-secondary" data-en="My projects">مشاريعي</a>
+                        </p>
+                    </div>
+                    <div class="selection-col rv">
+                        <div class="articles-grid" id="featuredArticlesGrid"></div>
+                        <p class="section-more">
+                            <a href="articles.html" class="btn btn-secondary" data-en="My articles">مقالاتي</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <div class="ed-divider" aria-hidden="true"></div>
-
+        <!-- ── تواصل ───────────────────────────────────────────────────── -->
         <section class="contact" id="contact">
-            <span class="ed-index" aria-hidden="true">٠٣</span>
-            <span class="ed-rail" aria-hidden="true"><span class="ed-rail-num">٠٣</span><span class="ed-rail-word">تواصل معي</span></span>
-            <div class="container">
-                <h2 class="section-title slide-up">تواصل معي</h2>
-                <div class="contact-content slide-up">
-                    <p class="contact-intro">هل لديك مشروع أو فرصة عمل؟ أسعد بالتواصل معك</p>
-                    
+            <div class="container section-grid">
+                <div class="section-head">
+                    <h2 class="section-title rv" data-en="Get in touch">تواصل <span class="swash">معي</span></h2>
+                    <p class="section-label rv" data-en="The shortest path from idea to getting started">أقصر طريق من الفكرة إلى بداية العمل</p>
+                </div>
+                <div class="contact-content section-body rv">
+                    <p class="contact-intro" data-en="Do you have a challenge that data could solve, an idea for a smart product, or a role where we build something with real impact? I'd be glad to hear from you.">هل لديك تحدٍّ يمكن أن تحلّه البيانات، أو فكرة لمنتج ذكي، أو فرصة عمل نبني فيها شيئاً ذا أثر؟ يسعدني أن أسمع منك.</p>
+
                     <div class="contact-methods">
                         <a href="mailto:Mohammed@Alzobaidi.me" class="contact-item">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                                <path d="m3 7 9 6 9-6"></path>
                             </svg>
                             <span>Mohammed@Alzobaidi.me</span>
                         </a>
-                        
+
                         <a href="tel:+966583324981" class="contact-item">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 3h3l2 5-2.5 1.5a13 13 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3 5.2 2 2 0 0 1 5 3z"></path>
                             </svg>
                             <span dir="ltr">+966 58 332 4981</span>
                         </a>
-                        
-                        <a href="https://www.linkedin.com/in/mohammed-abdullah-b6965b27b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="contact-item" target="_blank" rel="noopener">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                                <rect x="2" y="9" width="4" height="12"></rect>
-                                <circle cx="4" cy="4" r="2"></circle>
+
+                        <a href="https://www.linkedin.com/in/mohammed-alzobaidi-b6965b27b/" class="contact-item"
+                           target="_blank" rel="noopener">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+                                <path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4"></path>
                             </svg>
                             <span>LinkedIn</span>
                         </a>
 
-                        <a href="https://x.com/x7ciy?s=21" class="contact-item" target="_blank" rel="noopener">
-    <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
-    </svg>
-    <span>X</span>
-    </a>
+                        <a href="https://x.com/e7aiq" class="contact-item" target="_blank" rel="noopener">
+                            <svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                            </svg>
+                            <span>X</span>
+                        </a>
                     </div>
 
-                    <form action="mailto:Mohammed@Alzobaidi.me" method="post" enctype="text/plain" class="contact-form">
-                        <label for="emailMessage">أرسل لي رسالة:</label>
-                        <textarea id="emailMessage" name="message" rows="4" placeholder="اكتب رسالتك هنا..."></textarea>
-                        <button type="submit" class="btn btn-primary">إرسال</button>
-                    </form>
+                    <!-- كان هنا <form action="mailto:" method="post"> وهو يفشل صامتاً في
+                         معظم المتصفّحات. صار رابطاً يفتح برنامج البريد بموضوع مُعبّأ:
+                         بلا خادم، وبلا إخفاق صامت. -->
+                    <p class="contact-cta">
+                        <a class="btn btn-primary"
+                           href="mailto:Mohammed@Alzobaidi.me?subject=%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9">
+                            <span data-en="Write to me">اكتب لي رسالة</span>
+                        </a>
+                    </p>
                 </div>
             </div>
         </section>
@@ -215,15 +611,14 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 محمد الزبيدي. جميع الحقوق محفوظة.</p>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
+    <script src="js/i18n.js?v=r27"></script>
 
-    <script src="main.js?v=r2"></script>
-    <script src="animations.js?v=r2"></script>
-    <script src="projects.js?v=r2"></script>
-    <script src="effects.js?v=r2"></script>
-    <script src="skills-art.js?v=r2"></script>
-    <script src="gen-art.js?v=r4"></script>
+    <script src="main.js?v=r27"></script>
+    <script src="animations.js?v=r27"></script>
+    <script src="projects.js?v=r27"></script>
+    <script src="js/articles-list.js?v=r27"></script>
 </body>
 </html>

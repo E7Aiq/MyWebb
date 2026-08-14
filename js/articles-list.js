@@ -1,216 +1,207 @@
 /**
- * Articles List - Frontend Logic
- * Fetches articles from data/articles.json and displays them
+ * Articles Index
+ * يقرأ data/articles.json ويبني الفهرس: مقال صدارة ثم قائمة.
+ * لا يلمس طبقة البيانات — قراءة فقط.
  */
 
-(function() {
+(function () {
     'use strict';
 
-    // Configuration
+    /* ── جسر i18n ────────────────────────────────────────────────────────
+       كل نصّ واجهة يمرّ من هنا. الاحتياطي يُبقي الموقع عربياً صحيحاً لو
+       أخفق تحميل js/i18n.js — لا مفاتيح ترجمة عارية في الصفحة. */
+    const T = (ar, en) => (window.I18N ? window.I18N.t(ar, en) : ar);
+    const readTime = (m, w) => (window.I18N ? window.I18N.readTime(m, w) : `${m || 5} دقائق`);
+    const formatDate = (d) => (window.I18N ? window.I18N.date(d) : '');
+
     const CONFIG = {
         dataUrl: 'data/articles.json',
         containerId: 'articles-grid',
-        defaultImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop'
+        featuredGridId: 'featuredArticlesGrid'   // أحدث مقال في الصفحة الرئيسية
     };
 
-    /**
-     * Initialize the articles list on page load
-     */
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', boot);
 
-    async function init() {
-        const container = document.getElementById(CONFIG.containerId);
-        
-        if (!container) {
-            console.error(`Container #${CONFIG.containerId} not found`);
-            return;
-        }
-
-        // Show loading state
-        showLoading(container);
-
-        try {
-            const articles = await fetchArticles();
-            renderArticles(container, articles);
-        } catch (error) {
-            console.error('Error loading articles:', error);
-            showError(container, 'حدث خطأ في تحميل المقالات');
-        }
+    function boot() {
+        if (document.getElementById(CONFIG.containerId)) init();
+        if (document.getElementById(CONFIG.featuredGridId)) loadFeatured();
     }
 
-    /**
-     * Fetch articles from JSON file
-     */
     async function fetchArticles() {
         const response = await fetch(CONFIG.dataUrl);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json();
         return data.articles || [];
     }
 
-    /**
-     * Render articles to the container
-     */
-    function renderArticles(container, articles) {
-        if (!articles || articles.length === 0) {
-            showEmpty(container);
-            return;
+    // ── articles.html ────────────────────────────────────────────────────
+    async function init() {
+        const container = document.getElementById(CONFIG.containerId);
+        try {
+            render(container, await fetchArticles());
+        } catch (error) {
+            console.error('Error loading articles:', error);
+            showError(container, T('حدث خطأ في تحميل المقالات',
+                                   'Something went wrong loading the articles.'));
         }
+    }
 
-        // Sort: featured first, then by date
-        const sortedArticles = [...articles].sort((a, b) => {
-            if (a.featured && !b.featured) return -1;
-            if (!a.featured && b.featured) return 1;
-            return new Date(b.date) - new Date(a.date);
-        });
-
-        // Clear container and add articles
-        container.innerHTML = '';
-        
-        sortedArticles.forEach((article, index) => {
-            const card = createArticleCard(article, index);
-            container.appendChild(card);
-        });
-
-        // Trigger animations
-        animateCards();
+    // ── index.html — أحدث مقال وحده ───────────────────────────────────────
+    async function loadFeatured() {
+        const container = document.getElementById(CONFIG.featuredGridId);
+        try {
+            const [latest] = orderArticles(await fetchArticles());
+            container.innerHTML = '';
+            if (latest) container.appendChild(createArticleCard(latest));
+        } catch (error) {
+            console.error('Error loading featured article:', error);
+            container.innerHTML = '';   // الصفحة الرئيسية لا تُظهر خطأً مزعجاً
+        }
     }
 
     /**
-     * Create an article card element
+     * ترتيب المقالات — نفس القاعدة المستعملة في js/article.js للسابق/التالي،
+     * فيبقى ترتيب الفهرس وترتيب التنقّل داخل المقال متطابقين.
+     *
+     * القاعدة: المميّز (featured) أولاً إن وُجد، ثم ترتيب الملف كما هو.
+     *
+     * لماذا ليس الأحدث تاريخاً: حقل date فارغ (null) في كل مقال حالياً، فالفرز
+     * الزمني بلا أثر — new Date(null) ينتج NaN وتفشل المقارنة صامتةً فيبقى
+     * الترتيب كما هو أصلاً. وترتيب الملف هو ترتيب Notion: حتميّ ومستقرّ، فلا
+     * يبدو اختيار «مقال الصدارة» عشوائياً. متى امتلأ حقل التاريخ يُدرج الفرز
+     * الزمني هنا وفي js/article.js معاً.
      */
-    function createArticleCard(article, index) {
-        const card = document.createElement('article');
-        card.className = `article-card${article.featured ? ' featured' : ''} fade-in`;
-        card.dataset.id = article.id;
-        card.style.animationDelay = `${index * 0.1}s`;
+    function orderArticles(articles) {
+        return [...articles].sort((a, b) => (b.featured === true) - (a.featured === true));
+    }
 
-        const formattedDate = formatDate(article.date);
+    function render(container, articles) {
+        if (!articles.length) return showEmpty(container);
+
+        const ordered = orderArticles(articles);
+        const [lead, ...rest] = ordered;
+
+        container.innerHTML = '';
+        container.appendChild(createLead(lead));
+        rest.forEach((article) => container.appendChild(createArticleCard(article)));
+    }
+
+    /**
+     * مقال الصدارة: غلافه بعرض العمود، وعنوانه بخط العرض.
+     * عنصر <a> حقيقي — التنقّل بلوحة المفاتيح مجّاني ولا يحتاج role يدوياً.
+     */
+    function createLead(article) {
+        const a = document.createElement('a');
+        a.className = 'article-lead rv';
+        a.href = `article.html?id=${encodeURIComponent(article.id)}`;
+
+        // الصدارة فوق حدّ الشاشة ⇒ تُحمَّل بأولوية، والبقية كسولة.
+        const cover = article.cover
+            ? `<img class="article-lead-cover" src="${escapeAttr(article.cover)}" alt=""
+                    loading="eager" fetchpriority="high" decoding="async">`
+            : '';
+
+        a.innerHTML = `
+            ${cover}
+            <h2 class="article-lead-title">${escapeHtml(article.title)}</h2>
+            ${metaRow(article)}
+        `;
+        return a;
+    }
+
+    /**
+     * مدخل في الفهرس — الشكل نفسه الذي تأخذه الصدارة، بغلاف أصغر.
+     *
+     * كان الشكل السابق صفّاً بمصغّرة 88×64 وعنوان بخط المتن: شكل صفحة
+     * نتائج بحث. البيانات فيها مقالان بلا وصف ولا تاريخ ولا وسوم، فالعنوان
+     * هو إشارة التوجيه الوحيدة الموجودة فعلاً — ومن ثمّ يأخذ المقياس كله.
+     *
+     * <a> حقيقي لا <article role="link">: الأخير يكسر النقر بأمر والأوسط
+     * وفتح في تبويب جديد وقائمة السياق، وهي سلوكيات متصفّح لا يعوّضها
+     * مستمع click يدوي.
+     */
+    function createArticleCard(article) {
+        const a = document.createElement('a');
+        a.className = 'article-card rv';
+        a.dataset.id = article.id;
+        a.href = `article.html?id=${encodeURIComponent(article.id)}`;
+
         const tags = (article.tags || []).slice(0, 3);
-        const coverImage = article.cover || CONFIG.defaultImage;
 
-        card.innerHTML = `
-            <div class="article-card-image-wrapper">
-                <img 
-                    src="${coverImage}" 
-                    alt="${escapeHtml(article.title)}"
-                    class="article-card-image"
-                    loading="lazy"
-                    onerror="this.src='${CONFIG.defaultImage}'"
-                >
-            </div>
+        // <a> يقبل محتوى تدفّقياً ما لم يكن بداخله عنصر تفاعلي آخر،
+        // فتبقى العناوين عناوين حقيقية ويبقى مخطّط المستند سليماً.
+        const cover = article.cover
+            ? `<div class="article-card-image-wrapper">
+                   <img class="article-card-image" src="${escapeAttr(article.cover)}" alt=""
+                        loading="lazy" decoding="async">
+               </div>`
+            : '';
+
+        a.innerHTML = `
+            ${cover}
             <div class="article-card-content">
-                <div class="article-card-meta">
-                    ${article.category ? `<span class="article-card-category">${escapeHtml(article.category)}</span>` : ''}
-                    <span class="article-card-date">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        ${formattedDate}
-                    </span>
-                </div>
                 <h3 class="article-card-title">${escapeHtml(article.title)}</h3>
-                ${article.title_en ? `<p class="article-card-title-en">${escapeHtml(article.title_en)}</p>` : ''}
+                <p class="article-card-title-en">${escapeHtml(article.title_en || '')}</p>
                 <p class="article-card-description">${escapeHtml(article.description || '')}</p>
+                ${metaRow(article)}
                 <div class="article-card-footer">
                     <div class="article-card-tags">
-                        ${tags.map(tag => `<span class="article-tag">${escapeHtml(tag)}</span>`).join('')}
+                        ${tags.map((t) => `<span class="article-tag">${escapeHtml(t)}</span>`).join('')}
                     </div>
-                    <span class="article-read-time">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        ${article.read_time || 5} دقائق
-                    </span>
                 </div>
             </div>
         `;
 
-        // Add click handler to navigate to article page
-        card.addEventListener('click', () => {
-            window.location.href = `article.html?id=${article.id}`;
-        });
-
-        // Keyboard accessibility
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'link');
-        card.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                window.location.href = `article.html?id=${article.id}`;
-            }
-        });
-
-        return card;
+        return a;
     }
 
     /**
-     * Show loading state
+     * صفّ الميتا. الحقول الغائبة تُنتج عناصر فارغة يُخفيها CSS عبر :empty،
+     * فلا يبقى فاصل معلّق ولا شارة فارغة — وهي الحالة الغالبة في البيانات
+     * الحالية (date و category فارغان في كل المقالات).
      */
-    function showLoading(container) {
-        container.innerHTML = `
-            <div class="articles-loading">
-                <div class="loading-spinner"></div>
-                <p>جاري تحميل المقالات...</p>
+    function metaRow(article) {
+        return `
+            <div class="article-card-meta">
+                <span class="article-card-date">${formatDate(article.date)}</span>
+                <span class="article-card-category">${escapeHtml(article.category || '')}</span>
+                <span class="article-read-time">${readTime(article.read_time)}</span>
             </div>
         `;
     }
 
-    /**
-     * Show error state
-     */
     function showError(container, message) {
         container.innerHTML = `
             <div class="articles-error">
-                <div class="error-icon">⚠️</div>
-                <h3 class="error-title">عذراً</h3>
+                ${warnIcon()}
+                <h2 class="error-title">${T('تعذّر تحميل المقالات', 'Could not load the writing')}</h2>
                 <p class="error-message">${escapeHtml(message)}</p>
-                <button class="btn btn-primary" onclick="location.reload()">إعادة المحاولة</button>
+                <button class="btn btn-secondary" type="button" data-reload>${T('إعادة المحاولة', 'Try again')}</button>
             </div>
         `;
+        container.querySelector('[data-reload]')
+            ?.addEventListener('click', () => location.reload());
     }
 
-    /**
-     * Show empty state
-     */
     function showEmpty(container) {
         container.innerHTML = `
             <div class="no-articles">
-                <div class="no-articles-icon">📝</div>
-                <h3 class="error-title">لا توجد مقالات حالياً</h3>
-                <p class="error-message">سيتم إضافة مقالات قريباً، تابعنا!</p>
+                ${warnIcon()}
+                <h2 class="error-title">${T('لا توجد مقالات بعد', 'Nothing published yet')}</h2>
+                <p class="error-message">${T('ستُضاف مقالات قريباً.', 'New writing is on the way.')}</p>
             </div>
         `;
     }
 
-    /**
-     * Format date to Arabic
-     */
-    function formatDate(dateString) {
-        if (!dateString) return '';
-        
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ar-SA', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch {
-            return dateString;
-        }
+    /* أيقونة SVG بخطّ واحد — لا إيموجي كنظام أيقونات */
+    function warnIcon() {
+        return `<svg class="error-icon" width="28" height="28" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7.5v5"></path><path d="M12 16.5h.01"></path></svg>`;
     }
 
-    /**
-     * Escape HTML to prevent XSS
-     */
     function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -218,22 +209,11 @@
         return div.innerHTML;
     }
 
-    /**
-     * Animate cards on scroll
-     */
-    function animateCards() {
-        const cards = document.querySelectorAll('.article-card');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        cards.forEach(card => observer.observe(card));
+    function escapeAttr(text) {
+        return String(text || '').replace(/"/g, '&quot;');
     }
 
+    /* الفهرس مبنيّ في جافاسكربت فلا يصله مبدّل النصّ الذي يعمل على السمات
+       data-en — يُعاد بناؤه عند تبديل اللغة. */
+    if (window.I18N) window.I18N.onChange(boot);
 })();

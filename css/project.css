@@ -1,642 +1,414 @@
-/* ===================================================
-   نظام المشاريع - Project Styles
-   متوافق مع تصميم الموقع الأصلي
-   =================================================== */
-
-/* ===== بطاقات المشاريع (projects.html) ===== */
-
-.project-card {
-    background: var(--bg-card);
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    transition: var(--transition);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-}
-
-.project-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
-    border-color: var(--accent-primary);
-}
-
-.project-card-image-wrapper {
-    overflow: hidden;
-    height: 220px;
-}
-
-.project-card-image {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    background: var(--bg-secondary);
-    /* Ken Burns: تكبير بطيء مستمر أثناء المرور (transform فقط) */
-    transition: transform 6s var(--ease-out);
-}
-
-.project-card:hover .project-card-image {
-    transform: scale(1.12);
-}
-
-.project-card-content {
-    padding: var(--spacing-md);
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.project-card-meta {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    flex-wrap: wrap;
-}
-
-.project-card-date {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.project-card-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
-    line-height: 1.4;
-    transition: var(--transition);
-}
-
-.project-card:hover .project-card-title {
-    color: var(--accent-primary);
-}
-
-.project-card-summary {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.7;
-    margin-bottom: var(--spacing-md);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex-grow: 1;
-}
-
-/* ===== التصنيفات (Category Tags) ===== */
-
-.project-card-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
-}
-
-.category-tag {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-primary);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    border: 1px solid rgba(59, 130, 246, 0.25);
-    transition: var(--transition);
-}
-
-.category-tag:hover {
-    background: rgba(59, 130, 246, 0.2);
-}
-
-/* رفع متدرّج للوسوم عند المرور على البطاقة (30–80ms بين كل وسم) */
-.project-card:hover .category-tag {
-    transform: translateY(-3px);
-}
-.project-card:hover .category-tag:nth-child(1) { transition-delay: 0ms; }
-.project-card:hover .category-tag:nth-child(2) { transition-delay: 45ms; }
-.project-card:hover .category-tag:nth-child(3) { transition-delay: 90ms; }
-.project-card:hover .category-tag:nth-child(4) { transition-delay: 135ms; }
-
-/* ===== أزرار البطاقة ===== */
-
-.project-card-actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-top: auto;
-    padding-top: var(--spacing-sm);
-    border-top: 1px solid var(--border-color);
-}
-
-.project-card-btn {
-    flex: 1;
-    padding: 0.625rem 1rem;
-    border-radius: var(--border-radius);
-    text-align: center;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: var(--transition);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    cursor: pointer;
-}
-
-.project-card-btn-details {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-}
-
-.project-card-btn-details:hover {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
-    color: white;
-}
-
-.project-card-btn-preview {
-    background: var(--accent-primary);
-    color: white;
-    border: 1px solid var(--accent-primary);
-}
-
-.project-card-btn-preview:hover {
-    background: var(--accent-hover);
-    border-color: var(--accent-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-/* ===== Empty / No Projects State ===== */
-
-.no-projects {
-    text-align: center;
-    padding: var(--spacing-2xl);
-    color: var(--text-muted);
-    grid-column: 1 / -1;
-}
-
-.no-projects-icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-md);
-}
-
-/* ===== صفحة تفاصيل المشروع (project-details.html) ===== */
-
-.project-detail-cover-wrapper {
-    margin-bottom: var(--spacing-lg);
-    margin-top: calc(var(--spacing-xl) + 60px);
-}
-
-.project-detail-cover {
-    width: 100%;
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: var(--border-radius-lg);
-    margin-bottom: var(--spacing-xl);
-    box-shadow: var(--shadow-lg);
-}
-
-.project-detail-header {
-    text-align: center;
-    padding: var(--spacing-lg) 0;
-    margin-bottom: var(--spacing-lg);
-}
-
-.project-detail-meta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: var(--spacing-md);
-}
-
-.project-detail-date,
-.project-detail-read-time {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.project-detail-categories {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
-}
-
-.project-detail-categories .category-tag {
-    font-size: 0.9rem;
-    padding: 0.4rem 1rem;
-}
-
-.project-detail-preview-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--spacing-md);
-}
-
-.project-preview-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.875rem 2rem;
-    font-size: 1rem;
-}
-
-.project-preview-btn svg {
-    flex-shrink: 0;
-}
-
-.project-detail-body {
-    max-width: 800px;
-    margin: 0 auto;
-    padding-bottom: var(--spacing-xl);
-}
-
-/* ===== المحتوى المستورد من Notion ===== */
-
-/* Tables */
-.project-detail-body table,
-.article-body table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--spacing-lg) 0;
-    background: var(--bg-card);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    font-size: 0.95rem;
-}
-
-.project-detail-body thead,
-.article-body thead {
-    background: var(--bg-tertiary);
-}
-
-.project-detail-body th,
-.article-body th {
-    padding: var(--spacing-sm) var(--spacing-md);
-    text-align: right;
-    font-weight: 700;
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--accent-primary);
-}
-
-.project-detail-body td,
-.article-body td {
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--text-secondary);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.project-detail-body tr:last-child td,
-.article-body tr:last-child td {
-    border-bottom: none;
-}
-
-.project-detail-body tr:hover td,
-.article-body tr:hover td {
-    background: rgba(59, 130, 246, 0.05);
-}
-
-/* العودة */
-.project-detail-back {
-    text-align: center;
-    padding: var(--spacing-xl) 0 var(--spacing-2xl);
-    border-top: 1px solid var(--border-color);
-    margin-top: var(--spacing-xl);
-}
-
-.project-detail-back .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* ===== أزرار المشاركة (Share Buttons) ===== */
-
-.share-buttons-container {
-    max-width: 800px;
-    margin: var(--spacing-xl) auto 0;
-    padding: var(--spacing-lg) 0;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.share-buttons-label {
-    color: var(--text-muted);
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.share-buttons-row {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.share-icon-btn {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    font-size: 0;
-    line-height: 1;
-    padding: 0;
-}
-
-.share-icon-btn:hover {
-    background: var(--accent-primary);
-    color: #fff;
-    border-color: var(--accent-primary);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
-}
-
-.share-icon-btn:active {
-    transform: translateY(-1px);
+@charset "UTF-8";
+/* ============================================================================
+   MyWebb — المشاريع
+
+   صفحة التفاصيل تشترك مع صفحة المقال في شبكة الاختراق وأنماط النثر
+   (css/article.css)، فلا يُعاد تعريفها هنا. هذا الملف يحمل ما يخصّ
+   المشاريع وحدها: شريط الفلاتر، شبكة البطاقات، وتفاصيل الترويسة.
+   ============================================================================ */
+
+
+/* ============================================================================
+   ١. صفحة تفاصيل المشروع
+   ============================================================================ */
+
+/* نصف القطر وحلقة الحافة نفسهما اللذان يأخذهما كل غلاف في الموقع —
+   كانت الأغلفة بلا أي منهما بينما الصورة الشخصية بنصف قطر 20px. */
+.project-detail-cover{
+  inline-size: 100%;
+  block-size: clamp(14rem, 42vh, 26rem);
+  object-fit: cover;
+  border-radius: var(--r-card);
+  background: var(--bg-element);
+  box-shadow: inset 0 0 0 1px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .08);
+  /* ظاهرة افتراضاً — .cover-in تضيف أنيميشن دخول ولا تُعيد الظهور */
+  opacity: 1;
+}
+.project-detail-cover[hidden]{ display: none; }
+
+/* التصنيفات وسوم غير تفاعلية: لا وعاء ولا حدّ يوحي بأنها تُنقر.
+   نص خافت تفصله نقطة — ويختفي كلّه إن كانت القائمة فارغة. */
+.project-detail-categories{
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-2);
+  font-family: var(--font-sans);
+}
+.project-detail-categories:empty{ display: none; }
+/* حقلا صفّ الميتا في صفحة المشروع — التاريخ تحريري، والباقي واجهة */
+.project-detail-date{ font-family: var(--font-text); }
+.project-detail-read-time{ font-family: var(--font-sans); white-space: nowrap; }
+.category-tag{ color: var(--text-muted); white-space: nowrap; }
+.category-tag + .category-tag::before{
+  content: '·';
+  margin-inline-end: var(--s-2);
+  color: var(--text-faint);
+}
+
+.project-detail-preview-wrapper{
+  margin-block-start: var(--s-6);
+  margin-block-end: var(--s-12);
+}
+.project-preview-btn svg{ flex-shrink: 0; }
+
+
+/* ============================================================================
+   ٢. أزرار المشاركة (تُحقن بعد المتن)
+   ============================================================================ */
+
+.share-buttons-container{
+  grid-column: content;
+  margin-block-start: var(--s-16);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--border-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+}
+.share-buttons-label{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+}
+.share-buttons-row{ display: flex; align-items: center; gap: var(--s-2); }
+
+.share-icon-btn{
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  background: var(--bg-element);
+  color: var(--text-muted);
+  transition: var(--transition-ui);
+}
+.share-icon-btn:hover{ background: var(--accent-quiet); color: var(--accent-text); }
+.share-icon-btn:active{ transform: scale(0.94); transition-duration: var(--dur-fast); }
+
+
+/* ============================================================================
+   ٣. فهرس المشاريع (projects.html)
+   ============================================================================ */
+
+/* المشاريع أعرض من المقالات: لكل مشروع غلاف ووصف وتصنيفات وزرّان، وهي
+   بطاقات تُتصفَّح لا سطور تُقرأ — فلا تخضع لعرض عمود القراءة. */
+.projects-section{
+  --measure: 58rem;
+  padding-block: var(--s-12) var(--s-24);
+}
+
+/* ── شريط الفلاتر: زجاج ملتصق ─────────────────────────────────────────────
+   الطبقة الثانية من ثلاث تستحق backdrop-filter فعلاً: مضمار يبقى ظاهراً
+   أثناء التمرير وتمرّ البطاقات من تحته. التمييز يأتي بالسطح والارتفاع لا
+   بالإطار: مضمار غائر، والقطعة النشطة سطح مرتفع بظلّ خفيف وحبر داكن.
+   ثلاث إشارات متزامنة (تعبئة + ارتفاع + لون النص) فلا يكون النشط تخميناً. */
+.filters{
+  position: sticky;
+  inset-block-start: calc(var(--nav-h) + var(--s-2));
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  padding: var(--s-1);
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--shadow-1);
+  border-radius: var(--r-card);
+  margin-block-end: var(--s-12);
+  /* يلتفّ بلطف عند 320px بدل أن يصير شريط تمرير */
+  max-inline-size: 100%;
+}
+@supports not (backdrop-filter: blur(1px)){
+  .filters{ background: var(--bg-element); }
+}
+
+/* حشو المضمار 4px داخل نصف قطر 16px ⇒ نصف القطر الداخلي 12px. متحدّ المركز. */
+.filter-btn{
+  flex: 0 1 auto;
+  min-block-size: 2.5rem;
+  padding-inline: var(--s-4);
+  border-radius: calc(var(--r-card) - var(--s-1));
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  white-space: nowrap;
+  transition: var(--transition-ui);
+}
+.filter-btn:hover{ color: var(--text); background: var(--bg-element-hover); }
+.filter-btn.active{
+  background: var(--bg-canvas);
+  color: var(--text);
+  box-shadow: var(--shadow-1);
+}
+
+/* ── شبكة البطاقات ─────────────────────────────────────────────────────── */
+/* auto-fit لا auto-fill: البيانات فيها مشروعان، وauto-fill كان يُبقي
+   مساراً ثالثاً فارغاً عند 1200px فتنزوي البطاقتان إلى جهة البدء ويبقى
+   ثلث الصف فراغاً معلّقاً. auto-fit يطوي المسار الفارغ فتملأ البطاقتان
+   الصفّ فعلاً. */
+.projects-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  gap: var(--s-16) var(--s-8);
+}
+
+/* الرابط الممدود: <a> واحد حقيقي («اقرأ المزيد») يمدّ منطقة نقره فوق
+   البطاقة كلها. يعطي نقر البطاقة كاملةً مع الحفاظ على كل سلوكيات الرابط
+   الأصلية — أمر+نقر، النقر الأوسط، فتح في تبويب، نسخ الرابط، التنقّل
+   بلوحة المفاتيح — وهي ما كان <article role="link"> يكسره كله. */
+.project-card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-card);
+  background: transparent;
+  transition:
+    transform var(--dur-mid) var(--ease-out),
+    box-shadow var(--dur-mid) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+/* projects.js يضبط display:flex سطرياً بعد الفلترة — القاعدة أعلاه تطابقه */
+.project-card.hidden{ display: none; }
+
+@media (hover: hover) and (pointer: fine){
+  .project-card:hover .project-card-image-wrapper{
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+  }
+  .project-card:hover .project-card-title{ color: var(--accent-text); }
+}
+
+.project-card-image-wrapper{
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background: var(--bg-element);
+  aspect-ratio: 16 / 10;
+  margin-block-end: var(--s-6);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--dur-mid) var(--ease-out), box-shadow var(--dur-mid) var(--ease-out);
+}
+.project-card-image{
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.project-card-content{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+/* العنوان يحاذي جهة بدء البطاقة (يمين) مهما كانت لغته، فتصطفّ معه الميتا
+   والتصنيفات والأزرار تحته. كان dir="ltr" على العنصر نفسه يقلب محاذاته
+   إلى اليسار وحده فيبدو منفصلاً عمّا تحته. الآن <bdi> يعزل الاتجاه داخل
+   السطر فقط: النصّ اللاتيني يُقرأ يساراً-يميناً، والكتلة تبقى محاذية
+   لبقية البطاقة. */
+.project-card-title{
+  font-family: var(--font-text);
+  font-size: var(--t-lede);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text);
+  text-align: start;
+  text-wrap: balance;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+/* التتبّع السالب للاتينية وحدها — العربية لا letter-spacing عليها إطلاقاً */
+.project-card-title bdi{ letter-spacing: -0.01em; }
+
+.project-card-summary{
+  font-family: var(--font-text);
+  font-size: var(--t-ui);
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-block-start: var(--s-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.project-card-summary:empty{ display: none; }
+
+.project-card-meta,
+.project-card-categories{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  margin-block-start: var(--s-2);
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  color: var(--text-muted);
+}
+.project-card-meta:empty,
+.project-card-categories:empty{ display: none; }
+.project-card-meta > :empty{ display: none; }
+.project-card-date{ font-family: var(--font-text); }
+.project-card-read{ font-family: var(--font-sans); white-space: nowrap; }
+/* نقطة فاصلة بين حقلين موجودين فعلاً — ولا شيء إن غاب أحدهما */
+.project-card-meta > :not(:empty) ~ :not(:empty)::before{
+  content: '·';
+  margin-inline-end: var(--s-2);
+  color: var(--text-faint);
+}
+
+/* صفّ الإجراءات يُدفع لأسفل البطاقة */
+.project-card-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-block-start: auto;
+  padding-block-start: var(--s-4);
+}
+.project-card-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  min-block-size: 2.5rem;
+  padding-inline: var(--s-4);
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition-ui);
+}
+.project-card-btn:active{ transform: scale(0.97); transition-duration: var(--dur-fast); }
+.project-card-btn-details{ background: var(--bg-element); color: var(--text); }
+.project-card-btn-details:hover{ background: var(--bg-element-hover); color: var(--text); }
+.project-card-btn-preview{ background: var(--accent-quiet); color: var(--accent-text); }
+.project-card-btn-preview:hover{ background: var(--solid); color: var(--text-on-solid); }
+
+/* ::after يغطّي البطاقة كلها فتصير منطقة نقر الرابط */
+.project-card-link::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+/* البقيّة ترتفع فوق الطبقة الممدودة كي تبقى قابلة للنقر بذاتها */
+.project-card-btn-preview{ position: relative; z-index: 1; }
+/* حلقة التركيز تلتفّ حول الزرّ لا حول البطاقة كلها */
+.project-card-link:focus-visible{ outline-offset: 2px; }
+
+/* حالات التحميل والخطأ تعيش في style.css كي تصل إلى كل الصفحات؛
+   هنا يُضاف ما يخصّ وقوعها داخل شبكة البطاقات فقط. */
+.projects-grid > .loading-state,
+.projects-grid > .error-state{ grid-column: 1 / -1; }
+.no-projects-icon{ color: var(--text-faint); }
+
+
+/* ============================================================================
+   ٣٫٥ «ذُرى» — لكنة الصفحة البرتقالية + الماستهيد
+   ============================================================================ */
+
+/* لكنة صفحة المشاريع تتبع شعار «ذُرى» الطوبيّ (H≈33) بدل أزرق الموقع. سلّم
+   موازٍ لبنية الأزرق (نفس الإضاءة/الكروما تقريباً، بمحور لونيّ مختلف)،
+   متحقَّق WCAG: نصّ اللكنة على الورق 6.1:1، وأبيض على التعبئة 5.6:1. تُعاد
+   الرموز الدلالية وحدها؛ المكوّنات تقرأها فتنقلب برتقاليةً بلا لمسها. مقصور
+   على .dhura فلا يتسرّب إلى القائمة (خارج <main>) ولا إلى بقية الموقع. */
+.dhura{
+  --accent-quiet: oklch(95.5% 0.030 33);
+  --accent-line:  oklch(84.0% 0.090 33);
+  --focus:        oklch(64.0% 0.150 33);
+  --solid:        oklch(52.0% 0.170 33);
+  --solid-hover:  oklch(46.0% 0.165 33);
+  --accent-text:  oklch(50.0% 0.170 33);
+}
+/* بديل hex للمتصفّحات القديمة بلا oklch — يطابق ذُرى في style.css */
+@supports not (color: oklch(0 0 0)){
+  .dhura{
+    --accent-quiet:#FFE9E3; --accent-line:#FFB5A5; --focus:#D7644D;
+    --solid:#B6351B; --solid-hover:#9F2206; --accent-text:#AF2E13;
+  }
+}
+
+/* الماستهيد: نفس بنية «بان» — عنوان كبير، شعار مفرّغ، سطر واصف باللكنة،
+   تعريف لغويّ، ثم مقدّمة. اللكنة تتبع رموز .dhura أعلاه. */
+.page-masthead{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-3);
+  padding-block: var(--s-24) var(--s-12);
+  padding-inline: var(--gutter);
+}
+.masthead-title{
+  margin: 0;
+  font-size: clamp(2.75rem, 8.5vw, 5.5rem);
+  line-height: 1.14;
+  text-wrap: balance;
+}
+/* شعار مفرّغ الخلفية يسبح على الورق بظلّ ناعم مصبوغ نحو الحبر */
+.masthead-emblem{
+  block-size: clamp(7.5rem, 17vw, 11.5rem);
+  margin: 0 0 var(--s-2);
+  filter: drop-shadow(0 8px 16px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22));
+}
+.masthead-emblem img{ block-size: 100%; inline-size: auto; display: block; }
+.masthead-kicker{
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  font-weight: 500;
+  color: var(--accent-text);
+}
+.masthead-lead{
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-text);
+  font-size: var(--t-lede);
+  line-height: var(--lh-lede);
+  color: var(--text);
+}
+.masthead-lead-label{ color: var(--accent-text); }
+.masthead-intro{
+  max-inline-size: 44rem;
+  margin-block-start: var(--s-6);
+}
+.masthead-intro p{
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+.masthead-intro p + p{ margin-block-start: var(--s-4); }
+/* التوكيد داخل المقدّمة: وزن عريض ولون المتن الكامل — لا لكنة صارخة */
+.masthead-intro strong{ font-weight: 700; color: var(--text); }
+
+
+/* ============================================================================
+   ٤. الاستجابة
+   ============================================================================ */
+
+@media (max-width: 48rem){
+  .project-detail-cover{ block-size: clamp(10rem, 30vh, 15rem); }
+
+  /* ماستهيد «ذُرى» على الجوال: شعار أصغر وحاشية علوية أقلّ */
+  .page-masthead{ padding-block: var(--s-16) var(--s-8); }
+  .masthead-emblem{ block-size: clamp(6.5rem, 30vw, 9rem); }
+
+  .project-card-actions{ flex-direction: column; }
+  .project-card-btn{ inline-size: 100%; min-block-size: 2.75rem; }
+
+  .project-preview-btn{ inline-size: 100%; }
+}
+
+/* عمود واحد على الهواتف فقط. فوق ذلك يتكفّل auto-fill بعدد الأعمدة. */
+@media (max-width: 36rem){
+  .projects-grid{ grid-template-columns: 1fr; gap: var(--s-12); }
+}
+
+@media (max-width: 30rem){
+  .filters{ gap: 2px; }
+  .filter-btn{ padding-inline: var(--s-3); font-size: var(--t-meta); }
 }
-
-.share-icon-btn svg {
-    flex-shrink: 0;
-}
-
-/* ===== Toast Notification ===== */
-
-.copy-toast {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--accent-primary);
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-size: 0.95rem;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
-}
-
-.copy-toast-visible {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* ===== Responsive ===== */
-
-/* ==========================================================
-   project.css 768px overrides — matches responsive.css
-   Uses !important to guarantee these win.
-   ========================================================== */
-@media (max-width: 768px) {
-
-    .project-card {
-        display: flex !important;
-        flex-direction: column !important;
-        height: auto !important;
-        min-height: 350px !important;
-        overflow: hidden !important;
-        width: 100% !important;
-    }
-
-    .project-card-image-wrapper {
-        width: 100% !important;
-        height: 200px !important;
-        min-height: 200px !important;
-        flex-shrink: 0 !important;
-    }
-
-    .project-card-image {
-        width: 100% !important;
-        height: 200px !important;
-        object-fit: cover !important;
-        display: block !important;
-    }
-
-    .project-card-content {
-        flex: 1 1 auto !important;
-        padding: 16px !important;
-    }
-
-    .project-card-actions {
-        flex-direction: column !important;
-        gap: 8px !important;
-    }
-
-    .project-card-btn {
-        width: 100% !important;
-        min-height: 44px !important;
-    }
-
-    /* Detail page */
-    .project-detail-cover {
-        max-height: 260px;
-    }
-
-    .project-detail-header {
-        padding: var(--spacing-md) 0;
-    }
-
-    .project-detail-meta {
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-
-    .project-detail-body {
-        padding-left: var(--spacing-sm);
-        padding-right: var(--spacing-sm);
-    }
-
-    .project-detail-body table {
-        font-size: 0.85rem;
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .project-detail-body th,
-    .project-detail-body td {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        white-space: nowrap;
-    }
-
-    .project-preview-btn {
-        width: 100% !important;
-        min-height: 48px !important;
-        justify-content: center !important;
-    }
-
-    .project-detail-back .btn {
-        width: 100% !important;
-        min-height: 48px !important;
-        justify-content: center !important;
-    }
-
-    .share-buttons-container {
-        padding: var(--spacing-md) var(--spacing-sm) 0;
-    }
-
-    .share-icon-btn {
-        width: 44px;
-        height: 44px;
-    }
-}
-
-@media (max-width: 480px) {
-    .project-card {
-        min-height: 300px !important;
-    }
-
-    .project-card-image-wrapper {
-        height: 170px !important;
-        min-height: 150px !important;
-    }
-
-    .project-card-content {
-        padding: var(--spacing-sm) !important;
-    }
-
-    .project-card-title {
-        font-size: 1.1rem !important;
-    }
-
-    .project-card-btn {
-        min-height: 48px !important;
-        font-size: 0.9rem !important;
-    }
-
-    .project-detail-cover-wrapper {
-        margin-top: calc(var(--spacing-lg) + 50px);
-    }
-}
-
-/* ============================================================
-   Area 7: كشف صورة غلاف المشروع — تكبير خفيف → استقرار + تدرّج عمق
-   ============================================================ */
-.project-detail-cover-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.project-detail-cover-wrapper::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 45%;
-    background: linear-gradient(to top, var(--bg-primary), transparent);
-    pointer-events: none;
-}
-
-.project-detail-cover {
-    opacity: 0;
-    transform: scale(1.06);
-    transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out);
-}
-
-.project-detail-cover.cover-in {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* ═══════════ REBUILD · لوح المشروع المحفور (يُحمَّل بعد style.css فيسود) ═══════════ */
-.project-card {
-    background-color: rgba(var(--bg-secondary-rgb), 0.55);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.18);
-    border-radius: 6px;
-}
-.project-card:hover {
-    border-color: rgba(var(--accent-gold-rgb), 0.42);
-    box-shadow: 0 22px 55px -26px rgba(0, 0, 0, 0.75);
-}
-.project-card:hover .project-card-title { color: var(--parchment); }
-.project-card-title { letter-spacing: -0.005em; }
-
-.project-card-btn-details {
-    background: transparent;
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.35);
-    color: var(--text-primary);
-}
-.project-card-btn-details:hover {
-    background: rgba(var(--accent-gold-rgb), 0.10);
-    border-color: var(--accent-gold);
-    color: var(--parchment);
-}
-.project-card-btn-preview {
-    background: rgba(var(--accent-gold-rgb), 0.12);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.5);
-    color: var(--parchment);
-}
-.project-card-btn-preview:hover {
-    background: rgba(var(--accent-gold-rgb), 0.22);
-    border-color: var(--accent-gold);
-    box-shadow: none;
-    transform: translateY(-1px);
-}
-.category-tag {
-    background: rgba(var(--accent-gold-rgb), 0.06);
-    border: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.32);
-    color: var(--parchment);
-    border-radius: 3px;
-}
-
-/* ═══════════ ATELIER · تحرير سويسري لصفحات المشاريع (طبقة مُلحقة) ═══════════ */
-
-/* ترقيم تحريري لبطاقات المشاريع عبر عدّادات CSS (زخرفة إضافية) */
-.projects-grid { counter-reset: ed-plate; }
-.projects-grid .project-card { counter-increment: ed-plate; }
-.projects-grid .project-card-content { position: relative; }
-.projects-grid .project-card-content::before {
-    content: counter(ed-plate, arabic-indic);
-    position: absolute;
-    top: var(--spacing-sm);
-    left: var(--spacing-sm);
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--editorial-vermilion);
-    letter-spacing: 0.08em;
-    padding-bottom: 3px;
-    border-bottom: 2px solid rgba(var(--editorial-vermilion-rgb), 0.55);
-    opacity: 0.9;
-    pointer-events: none;
-}
-
-/* صف الإجراءات: مسطرة شعرية علوية (انضباط أعمدة سويسري) */
-.project-card-actions {
-    border-top: var(--line-hair) solid rgba(var(--accent-gold-rgb), 0.14);
-    padding-top: var(--spacing-sm);
-}
-
-/* قسم المشاريع يستضيف سكّة جانبية زخرفية */
-.projects-section { position: relative; }

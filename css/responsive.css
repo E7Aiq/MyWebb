@@ -1,523 +1,134 @@
-@media (max-width: 968px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
+@charset "UTF-8";
+/* ============================================================================
+   MyWebb — الاستجابة
 
-    /* الاسم اللاتيني يتوسّط مع باقي النص في العمود الواحد */
-    .hero-title .name-en {
-        text-align: center;
-    }
-    
-    .hero-text {
-        order: 2;
-    }
-    
-    .hero-image {
-        order: 1;
-        margin-bottom: var(--spacing-lg);
-    }
-    
-    .profile-img {
-        max-width: 300px;
-        margin: 0 auto;
-    }
-    
-    .hero-cta {
-        justify-content: center;
-    }
-    
-    .skills-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .projects-grid {
-        grid-template-columns: 1fr;
-    }
+   هذا الملف يحمل ما يخصّ الأجهزة فعلاً فقط: قائمة الجوال، أهداف اللمس،
+   وتفضيلات المؤشر. أما تكيّف كل مكوّن مع المقاس فيعيش مع المكوّن نفسه في
+   ملفه (article.css / project.css) قرب القاعدة التي يعدّلها.
+
+   النسخة السابقة كانت ٥٢٣ سطراً معظمها !important لكسب معارك تتالٍ خسرها
+   الملف أصلاً — أُزيلت كلها لأن طبقة الرموز الجديدة لم تعد تحتاجها.
+   ============================================================================ */
+
+
+/* ── ≤48rem (768px): قائمة الجوال ─────────────────────────────────────── */
+@media (max-width: 48rem){
+
+  .mobile-toggle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    z-index: 1100;
+  }
+
+  /* شطيرة → ✕ */
+  .mobile-toggle.active span:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+  .mobile-toggle.active span:nth-child(2){ opacity: 0; }
+  .mobile-toggle.active span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* لوح منزلق — مادة زجاجية، لا لون صلب */
+  .nav-links{
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: var(--s-2);
+    padding: var(--nav-h) var(--gutter) var(--s-16);
+    background: var(--bg-glass);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    backdrop-filter: saturate(180%) blur(24px);
+    transform: translateX(100%);      /* RTL: يدخل من اليمين */
+    visibility: hidden;
+    transition:
+      transform var(--dur-mid) var(--ease-out),
+      visibility var(--dur-mid) linear;
+    overflow-y: auto;
+  }
+  @supports not (backdrop-filter: blur(1px)){
+    .nav-links{ background: var(--bg-canvas); }
+  }
+
+  .nav-links.active{ transform: translateX(0); visibility: visible; }
+
+  .nav-links li{ inline-size: 100%; }
+
+  /* 24px — دون عتبة الـ28px، والعنصر يُنقر لا يُقرأ. الدور Sans لا Display
+     مهما كبر المقاس: كان هذا الموضع يقلب دور الخط على الجوال وحده. */
+  .nav-link{
+    justify-content: flex-start;
+    min-block-size: 3.25rem;
+    padding-inline: var(--s-2);
+    font-family: var(--font-sans);
+    font-size: var(--t-h3);
+    font-weight: 700;
+    color: var(--text);
+  }
+  /* الخط السفلي لا معنى له تحت عنصر بعرض الشاشة في لوح عمودي */
+  .nav-link::after{ display: none; }
+  .nav-link.active{ color: var(--accent-text); }
+
+  /* زرّ الإغلاق يستقرّ أعلى بداية السطر (RTL: اليسار) فوق اللوح */
+  .mobile-toggle.active{
+    position: fixed;
+    inset-block-start: calc((var(--nav-h) - 2.75rem) / 2);
+    inset-inline-end: var(--gutter);
+  }
+
+  /* بلا جافاسكربت لا يعمل زرّ الفتح، فيبقى اللوح مغلقاً إلى الأبد ولا سبيل
+     إلى التنقّل أصلاً. في هذه الحالة تعود القائمة قائمةً ساكنة تحت الشعار:
+     أقلّ أناقة، لكنها صالحة — ولا طريق مسدود. */
+  html:not(.js) .nav-container{ flex-wrap: wrap; block-size: auto; padding-block: var(--s-3); }
+  html:not(.js) .nav-actions{ flex-wrap: wrap; inline-size: 100%; }
+  html:not(.js) .mobile-toggle{ display: none; }
+  /* المبدّل يحتاج جافاسكربت ليعمل، فلا يُعرض بدونها زرّاً ميتاً */
+  html:not(.js) .lang-toggle{ display: none; }
+  html:not(.js) .nav-links{
+    position: static;
+    inline-size: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--s-4);
+    padding: var(--s-2) 0 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    transform: none;
+    visibility: visible;
+  }
+  html:not(.js) .nav-links li{ inline-size: auto; }
+  html:not(.js) .nav-link{ min-block-size: 2.75rem; font-size: var(--t-ui); }
 }
 
-@media (max-width: 768px) {
 
-    /* ==========================================================
-       FORCEFUL MOBILE OVERRIDE — Arabic RTL Portfolio
-       Uses !important to override all competing rules from
-       style.css, project.css, and animations.css.
-       ========================================================== */
-
-
-    /* ===== 1. PROJECT CARDS — PREVENT COLLAPSE ===== */
-
-    /* Force single-column grid */
-    .projects-grid {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 20px !important;
-        width: 100% !important;
-    }
-
-    /* Force card to expand properly */
-    .project-card {
-        display: flex !important;
-        flex-direction: column !important;
-        height: auto !important;
-        min-height: 350px !important;
-        overflow: hidden !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        white-space: normal !important;
-        opacity: 1 !important;
-        transform: none !important;
-        visibility: visible !important;
-    }
-
-    /* Force image sizing */
-    .project-card-image-wrapper {
-        width: 100% !important;
-        height: 200px !important;
-        min-height: 200px !important;
-        flex-shrink: 0 !important;
-        overflow: hidden !important;
-    }
-
-    .project-card-image,
-    .project-image {
-        width: 100% !important;
-        height: 200px !important;
-        min-height: 200px !important;
-        object-fit: cover !important;
-        display: block !important;
-    }
-
-    /* Force content area to fill remaining space */
-    .project-card-content,
-    .project-content {
-        flex: 1 1 auto !important;
-        padding: 16px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        white-space: normal !important;
-        overflow: visible !important;
-    }
-
-    .project-card-title,
-    .project-title {
-        font-size: 1.15rem !important;
-        white-space: normal !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-    }
-
-    .project-card-summary,
-    .project-description {
-        font-size: 0.9rem !important;
-        white-space: normal !important;
-        overflow: hidden !important;
-        -webkit-line-clamp: 4 !important;
-        line-clamp: 4 !important;
-        display: -webkit-box !important;
-        -webkit-box-orient: vertical !important;
-    }
-
-    .project-card-categories {
-        flex-wrap: wrap !important;
-    }
-
-    /* Stack action buttons vertically */
-    .project-card-actions,
-    .project-links {
-        flex-direction: column !important;
-        gap: 8px !important;
-    }
-
-    .project-card-btn,
-    .project-link {
-        width: 100% !important;
-        min-height: 44px !important;
-    }
-
-
-    /* ===== 2. MOBILE MENU OVERLAY ===== */
-
-    /* Show the hamburger toggle */
-    .mobile-toggle {
-        display: flex !important;
-        min-width: 44px;
-        min-height: 44px;
-        align-items: center;
-        justify-content: center;
-        z-index: 1100;
-        position: relative;
-    }
-
-    /* Hamburger → X transform */
-    .mobile-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-    .mobile-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-    .mobile-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-    }
-
-    /* Full-screen overlay */
-    .nav-links {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100% !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        background-color: var(--bg-secondary) !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 0 !important;
-        padding: 80px 30px 40px !important;  /* space for close btn at top */
-        transform: translateX(100%) !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transition: transform 0.35s ease, opacity 0.3s ease, visibility 0.3s !important;
-        z-index: 1050 !important;
-        overflow-y: auto !important;
-    }
-
-    .nav-links.active {
-        transform: translateX(0) !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-
-    /* When overlay is open, move the toggle to top-left (RTL: left side) as close btn */
-    .mobile-toggle.active {
-        position: fixed !important;
-        top: 20px !important;
-        left: 20px !important;
-        right: auto !important;
-        z-index: 1100 !important;
-    }
-
-    .nav-links li {
-        width: 100% !important;
-        max-width: 320px !important;
-        text-align: center !important;
-    }
-
-    /* المنزلق الأفقي بلا معنى في overlay عمودي */
-    .nav-underline {
-        display: none !important;
-    }
-
-    /* دخول متدرّج لعناصر القائمة عند فتح الـ overlay
-       (RTL: تدخل من اليمين — نفس اتجاه انزلاق الـ overlay) */
-    .nav-links li {
-        opacity: 0;
-        transform: translateX(28px);
-    }
-
-    .nav-links.active li {
-        animation: navItemIn 0.4s var(--ease-out) both;
-    }
-
-    .nav-links.active li:nth-child(1) { animation-delay: 0.15s; }
-    .nav-links.active li:nth-child(2) { animation-delay: 0.21s; }
-    .nav-links.active li:nth-child(3) { animation-delay: 0.27s; }
-    .nav-links.active li:nth-child(4) { animation-delay: 0.33s; }
-
-    @keyframes navItemIn {
-        from { opacity: 0; transform: translateX(28px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-
-    /* Nav link touch targets */
-    .nav-link {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
-        min-height: 52px !important;
-        padding: 15px 30px !important;
-        font-size: 1.2rem !important;
-        font-weight: 600 !important;
-        border-bottom: 1px solid var(--border-color) !important;
-        border-radius: var(--border-radius) !important;
-        transition: background 0.2s ease, color 0.2s ease !important;
-    }
-
-    .nav-links li:last-child .nav-link {
-        border-bottom: none !important;
-    }
-
-    .nav-link:hover,
-    .nav-link:active {
-        background: rgba(59, 130, 246, 0.1) !important;
-        color: var(--accent-primary) !important;
-    }
-
-    /* Hide desktop underline indicators */
-    .nav-link::after,
-    .nav-link::before {
-        display: none !important;
-    }
-
-
-    /* ===== 3. GENERAL RTL MOBILE OPTIMISATION ===== */
-
-    /* Safe container margins */
-    .container {
-        width: 90%;
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 0;
-    }
-
-    /* Touch-friendly targets (Apple HIG: 44px minimum) */
-    .btn,
-    .filter-btn,
-    .contact-item {
-        min-height: 44px;
-    }
-
-    /* Typography */
-    .hero-title {
-        font-size: 2rem;
-    }
-
-    .name-en {
-        font-size: 1.125rem;
-    }
-
-    .hero-role {
-        font-size: 1.25rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .page-title {
-        font-size: 2rem;
-    }
-
-    .about-bio {
-        font-size: 1.125rem;
-    }
-
-    .contact-methods {
-        grid-template-columns: 1fr;
-    }
-
-    .filters {
-        gap: var(--spacing-xs);
-        padding: 0 var(--spacing-xs);
-    }
-
-    .filter-btn {
-        padding: 0.6rem 1.1rem;
-        font-size: 0.875rem;
-        min-height: 44px;
-    }
-
-    /* Prevent horizontal overflow */
-    img,
-    video,
-    iframe,
-    table {
-        max-width: 100%;
-    }
+/* ── ≥48rem: القائمة أفقية دائماً ─────────────────────────────────────── */
+@media (min-width: 48.0625rem){
+  .nav-links{ transform: none; visibility: visible; }
 }
 
-@media (max-width: 480px) {
-    :root {
-        --spacing-xl: 2rem;
-        --spacing-2xl: 2.5rem;
-    }
 
-    .container {
-        width: 92%;
-        padding: 0;
-    }
+/* ── أجهزة اللمس: لا رفع ولا حالات hover عالقة ────────────────────────── */
+@media (hover: none){
+  .hover-lift:hover{ transform: none; box-shadow: none; }
 
-    .hero {
-        padding: var(--spacing-xl) 0;
-    }
-
-    .hero-title {
-        font-size: 1.75rem;
-    }
-
-    .hero-cta {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .btn {
-        width: 100%;
-        text-align: center;
-        min-height: 48px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .profile-img {
-        max-width: 250px;
-    }
-
-    section {
-        padding: var(--spacing-xl) 0;
-    }
-
-    .section-title {
-        font-size: 1.75rem;
-    }
-
-    .skill-card {
-        padding: var(--spacing-md);
-    }
-
-    .project-card {
-        margin-bottom: var(--spacing-md);
-        min-height: 280px;
-    }
-
-    .project-card-image-wrapper,
-    .project-card-image,
-    .project-image {
-        height: 170px;
-        min-height: 150px;
-    }
-
-    .notion-embed {
-        height: 600px;
-    }
-
-    .nav-link {
-        font-size: 1.3rem;
-        min-height: 56px;
-    }
+  /* بديل الرفع: تغذية راجعة ضغط حقيقية */
+  .btn:active,
+  .filter-btn:active,
+  .article-card:active,
+  .project-card:active{
+    transform: scale(0.985);
+    transition-duration: var(--dur-fast);
+  }
 }
 
-@media (min-width: 1400px) {
-    .container {
-        max-width: 1320px;
-    }
-    
-    .hero-title {
-        font-size: 3.5rem;
-    }
-    
-    .section-title {
-        font-size: 3rem;
-    }
-}
 
-@media (hover: none) and (pointer: coarse) {
-    .skill-card:hover,
-    .project-card:hover {
-        transform: none;
-    }
-
-    .btn:hover {
-        transform: none;
-    }
-
-    /* اللمس يطلق :hover زائفاً عند النقر ويبقى عالقاً —
-       نُلغي توهجات الـ hover الجديدة (الحدّ المتدرّج + توهج المؤشر) */
-    .skill-card:hover::before,
-    .project-card:hover::before,
-    .article-card:hover::before,
-    .contact-item:hover::before {
-        opacity: 0.35;
-    }
-
-    .skill-card:hover::after,
-    .project-card:hover::after,
-    .article-card:hover::after,
-    .contact-item:hover::after {
-        opacity: 0;
-    }
-
-    /* بدلاً من الرفع (المُعطّل على اللمس): تغذية راجعة ضغط حقيقية
-       — الأزرار المغناطيسية معطّلة على اللمس فلا تعارض */
-    .btn:active,
-    .filter-btn:active {
-        transform: scale(0.97);
-        transition: transform 0.1s var(--ease-out);
-    }
-}
-
-/* ==========================================================
-   VISUAL EFFECTS — تخفيف الجوال (أداء 60fps)
-   الكانفس أصلاً لا يُنشأ ≤768px (بوابة في effects.js)
-   ========================================================== */
-@media (max-width: 768px) {
-
-    /* الزجاجية مكلفة على الجوال → أسطح صلبة */
-    .navbar {
-        background-color: var(--bg-secondary);
-        -webkit-backdrop-filter: none;
-        backdrop-filter: none;
-    }
-
-    .skill-card,
-    .project-card,
-    .article-card,
-    .contact-item {
-        background-color: var(--bg-card);
-        -webkit-backdrop-filter: none;
-        backdrop-filter: none;
-    }
-
-    /* توهج المؤشر بلا معنى على اللمس */
-    .skill-card::after,
-    .project-card::after,
-    .article-card::after,
-    .contact-item::after {
-        display: none;
-    }
-
-    /* توهجات الهيرو الضبابية الكبيرة مكلفة → نصغّرها ونثبّتها */
-    .hero::before,
-    .hero::after {
-        animation: none;
-        filter: blur(60px);
-        width: 80vw;
-        height: 80vw;
-    }
-
-    .hero-image::before {
-        animation: none;
-        filter: blur(40px);
-    }
-}
-/* ==========================================================
-   ATELIER · GENERATIVE × EDITORIAL — تبسيط رشيق للشاشات الصغيرة
-   ========================================================== */
-
-/* ≤968px: السكك والفهارس الضخمة تزاحم المحتوى → تُخفى */
-@media (max-width: 968px) {
-    .ed-rail,
-    .ed-index,
-    .ed-cropmarks {
-        display: none;
-    }
-}
-
-/* ≤768px: لا كانفس على الجوال (بوابة gen-art.js) — نخفي أوعيتها الفارغة
-   والطباعة التحريرية تتقلّص بلطف */
-@media (max-width: 768px) {
-    .ed-ghost,
-    .gen-margin {
-        display: none;
-    }
-
-    .ed-divider {
-        padding-inline: var(--spacing-md);
-    }
-
-    .article-body > p:first-of-type {
-        font-size: 1.1em;
-        line-height: 1.95;
-    }
+/* ── أهداف لمس بحدّ أدنى ٤٤px (Apple HIG) ────────────────────────────── */
+@media (pointer: coarse){
+  .btn, .filter-btn, .share-btn, .nav-link, .mobile-toggle{
+    min-block-size: 2.75rem;
+  }
 }

@@ -1,258 +1,131 @@
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
+@charset "UTF-8";
+/* ============================================================================
+   MyWebb — الحركة
+
+   ── العقد الحاكم: «CSS لا يُخفي المحتوى أبداً» ───────────────────────────
+   الحالة الافتراضية لكل عنصر هي «ظاهر». الإخفاء اختياري ومشروط ببوابتين
+   يجب أن تتحقّقا معاً:
+
+     ١. .js على <html> — يضعها سكربت سطري في <head>. إن كانت جافاسكربت
+        معطّلة أو محجوبة أو أخفقت، لا تُضاف الفئة ⇒ لا يُخفى شيء أبداً.
+     ٢. prefers-reduced-motion: no-preference — من يطلب تقليل الحركة
+        يرى المحتوى فوراً بلا كشف.
+
+   قبل هذا الملف كان العكس: animations.css يضع opacity:0 على .slide-up
+   وحده بلا أنيميشن على القاعدة، فلا يظهر العنصر إلا حين يضيف
+   animations.js فئة .animate. أي إخفاق في السكربت كان يُخفي قسم «عني»
+   وكتلة «تواصل» وكل عناوين الأقسام وفلاتر المشاريع إخفاءً دائماً.
+   ============================================================================ */
+
+
+/* ── الحالة المستقرّة: ظاهر. هذه هي القاعدة، وكل ما بعدها استثناء. ─────── */
+.rv, .fade-in, .slide-up, .slide-left, .slide-right, .scale-in{
+  opacity: 1;
+  transform: none;
 }
 
-.slide-up {
-    opacity: 0;
-    transform: translateY(30px);
-}
+@media (prefers-reduced-motion: no-preference){
 
-.slide-up.animate {
-    animation: slideUp 0.7s var(--ease-out-expo, ease-out) forwards;
-}
-
-.fade-in.animate {
-    animation: fadeIn 0.8s var(--ease-out-expo, ease-out) forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        filter: blur(6px);
-    }
-    to {
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-        filter: blur(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
-}
-
-/* ===== Hero title reveal (يُفعَّل من effects.js) ===== */
-
-/* الاسم العربي: كل كلمة على حدة (التقسيم على المسافات يحفظ التشكيل).
-   ترتفع من الضباب مع تجاوز نابض، ثم يتنفّس التدرّج (aurora بطيء 10s). */
-.name-ar .name-word {
-    display: inline-block;
-    opacity: 0;
-    background: var(--aurora-gradient);
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation:
-        wordRise 0.9s var(--ease-spring, ease-out) var(--rise-delay, 0s) both,
-        aurora 10s ease-in-out 1.1s infinite;
-}
-
-/* كشف كلمة-كلمة للنص اللاتيني (بلا تدرّج) */
-.reveal-word {
-    display: inline-block;
-    opacity: 0;
-    animation: wordRise 0.8s var(--ease-out-expo, ease-out) var(--rise-delay, 0s) both;
-}
-
-@keyframes wordRise {
-    from {
-        opacity: 0;
-        transform: translateY(0.7em);
-        filter: blur(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
-}
-
-.scale-in {
-    opacity: 0;
-    transform: scale(0.9);
-}
-
-.scale-in.animate {
-    animation: scaleIn 0.5s ease-out forwards;
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.slide-right {
-    opacity: 0;
-    transform: translateX(-30px);
-}
-
-.slide-right.animate {
-    animation: slideRight 0.6s ease-out forwards;
-}
-
-@keyframes slideRight {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.slide-left {
-    opacity: 0;
-    transform: translateX(30px);
-}
-
-.slide-left.animate {
-    animation: slideLeft 0.6s ease-out forwards;
-}
-
-@keyframes slideLeft {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-
-.hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-8px);
-}
-
-.nav-link {
-    position: relative;
-    overflow: hidden;
-}
-
-/* خط سفلي احتياطي (بلا JS) — يُخفى عند تفعيل المنزلق.
-   يكبر من المنتصف عبر scaleX (GPU) بدل width (layout). */
-.nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    right: 0;
-    left: 0;
-    height: 2px;
-    background-color: var(--accent-primary);
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s var(--ease-out);
-}
-
-.nav-link:hover::before,
-.nav-link.active::before {
-    transform: scaleX(1);
-}
-
-.btn {
-    position: relative;
-    overflow: hidden;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    width: 300px;
-    height: 300px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    /* موجة تكبّر من نقطة — transform فقط (كان width/height = layout) */
-    transform: translate(50%, -50%) scale(0);
-    transition: transform 0.6s var(--ease-out);
-}
-
-.btn:hover::before {
-    transform: translate(50%, -50%) scale(1);
-}
-
-.project-card {
-    /* رفع بتجاوز خفيف (نابض) + ظل/حدّ ناعم */
+  /* الانتقال يُعلَن على القاعدة كي يعمل في الاتجاهين.
+     نابض قصير (--ease-spring/--dur-mid): تجاوز طفيف على الإزاحة يمنح الكشف
+     حياةً بلا أن يُقرأ «أثراً» — عتامةً وإزاحةً ٨px لا أكثر. */
+  .js .rv, .js .fade-in, .js .slide-up,
+  .js .slide-left, .js .slide-right, .js .scale-in{
     transition:
-        transform 0.4s var(--ease-spring),
-        box-shadow 0.4s var(--ease-out),
-        border-color 0.3s var(--ease-out);
-}
+      opacity var(--dur-mid) var(--ease-spring),
+      transform var(--dur-mid) var(--ease-spring);
+  }
 
-.skill-card {
-    /* أسرع وهادئ (بلا نابض) — الميلان يتتبّع المؤشر فلا يجب أن يتذبذب */
-    transition:
-        transform 0.18s var(--ease-out),
-        box-shadow 0.4s var(--ease-out),
-        border-color 0.3s var(--ease-out);
-}
-
-.skill-icon svg {
-    transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.skill-card:hover .skill-icon svg {
-    transform: scale(1.1) rotate(5deg);
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-.hero-image {
-    animation: float 3s ease-in-out infinite;
-}
-
-.mobile-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.mobile-toggle.active span:nth-child(2) {
+  /* الإخفاء المشروط: جافاسكربت حيّة + الحركة مسموحة + لم يُكشف بعد.
+     :not() تغطي كل أسماء «تم الكشف» في العقد (animate/visible/in/animated). */
+  .js .rv:not(.animate):not(.visible):not(.in):not(.animated),
+  .js .fade-in:not(.animate):not(.visible):not(.in):not(.animated),
+  .js .slide-up:not(.animate):not(.visible):not(.in):not(.animated),
+  .js .slide-left:not(.animate):not(.visible):not(.in):not(.animated),
+  .js .slide-right:not(.animate):not(.visible):not(.in):not(.animated),
+  .js .scale-in:not(.animate):not(.visible):not(.in):not(.animated){
     opacity: 0;
+  }
+
+  .js .slide-up:not(.animate):not(.visible):not(.in):not(.animated){ transform: translateY(10px); }
+  .js .slide-left:not(.animate):not(.visible):not(.in):not(.animated){ transform: translateX(10px); }
+  .js .slide-right:not(.animate):not(.visible):not(.in):not(.animated){ transform: translateX(-10px); }
+  .js .scale-in:not(.animate):not(.visible):not(.in):not(.animated){ transform: scale(0.98); }
+  .js .rv:not(.animate):not(.visible):not(.in):not(.animated){ transform: translateY(8px); }
+
+  /* تتابع الأبناء — نفس العقد: الأب وحده يحمل بوابة .js */
+  .js .stagger-parent .stagger-child:not(.animate){
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity var(--dur-mid) var(--ease-spring),
+      transform var(--dur-mid) var(--ease-spring);
+  }
 }
 
-.mobile-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
+/* أسماء «تم الكشف» — كلها تعني الحالة المستقرّة نفسها */
+.animate, .visible, .in, .animated,
+.stagger-parent .stagger-child.animate{
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+
+/* ── كشف صورة الغلاف ─────────────────────────────────────────────────────
+   العكس تماماً لما كان: الغلاف ظاهر افتراضاً (القاعدة في article.css /
+   project.css)، و.cover-in تضيف أنيميشن دخول ولا تُعيد الظهور. لذلك خطأ
+   في السكربت أو تعطيل جافاسكربت أو تقليل الحركة لا يمكن أن يترك غلافاً
+   مخفياً إلى الأبد. */
+@media (prefers-reduced-motion: no-preference){
+  .cover-in{ animation: coverIn var(--dur-slow) var(--ease-out) both; }
+}
+@keyframes coverIn{
+  from{ opacity: 0; transform: scale(1.015); }
+  to  { opacity: 1; transform: none; }
+}
+
+
+/* ── كشف تحميل الصفحة المنسّق: أربع خطوات، ~320ms ──────────────────────── */
+@media (prefers-reduced-motion: no-preference){
+  .js .page-enter > *{ animation: enterUp 420ms var(--ease-out-expo) both; }
+  .js .page-enter > *:nth-child(1){ animation-delay: 0ms; }
+  .js .page-enter > *:nth-child(2){ animation-delay: 70ms; }
+  .js .page-enter > *:nth-child(3){ animation-delay: 140ms; }
+  .js .page-enter > *:nth-child(n+4){ animation-delay: 210ms; }
+}
+@keyframes enterUp{
+  from{ opacity: 0; transform: translateY(10px); }
+  to  { opacity: 1; transform: none; }
+}
+
+
+/* ── رفع البطاقات: ظلّ + إزاحة، بلا حدّ تتغيّر ─────────────────────────── */
+.hover-lift{
+  transition:
+    transform var(--dur-mid) var(--ease-spring),
+    box-shadow var(--dur-mid) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine){
+  .hover-lift:hover{ transform: translateY(-2px); box-shadow: var(--shadow-2); }
+}
+
+
+/* ── فئات محجوزة في العقد، بلا سلوك حركي الآن ─────────────────────────── */
+.observed{}          /* علامة «مراقَب» يضعها animations.js */
+.card-ready{}        /* كانت تحرّر تحويل الميلان — أُلغي الميلان */
+.section-lit{}       /* كانت توهّجات الأقسام — أُلغيت */
+.title-drawn{}       /* كان رسم الخط السفلي — صار حالة ثابتة */
+.title-shimmer{}     /* كانت لمعة العنوان — أُلغيت */
+.slider-ready{}      /* كان الخط المنزلق — صار .nav-link.active */
+
+
+/* ── تقليل الحركة: لا حركة إطلاقاً ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html{ scroll-behavior: auto; }
 }
