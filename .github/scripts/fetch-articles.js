@@ -1,12 +1,16 @@
 /**
  * Notion to Website - Article Fetcher
- * Converts Notion pages to HTML and saves to articles.json
- * 
+ * Converts Notion pages to HTML and saves to articles.json.
+ * Cover images are downloaded locally (Notion URLs expire).
+ *
  * Dependencies: @notionhq/client, notion-to-md, marked
  */
 
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
+const http = require('http');
+const { URL } = require('url');
 
 // ============================================
 // IMPORTS & INITIALIZATION
@@ -69,11 +73,93 @@ console.log('✅ Notion client initialized');
 console.log('📋 Database ID:', DATABASE_ID.substring(0, 8) + '...');
 
 // ============================================
+// IMAGE DOWNLOAD HELPERS
+// ============================================
+
+const IMAGES_DIR = path.join(process.cwd(), 'assets', 'images', 'articles');
+const PLACEHOLDER = 'assets/images/cover-placeholder.svg';
+
+function ensureImagesDir() {
+    if (!fs.existsSync(IMAGES_DIR)) {
+        fs.mkdirSync(IMAGES_DIR, { recursive: true });
+        console.log('📁 Created images directory:', IMAGES_DIR);
+    }
+}
+
+/**
+ * Download a remote cover and save locally.
+ * Returns a local relative path, or PLACEHOLDER if the download fails.
+ */
+function downloadImage(imageUrl, filename) {
+    return new Promise((resolve) => {
+        if (!imageUrl) {
+            resolve(null);
+            return;
+        }
+
+        try {
+            const parsedUrl = new URL(imageUrl);
+            let ext = path.extname(parsedUrl.pathname).split('?')[0] || '.jpg';
+            ext = ext.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)/i)?.[0] || '.jpg';
+
+            const localFilename = `${filename}${ext}`;
+            const localPath = path.join(IMAGES_DIR, localFilename);
+            const relativePath = `assets/images/articles/${localFilename}`;
+            const protocol = parsedUrl.protocol === 'https:' ? https : http;
+
+            const request = protocol.get(imageUrl, { timeout: 30000 }, (response) => {
+                if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+                    downloadImage(response.headers.location, filename).then(resolve);
+                    return;
+                }
+
+                if (response.statusCode !== 200) {
+                    console.warn(`   ⚠️ Failed to download cover (HTTP ${response.statusCode})`);
+                    resolve(PLACEHOLDER);
+                    return;
+                }
+
+                const fileStream = fs.createWriteStream(localPath);
+                response.pipe(fileStream);
+
+                fileStream.on('finish', () => {
+                    fileStream.close();
+                    const sizeKB = (fs.statSync(localPath).size / 1024).toFixed(1);
+                    console.log(`   📥 Downloaded cover: ${localFilename} (${sizeKB} KB)`);
+                    resolve(relativePath);
+                });
+
+                fileStream.on('error', (err) => {
+                    fs.unlink(localPath, () => {});
+                    console.warn(`   ⚠️ Error writing cover file: ${err.message}`);
+                    resolve(PLACEHOLDER);
+                });
+            });
+
+            request.on('error', (err) => {
+                console.warn(`   ⚠️ Error downloading cover: ${err.message}`);
+                resolve(PLACEHOLDER);
+            });
+
+            request.on('timeout', () => {
+                request.destroy();
+                console.warn('   ⚠️ Timeout downloading cover');
+                resolve(PLACEHOLDER);
+            });
+        } catch (err) {
+            console.warn(`   ⚠️ Invalid cover URL: ${err.message}`);
+            resolve(PLACEHOLDER);
+        }
+    });
+}
+
+// ============================================
 // MAIN FUNCTION
 // ============================================
 
 async function fetchArticles() {
     try {
+        ensureImagesDir();
         console.log('\n🔄 Fetching articles from Notion...\n');
 
         // Query the database for published articles
