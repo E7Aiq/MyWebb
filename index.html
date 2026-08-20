@@ -111,8 +111,15 @@
                 </div>
 
                 <div class="hero-image">
-                    <img src="assets/images/profile.webp" alt="محمد الزبيدي" class="profile-img"
-                         width="640" height="857" fetchpriority="high">
+                    <!-- الصورة الأهمّ في الموقع لا تتوقّف على صيغة واحدة:
+                         WebP لمن يدعمها، وJPEG لمن لا يدعمها (Safari دون 14،
+                         وبعض عارضات المعاينة). الملف الاحتياطي موجود أصلاً
+                         لأن og:image يستعمله، فلا وزن إضافي. -->
+                    <picture>
+                        <source srcset="assets/images/profile.webp" type="image/webp">
+                        <img src="assets/images/profile.jpg" alt="محمد الزبيدي" class="profile-img"
+                             width="640" height="857" fetchpriority="high">
+                    </picture>
                 </div>
             </div>
         </section>
