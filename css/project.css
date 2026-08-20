@@ -144,7 +144,10 @@
    الصفّ فعلاً. */
 .projects-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  /* auto-fill لا auto-fit: مع auto-fit تنطوي المسارات الفارغة، فبطاقة
+     واحدة بعد الترشيح تتمدّد لتملأ عرض الشبكة كلّه وغلافها معها.
+     auto-fill يُبقي المسار الفارغ فتحتفظ البطاقة بمقاسها. */
+  grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr));
   gap: var(--s-16) var(--s-8);
 }
 

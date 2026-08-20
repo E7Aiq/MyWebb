@@ -38,11 +38,30 @@
     async function init() {
         const container = document.getElementById(CONFIG.containerId);
         try {
-            render(container, await fetchArticles());
+            const articles = await fetchArticles();
+            render(container, articles);
+            announce(articles.length);
         } catch (error) {
             console.error('Error loading articles:', error);
             showError(container, T('حدث خطأ في تحميل المقالات',
                                    'Something went wrong loading the articles.'));
+            announce(null);
+        }
+    }
+
+    /**
+     * قارئ الشاشة لا يرى الشبكة تمتلئ ولا تفرغ — المنطقة الحيّة تنطق ما وقع.
+     */
+    function announce(count) {
+        const el = document.getElementById('gridStatus');
+        if (!el) return;
+        if (count === null) {
+            el.textContent = T('تعذّر تحميل المقالات.', 'Could not load the writing.');
+        } else if (count === 0) {
+            el.textContent = T('لا مقالات بعد.', 'Nothing published yet.');
+        } else {
+            const n = window.I18N ? window.I18N.num(count) : count;
+            el.textContent = T(`عُرض ${n} من المقالات.`, `Showing ${count} article${count === 1 ? '' : 's'}.`);
         }
     }
 
@@ -63,16 +82,22 @@
      * ترتيب المقالات — نفس القاعدة المستعملة في js/article.js للسابق/التالي،
      * فيبقى ترتيب الفهرس وترتيب التنقّل داخل المقال متطابقين.
      *
-     * القاعدة: المميّز (featured) أولاً إن وُجد، ثم ترتيب الملف كما هو.
+     * القاعدة: المميّز (featured) أولاً، ثم الأحدث تاريخاً.
      *
-     * لماذا ليس الأحدث تاريخاً: حقل date فارغ (null) في كل مقال حالياً، فالفرز
-     * الزمني بلا أثر — new Date(null) ينتج NaN وتفشل المقارنة صامتةً فيبقى
-     * الترتيب كما هو أصلاً. وترتيب الملف هو ترتيب Notion: حتميّ ومستقرّ، فلا
-     * يبدو اختيار «مقال الصدارة» عشوائياً. متى امتلأ حقل التاريخ يُدرج الفرز
-     * الزمني هنا وفي js/article.js معاً.
+     * كان التعليق هنا يقول إن حقل date فارغ في كل مقال فلا معنى للفرز
+     * الزمني — وقد امتلأ الحقل منذُئذٍ (٢٠٢٥-٠٤-١٢ و٢٠٢٣-٠٩-٠٩)، وكلا
+     * المقالين featured:false، فكان الفرز لا يفعل شيئاً والترتيب ترتيبَ
+     * Notion. الفارغ يُعزل صراحةً بدل ترك new Date(null) ينتج NaN فيُفسد
+     * الفرز صامتاً.
      */
     function orderArticles(articles) {
-        return [...articles].sort((a, b) => (b.featured === true) - (a.featured === true));
+        return [...articles].sort((a, b) => {
+            const byFeatured = (b.featured === true) - (a.featured === true);
+            if (byFeatured) return byFeatured;
+            const ta = a.date ? new Date(a.date).getTime() : -Infinity;
+            const tb = b.date ? new Date(b.date).getTime() : -Infinity;
+            return tb - ta;
+        });
     }
 
     function render(container, articles) {

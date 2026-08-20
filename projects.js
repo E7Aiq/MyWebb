@@ -55,14 +55,36 @@
     // ── projects.html ────────────────────────────────────────────────────
     async function loadAllProjects() {
         const container = document.getElementById(CONFIG.gridId);
+        // رسالة الخطأ كانت تُعرض ولا تُخفى أبداً، فتبقى معلّقة فوق البطاقات
+        // بعد نجاح محاولة تالية (تبديل اللغة يعيد البناء مثلاً).
+        const errorState = document.getElementById(CONFIG.errorStateId);
+        if (errorState) errorState.hidden = true;
         try {
             allProjects = orderProjects(await fetchProjects());
             renderGrid(container, allProjects);
             buildFilters(allProjects);
             initFilters();
+            announce(allProjects.length);
         } catch (error) {
             console.error('Error loading projects:', error);
             showError();
+        }
+    }
+
+    /**
+     * قارئ الشاشة لا يرى الشبكة تمتلئ ولا تفرغ. المنطقة الحيّة تنطق ما
+     * وقع: عدد ما عُرض، أو خلوّ النتيجة، أو تعذّر التحميل.
+     */
+    function announce(count) {
+        const el = document.getElementById('gridStatus');
+        if (!el) return;
+        if (count === null) {
+            el.textContent = T('تعذّر تحميل المشاريع.', 'Could not load projects.');
+        } else if (count === 0) {
+            el.textContent = T('لا نتائج.', 'No results.');
+        } else {
+            const n = window.I18N ? window.I18N.num(count) : count;
+            el.textContent = T(`عُرض ${n} من المشاريع.`, `Showing ${count} project${count === 1 ? '' : 's'}.`);
         }
     }
 
@@ -112,9 +134,12 @@
         const href = `project-details.html?id=${encodeURIComponent(project.id)}`;
         const categories = (project.categories || []).slice(0, 4);
         const latinTitle = isLatin(project.title);
-        // حقل date فارغ في بعض المشاريع، وlast_edited موجود دائماً — فلا
-        // تظهر بطاقة بلا أي إشارة زمنية بينما جارتها تحمل تاريخاً.
-        const when = project.date || project.last_edited;
+        // ‏last_edited تاريخ آخر مزامنة مع Notion، لا تاريخ نشر. عرضه كأنه
+        // تاريخ نشر كان يناقض الترتيب أمام عين القارئ: الفرز يعتمد date
+        // وحده ويضع الفارغ في الآخر، فيجلس المشروع بلا تاريخ في الأسفل
+        // وهو يعرض أحدث تاريخ في الصفحة. بطاقة بلا تاريخ أصدق من بطاقة
+        // بتاريخ خاطئ — و.project-card-meta تخفي الفراغ أصلاً.
+        const when = project.date;
 
         const cover = project.cover
             ? `<div class="project-card-image-wrapper">
@@ -208,12 +233,15 @@
         const container = document.getElementById(CONFIG.gridId);
         if (!container) return;
 
+        let shown = 0;
         container.querySelectorAll('.project-card').forEach((card) => {
             let categories = [];
             try { categories = JSON.parse(card.dataset.categories); } catch { categories = []; }
             const show = filter === 'all' || categories.includes(filter);
             card.classList.toggle('hidden', !show);
+            if (show) shown++;
         });
+        announce(shown);
     }
 
     function showError() {
@@ -221,6 +249,7 @@
         const errorState = document.getElementById(CONFIG.errorStateId);
         if (grid) grid.innerHTML = '';
         if (errorState) errorState.hidden = false;
+        announce(null);
     }
 
     // ── مساعدات ──────────────────────────────────────────────────────────

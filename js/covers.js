@@ -69,4 +69,26 @@
     }
 
     window.COVERS = { PLACEHOLDER, apply, markLoaded };
+
+    /* ── شبكة أمان مفوَّضة ──────────────────────────────────────────────────
+       ما سبق واجهة تُستدعى من المولّدات، والمولّدات لا تستدعيها اليوم. وهذه
+       طبقة ثانية لا تحتاج تعاوناً من أحد: تلتقط فشل تحميل أي صورة غلاف —
+       محقونة كانت أو مكتوبة في الترميز — وتضع البديل مكانها.
+
+       حدث error على <img> لا يتفقّع، لكنه يمرّ في مرحلة الالتقاط، فيلتقطه
+       مستمع على window بـ capture:true. وهذا ما يجعل الشبكة تغطّي الصور
+       التي تُحقن بعد التحميل بلا مراقب إضافي. */
+    const COVER_SELECTOR =
+        '.article-cover, .article-lead-cover, .article-card-image, .project-card-image';
+
+    window.addEventListener('error', (e) => {
+        const img = e.target;
+        if (!(img instanceof HTMLImageElement)) return;
+        if (img.dataset.fallback === '1') return;
+        if (!img.matches(COVER_SELECTOR)) return;
+
+        img.dataset.fallback = '1';
+        img.src = PLACEHOLDER;
+        markLoaded(img);
+    }, true);
 })();

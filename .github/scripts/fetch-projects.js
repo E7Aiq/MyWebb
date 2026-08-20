@@ -140,7 +140,7 @@ function downloadImage(imageUrl, filename) {
                     fileStream.close();
                     const sizeKB = (fs.statSync(localPath).size / 1024).toFixed(1);
                     console.log(`   📥 Downloaded image: ${localFilename} (${sizeKB} KB)`);
-                    resolve(relativePath);
+                    optimizeImage(localPath, relativePath).then(resolve);
                 });
 
                 fileStream.on('error', (err) => {
@@ -201,6 +201,44 @@ async function downloadAndReplaceImages(html, projectId) {
     }
 
     return updatedHtml;
+}
+
+
+/**
+ * Re-encode a downloaded image as a width-capped WebP and drop the original.
+ * Notion hands back full-resolution exports — the project images were landing
+ * at 6.6 MB each, which put one project page at 10.7 MB of images alone.
+ * Falls back to the untouched original if `sharp` is unavailable, so the sync
+ * never fails over an optimisation step.
+ *
+ * @returns {string} the relative path the JSON should reference
+ */
+async function optimizeImage(localPath, relativePath, maxWidth = 1600) {
+    let sharp;
+    try {
+        sharp = require('sharp');
+    } catch {
+        console.warn('   ⚠️ sharp unavailable — keeping original image');
+        return relativePath;
+    }
+
+    const webpPath = localPath.replace(/\.(png|jpe?g)$/i, '.webp');
+    if (webpPath === localPath) return relativePath;   // already webp/svg/gif
+
+    try {
+        const before = fs.statSync(localPath).size;
+        await sharp(localPath)
+            .resize({ width: maxWidth, withoutEnlargement: true })
+            .webp({ quality: 82 })
+            .toFile(webpPath);
+        const after = fs.statSync(webpPath).size;
+        fs.unlinkSync(localPath);
+        console.log(`   🗜️  Optimised: ${(before / 1048576).toFixed(2)} MB → ${(after / 1048576).toFixed(2)} MB`);
+        return relativePath.replace(/\.(png|jpe?g)$/i, '.webp');
+    } catch (err) {
+        console.warn(`   ⚠️ Could not optimise image: ${err.message}`);
+        return relativePath;
+    }
 }
 
 // ============================================

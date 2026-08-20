@@ -126,7 +126,7 @@ function downloadImage(imageUrl, filename) {
                     fileStream.close();
                     const sizeKB = (fs.statSync(localPath).size / 1024).toFixed(1);
                     console.log(`   📥 Downloaded cover: ${localFilename} (${sizeKB} KB)`);
-                    resolve(relativePath);
+                    optimizeImage(localPath, relativePath).then(resolve);
                 });
 
                 fileStream.on('error', (err) => {
@@ -151,6 +151,75 @@ function downloadImage(imageUrl, filename) {
             resolve(PLACEHOLDER);
         }
     });
+}
+
+/**
+ * Replace every remote image URL in the article body with a locally
+ * downloaded copy. Mirrors downloadAndReplaceImages() in fetch-projects.js —
+ * without it the body images rot on the same one-hour clock as the covers.
+ */
+async function downloadAndReplaceImages(html, articleId) {
+    const imgRegex = /<img[^>]+src="([^"]+)"[^>]*>/gi;
+    const matches = [...html.matchAll(imgRegex)];
+    if (matches.length === 0) return html;
+
+    let updatedHtml = html;
+    let imgIndex = 0;
+
+    for (const match of matches) {
+        const originalUrl = match[1];
+
+        // Skip already-local paths
+        if (originalUrl.startsWith('assets/') || originalUrl.startsWith('./') || originalUrl.startsWith('/')) {
+            continue;
+        }
+
+        const localPath = await downloadImage(originalUrl, `${articleId}-content-${imgIndex}`);
+        if (localPath && localPath !== originalUrl) {
+            updatedHtml = updatedHtml.replace(originalUrl, localPath);
+        }
+        imgIndex++;
+    }
+
+    return updatedHtml;
+}
+
+
+/**
+ * Re-encode a downloaded image as a width-capped WebP and drop the original.
+ * Notion hands back full-resolution exports — the project images were landing
+ * at 6.6 MB each, which put one project page at 10.7 MB of images alone.
+ * Falls back to the untouched original if `sharp` is unavailable, so the sync
+ * never fails over an optimisation step.
+ *
+ * @returns {string} the relative path the JSON should reference
+ */
+async function optimizeImage(localPath, relativePath, maxWidth = 1600) {
+    let sharp;
+    try {
+        sharp = require('sharp');
+    } catch {
+        console.warn('   ⚠️ sharp unavailable — keeping original image');
+        return relativePath;
+    }
+
+    const webpPath = localPath.replace(/\.(png|jpe?g)$/i, '.webp');
+    if (webpPath === localPath) return relativePath;   // already webp/svg/gif
+
+    try {
+        const before = fs.statSync(localPath).size;
+        await sharp(localPath)
+            .resize({ width: maxWidth, withoutEnlargement: true })
+            .webp({ quality: 82 })
+            .toFile(webpPath);
+        const after = fs.statSync(webpPath).size;
+        fs.unlinkSync(localPath);
+        console.log(`   🗜️  Optimised: ${(before / 1048576).toFixed(2)} MB → ${(after / 1048576).toFixed(2)} MB`);
+        return relativePath.replace(/\.(png|jpe?g)$/i, '.webp');
+    } catch (err) {
+        console.warn(`   ⚠️ Could not optimise image: ${err.message}`);
+        return relativePath;
+    }
 }
 
 // ============================================
@@ -227,24 +296,32 @@ async function fetchArticles() {
 
 async function processArticle(page) {
     const props = page.properties;
-    
+    const articleId = page.id.replace(/-/g, '');
+
     // Get page content as Markdown
     const mdBlocks = await n2m.pageToMarkdown(page.id);
     const mdString = n2m.toMarkdownString(mdBlocks);
-    
+
     // Convert Markdown to HTML
-    const contentHtml = marked.parse(mdString.parent || mdString || '');
-    
+    let contentHtml = marked.parse(mdString.parent || mdString || '');
+
+    // Notion image URLs are presigned and expire after an hour — download
+    // them locally, exactly as fetch-projects.js does.
+    contentHtml = await downloadAndReplaceImages(contentHtml, articleId);
+
     // Build article object
     return {
-        id: page.id.replace(/-/g, ''),
+        id: articleId,
         title: getTitle(props.Title || props.Name),
         title_en: getRichText(props.Title_EN),
         description: getRichText(props.Description),
         date: getDate(props.Date),
         category: getSelect(props.Category),
         tags: getMultiSelect(props.Tags),
-        cover: getCover(page.cover),
+        // getCover() returns a presigned URL that dies after an hour. It must
+        // be downloaded, not stored — every article cover on the live site was
+        // returning HTTP 403 because this call was missing.
+        cover: await downloadImage(getCover(page.cover), `${articleId}-cover`),
         icon: getIcon(page.icon),
         read_time: getNumber(props.ReadTime) || estimateReadTime(contentHtml),
         featured: getCheckbox(props.Featured),

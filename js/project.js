@@ -110,7 +110,7 @@
 
             const bodyEl = el('project-body');
             if (bodyEl) {
-                bodyEl.innerHTML = project.content_html || '';
+                bodyEl.innerHTML = sanitizeHtml(project.content_html);
                 enhanceProse(bodyEl, project.title);
                 renderShareButtons(bodyEl, project.title);
             }
@@ -185,7 +185,14 @@
             }
 
             const alt = (img.getAttribute('alt') || '').trim();
-            if (alt && alt.length > 3) {
+            /* Notion يضع اسم الملف نصّاً بديلاً حين لا تعليق، فكانت أسماء
+               مثل «fFlow_Diagram.png» و«image» تُطبع تعليقاتٍ مرئية تحت
+               الصور. التعليق يستحقّ جملة، لا اسم ملف. */
+            const looksLikeFilename =
+                /\.(png|jpe?g|gif|webp|svg|avif)$/i.test(alt) ||
+                /^image[\s_-]*\d*$/i.test(alt) ||
+                (!/\s/.test(alt) && /[_-]/.test(alt));
+            if (alt && alt.length > 3 && !looksLikeFilename) {
                 const caption = document.createElement('figcaption');
                 caption.textContent = alt;
                 figure.appendChild(caption);
@@ -200,7 +207,7 @@
     }
 
     function isLatin(s) {
-        return /^[ -ӿ\s\p{P}\p{S}]*$/u.test(s || '') && /[A-Za-z]/.test(s || '');
+        return /^[\u0000-\u04FF\s\p{P}\p{S}]*$/u.test(s || '') && /[A-Za-z]/.test(s || '');
     }
 
     function normalise(s) {
@@ -319,6 +326,49 @@
         setMetaTag('og:description', project.summary);
         setMetaTag('og:image', project.cover);
         setMetaTag('og:url', window.location.href);
+
+        /* الوصف والرابط المعياري يتبعان المحتوى أيضاً. بدون canonical تبدو
+           كل تنويعة على معامل الاستعلام صفحةً مستقلّة لمحرّك البحث. */
+        setNamedMeta('description', project.summary || project.title);
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) {
+            canonical.href = `https://alzobaidi.me/${'project-details.html'}?id=` +
+                encodeURIComponent(project.id);
+        }
+    }
+
+    /**
+     * تعقيم خفيف لمحتوى Notion قبل الحقن. المصدر أنت نفسك فالخطر منخفض،
+     * لكن سمة onerror ملصوقة في Notion — أو رابط javascript: — كانت
+     * ستُنفَّذ في نطاق الموقع. DOMParser يحلّل في مستند خامل: لا صور
+     * تُطلَب ولا سكربت يعمل أثناء التحليل.
+     */
+    function sanitizeHtml(html) {
+        const doc = new DOMParser().parseFromString(html || '', 'text/html');
+        doc.querySelectorAll('script, object, embed').forEach((n) => n.remove());
+        doc.querySelectorAll('*').forEach((el) => {
+            [...el.attributes].forEach((attr) => {
+                const name = attr.name.toLowerCase();
+                const value = attr.value.trim().toLowerCase();
+                if (name.startsWith('on')) el.removeAttribute(attr.name);
+                else if ((name === 'href' || name === 'src' || name === 'xlink:href')
+                         && /^(javascript|data:text\/html|vbscript):/i.test(value)) {
+                    el.removeAttribute(attr.name);
+                }
+            });
+        });
+        return doc.body.innerHTML;
+    }
+
+    function setNamedMeta(name, content) {
+        if (!content) return;
+        let meta = document.querySelector(`meta[name="${name}"]`);
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.setAttribute('name', name);
+            document.head.appendChild(meta);
+        }
+        meta.content = content;
     }
 
     function setMetaTag(property, content) {
@@ -331,5 +381,11 @@
         }
         meta.content = content;
     }
+
+    /* تبديل اللغة يعيد بناء الصفحة. المولّدان في projects.js و
+       articles-list.js يفعلان هذا منذ البداية؛ صفحتا التفاصيل كانتا
+       الاستثناء، فيبقى التاريخ ووقت القراءة وتسميات المشاركة وروابط
+       السابق/التالي بلغةٍ والواجهة بأخرى. */
+    if (window.I18N) window.I18N.onChange(loadProject);
 
 })();

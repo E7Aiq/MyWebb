@@ -73,7 +73,11 @@
         }, 1500);
 
         // البطاقات تُبنى بعد جلب JSON — راقب الأوعية الديناميكية
-        ['projectsGrid', 'featuredProjectsGrid', 'articles-grid'].forEach((id) => {
+        // featuredArticlesGrid كان ناقصاً: بطاقة المقال المميّز في الصفحة
+        // الرئيسية لم تكن تُسجَّل عند المراقب، فلم يكن ينقذها إلا مهلة
+        // الأمان أعلاه — سباقٌ يخسره الجلب البطيء وتكبر خسارته مع الملف.
+        ['projectsGrid', 'featuredProjectsGrid',
+         'articles-grid', 'featuredArticlesGrid'].forEach((id) => {
             const host = document.getElementById(id);
             if (!host) return;
             new MutationObserver(() => observe(host))

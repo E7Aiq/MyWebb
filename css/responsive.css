@@ -17,10 +17,18 @@
   /* backdrop-filter على النافبار يجعل position:fixed للقائمة نسبياً
      لارتفاع الشريط (~4rem) في Safari الحقيقي — يُقصّ اللوح ويحتاج تمريراً
      داخلياً. خلفية صلبة على الجوال بدل الزجاج. */
+  /* z-index هنا شرطٌ لعمل زرّ الإغلاق. النافبار عنصر sticky بـ z-index:1000
+     في style.css فينشئ سياق تكديس، وكل ما بداخله محبوس عنده — بما فيه زرّ
+     ✕ الذي كان يحمل z-index:1100 بلا أثر (وهو أصلاً عنصر static فلا يقبل
+     z-index إطلاقاً). واللوح يُنقل إلى body بـ z-index:1050 فيعلو النافبار
+     كلها ويدفن الزرّ ومبدّل اللغة تحته. ولأنه يغطّي 100dvh فلا «خارج»
+     يُنقَر، ولا Escape على اللمس — فلا مخرج إلا الانتقال إلى صفحة أخرى.
+     رفع النافبار إلى 1100 يعيد الزرّ فوق اللوح. */
   .navbar{
     background: var(--bg-canvas);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    z-index: 1100;
   }
 
   .mobile-toggle{
@@ -29,7 +37,8 @@
     justify-content: center;
     min-inline-size: 2.75rem;
     min-block-size: 2.75rem;
-    z-index: 1100;
+    position: relative;   /* بدونه z-index أدناه مُهمَل تماماً */
+    z-index: 1;
   }
 
   /* شطيرة → ✕ */
@@ -55,8 +64,11 @@
     justify-content: center;
     gap: var(--s-2);
     padding-inline: var(--gutter);
+    /* الحشو العلوي يحسب ارتفاع الشريط: صار الشريط يعلو اللوح (z-index أعلاه)
+       فما يقع تحته يُحجَب. مع justify-content:center يبقى التوسيط صحيحاً
+       بالنسبة إلى المساحة المرئية لا إلى المنفذ كاملاً. */
     padding-block:
-      calc(env(safe-area-inset-top, 0px) + var(--s-4))
+      calc(env(safe-area-inset-top, 0px) + var(--nav-h) + var(--s-4))
       calc(env(safe-area-inset-bottom, 0px) + var(--s-4));
     background: color-mix(in oklab, var(--bg-canvas) 58%, transparent);
     -webkit-backdrop-filter: saturate(180%) blur(24px);

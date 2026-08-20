@@ -38,8 +38,16 @@
      * «الصدارة» اختياراً عشوائياً. متى امتلأ حقل التاريخ يمكن إدراج الفرز
      * الزمني هنا وحده فينسحب على الصفحتين معاً.
      */
+    /* نفس قاعدة js/articles-list.js حرفياً: المميّز أولاً ثم الأحدث تاريخاً.
+       أي افتراق بين الملفّين يجعل «السابق/التالي» يخالف ترتيب الفهرس. */
     function orderArticles(articles) {
-        return [...articles].sort((a, b) => (b.featured === true) - (a.featured === true));
+        return [...articles].sort((a, b) => {
+            const byFeatured = (b.featured === true) - (a.featured === true);
+            if (byFeatured) return byFeatured;
+            const ta = a.date ? new Date(a.date).getTime() : -Infinity;
+            const tb = b.date ? new Date(b.date).getTime() : -Infinity;
+            return tb - ta;
+        });
     }
 
     async function loadArticle() {
@@ -87,7 +95,7 @@
 
             const bodyEl = el('article-body');
             if (bodyEl) {
-                bodyEl.innerHTML = article.content_html || '';
+                bodyEl.innerHTML = sanitizeHtml(article.content_html);
                 enhanceProse(bodyEl, article.title);
                 renderShareSection(bodyEl, article.title);
             }
@@ -155,7 +163,14 @@
             }
 
             const alt = (img.getAttribute('alt') || '').trim();
-            if (alt && alt.length > 3) {
+            /* Notion يضع اسم الملف نصّاً بديلاً حين لا تعليق، فكانت أسماء
+               مثل «fFlow_Diagram.png» و«image» تُطبع تعليقاتٍ مرئية تحت
+               الصور. التعليق يستحقّ جملة، لا اسم ملف. */
+            const looksLikeFilename =
+                /\.(png|jpe?g|gif|webp|svg|avif)$/i.test(alt) ||
+                /^image[\s_-]*\d*$/i.test(alt) ||
+                (!/\s/.test(alt) && /[_-]/.test(alt));
+            if (alt && alt.length > 3 && !looksLikeFilename) {
                 const caption = document.createElement('figcaption');
                 caption.textContent = alt;
                 figure.appendChild(caption);
@@ -297,6 +312,49 @@
         setMetaTag('og:description', article.description);
         setMetaTag('og:image', article.cover);
         setMetaTag('og:url', window.location.href);
+
+        /* الوصف والرابط المعياري يتبعان المحتوى أيضاً. بدون canonical تبدو
+           كل تنويعة على معامل الاستعلام صفحةً مستقلّة لمحرّك البحث. */
+        setNamedMeta('description', article.description || article.title);
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) {
+            canonical.href = `https://alzobaidi.me/${'article.html'}?id=` +
+                encodeURIComponent(article.id);
+        }
+    }
+
+    /**
+     * تعقيم خفيف لمحتوى Notion قبل الحقن. المصدر أنت نفسك فالخطر منخفض،
+     * لكن سمة onerror ملصوقة في Notion — أو رابط javascript: — كانت
+     * ستُنفَّذ في نطاق الموقع. DOMParser يحلّل في مستند خامل: لا صور
+     * تُطلَب ولا سكربت يعمل أثناء التحليل.
+     */
+    function sanitizeHtml(html) {
+        const doc = new DOMParser().parseFromString(html || '', 'text/html');
+        doc.querySelectorAll('script, object, embed').forEach((n) => n.remove());
+        doc.querySelectorAll('*').forEach((el) => {
+            [...el.attributes].forEach((attr) => {
+                const name = attr.name.toLowerCase();
+                const value = attr.value.trim().toLowerCase();
+                if (name.startsWith('on')) el.removeAttribute(attr.name);
+                else if ((name === 'href' || name === 'src' || name === 'xlink:href')
+                         && /^(javascript|data:text\/html|vbscript):/i.test(value)) {
+                    el.removeAttribute(attr.name);
+                }
+            });
+        });
+        return doc.body.innerHTML;
+    }
+
+    function setNamedMeta(name, content) {
+        if (!content) return;
+        let meta = document.querySelector(`meta[name="${name}"]`);
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.setAttribute('name', name);
+            document.head.appendChild(meta);
+        }
+        meta.content = content;
     }
 
     function setMetaTag(property, content) {
@@ -309,5 +367,11 @@
         }
         meta.content = content;
     }
+
+    /* تبديل اللغة يعيد بناء الصفحة. المولّدان في projects.js و
+       articles-list.js يفعلان هذا منذ البداية؛ صفحتا التفاصيل كانتا
+       الاستثناء، فيبقى التاريخ ووقت القراءة وتسميات المشاركة وروابط
+       السابق/التالي بلغةٍ والواجهة بأخرى. */
+    if (window.I18N) window.I18N.onChange(loadArticle);
 
 })();

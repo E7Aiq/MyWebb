@@ -144,7 +144,11 @@
   --n-6:  oklch(84.5% 0.008 200);
   --n-7:  oklch(78.0% 0.010 235);
   --n-8:  oklch(68.0% 0.012 248);
-  --n-9:  oklch(56.0% 0.013 252);
+  /* كانت 56.0% فتعطي 4.35:1 على --n-1 — ترسب في WCAG AA بفارق 0.15.
+     وهي الدرجة التي يقرأها --text-faint، أي كل التسميات الصغيرة ووسوم
+     المراحل والعناصر النائبة. 53.0% تعبر على الأرضيتين معاً:
+     4.96:1 على --n-1 و4.74:1 على --n-2، وتبقى متمايزة عن --n-11. */
+  --n-9:  oklch(53.0% 0.013 252);
   --n-10: oklch(50.5% 0.014 253);
   --n-11: oklch(45.2% 0.014 254);   /* #5B6169 — نص خافت */
   --n-12: oklch(21.2% 0.007 264);   /* #16181C — نص أساسي */
@@ -598,6 +602,12 @@ time, .article-read-time, .article-card-date, .project-card-date,
   border-radius: var(--r-control);
 }
 
+/* أهداف المراسي وروابط التخطّي تُمنح tabindex="-1" في main.js كي ينتقل
+   إليها التركيز فعلاً. وهي حاويات لا عناصر تفاعلية، فلا حلقة حولها —
+   التركيز هنا موضع قراءة لا هدف نقر. */
+[id][tabindex="-1"]:focus,
+[id][tabindex="-1"]:focus-visible{ outline: none; }
+
 .skip-link{
   position: absolute;
   inset-block-start: var(--s-2);
@@ -763,7 +773,7 @@ time, .article-read-time, .article-card-date, .project-card-date,
   :root{
     --n-1:#F9F8F6; --n-2:#F3F2EF; --n-3:#EBEAE7; --n-4:#E1E2DD;
     --n-5:#D5D9D4; --n-6:#C6CECE; --n-7:#B2B9BD; --n-8:#93999F;
-    --n-9:#6F757C; --n-10:#5F656D; --n-11:#5B6169; --n-12:#16181C;
+    --n-9:#666C73; --n-10:#5F656D; --n-11:#5B6169; --n-12:#16181C;
     --a-2:#F4F7FE; --a-3:#E9F0FE; --a-4:#DEE8FE; --a-5:#D0DEFD;
     --a-6:#BBCEF6; --a-7:#96B0EB; --a-8:#6889D8; --a-9:#2A4A9B;
     --a-10:#172F77; --a-11:#2E4B9F; --a-12:#0C1B47;
@@ -796,6 +806,25 @@ time, .article-read-time, .article-card-date, .project-card-date,
 
 /* رمز القسم داخل الزرّ (شعار مفرّغ صغير يسبق الاسم) */
 .btn-emblem{ block-size: 1.25rem; inline-size: auto; display: block; }
+
+/* ما الذي سيُنزَّل؟ النوع والحجم قبل النقر لا بعده */
+.btn-meta{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-inline-start: var(--s-1);
+}
+
+/* الاسم علامة، والوسم بجانبه وظيفة. «ذُرى» و«بان» وحدهما لا يدلّان على
+   وجهتهما لزائر أوّل، وكانا يبقيان عربيَّين في الواجهة الإنجليزية لأنهما
+   بلا data-en. الوسم يحمل الترجمة ويشرح، والاسم يبقى كما هو. */
+.nav-gloss{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 400;
+  color: var(--text-muted);
+}
 
 /* رابط قسم ملوّن في القائمة العلوية: يحمل لون قسمه دائماً لا خافتاً */
 .nav-link.brand-dhura,
@@ -883,6 +912,25 @@ time, .article-read-time, .article-card-date, .project-card-date,
   color: var(--text-muted);
   font-size: var(--t-meta);
 }
+.footer-grid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4) var(--s-8);
+  align-items: baseline;
+  justify-content: space-between;
+}
+.footer-grid > p{ margin: 0; }
+.footer-nav{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+}
+.footer-nav a{
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.footer-nav a:hover,
+.footer-nav a:focus-visible{ color: var(--text); }
 
 /* ── النماذج ────────────────────────────────────────────────────────── */
 textarea, input[type="text"], input[type="email"]{
@@ -1103,7 +1151,36 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
    الأول يعالجه ltr على المضمار، والثاني لا يعالجه إلا ltr على الحاوية:
    عندها تلتصق الحافة اليسرى بالصفر ويفيض إلى اليمين كما صُمّمت الحركة.
    ولا يمسّ ذلك اتجاه الصفحة ولا أي نصّ — الشريط صور فقط. */
-.mq{ direction: ltr; }
+.mq{ direction: ltr; position: relative; }
+
+/* المُوقِف: صغير وخافت حتى يُطلَب، ويكبر تباينه عند التركيز والتحويم.
+   يقع في زاوية الشريط فوق قناع التلاشي حيث لا شعار يُحجَب. */
+.mq-toggle{
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 0;
+  translate: 0 -50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-full, 999px);
+  background: var(--bg-surface);
+  color: var(--text-faint);
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  opacity: .55;
+  transition: opacity var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.mq-toggle:hover,
+.mq-toggle:focus-visible{ opacity: 1; color: var(--text); }
+@media (pointer: coarse){
+  /* على اللمس لا تحويم يكشفه، فيبدأ ظاهراً وبهدف لمس كامل */
+  .mq-toggle{ opacity: .9; inline-size: 2.75rem; block-size: 2.75rem; }
+}
 .mq__track{ direction: ltr; list-style: none; margin: 0; }
 
 /* ── إغلاق الحلقة: الفجوة الناقصة عند نقطة اللف ─────────────────────────
@@ -1245,7 +1322,28 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 .contact-item svg{ color: var(--text-faint); flex-shrink: 0; transition: color var(--dur-fast) var(--ease-out); }
 .contact-item:hover{ background: var(--bg-element); color: var(--accent-text); }
 .contact-item:hover svg{ color: var(--accent-text); }
-.contact-cta{ margin-block-start: var(--s-8); }
+/* ── صفحة ٤٠٤ ──────────────────────────────────────────────────────────
+   الطريق المسدود يصير مفترقاً: أربعة مداخل بدل رسالة ورجوعٍ بالمتصفّح. */
+.notfound{ padding-block: var(--rhythm); }
+.notfound-text{
+  max-inline-size: var(--measure);
+  margin-block-start: var(--s-4);
+  color: var(--text-muted);
+}
+.notfound-links{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-block-start: var(--s-8);
+}
+
+.contact-cta{
+  margin-block-start: var(--s-8);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
 
 /* ── فئات العقد (§4) ───────────────────────────────────────────────────
    أسماء حقيقية في الترميز تنسيقُها يعيش في أبنائها أو في سلفها. تُعلَن
@@ -1262,9 +1360,12 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 
 /* ── استجابة الصفحة الرئيسية ───────────────────────────────────────── */
 @media (max-width: 60rem){
-  .hero-inner{ grid-template-columns: 1fr; gap: var(--s-12); }
+  .hero-inner{ grid-template-columns: 1fr; gap: var(--s-8); }
   .hero-image{ order: -1; justify-self: start; }
-  .profile-img{ max-inline-size: 12rem; }
+  /* الصورة تتصدّر الشاشة الضيّقة، فكلّ بكسل فيها يدفع الاسم والدور
+     والنداءات الثلاثة إلى ما تحت الحدّ. عند 12rem كان زائر الجوال يرى
+     صورةً ولا يرى فعلاً واحداً. */
+  .profile-img{ max-inline-size: 8rem; }
 
   /* في عمود واحد لا معنى لخطّ أفقي واحد — يصير لكل مرحلة خطّها */
   .journey-grid{ grid-template-columns: 1fr; gap: var(--s-12); }

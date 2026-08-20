@@ -69,6 +69,22 @@
             } else {
                 unlockPageScroll();
             }
+            /* حبس التركيز داخل اللوح. inert يُخرج بقيّة الصفحة من شجرة
+               الوصول ومن ترتيب Tab معاً — فلا يتسرّب التركيز إلى محتوى
+               مخفيّ خلف الطبقة الضبابية. يُحسَب بعد mountNavOverlay لأن
+               اللوح ينتقل إلى body فيغيّر قائمة الأشقّاء. */
+            [...document.body.children].forEach((el) => {
+                if (el !== navLinks && el.tagName !== 'SCRIPT') el.inert = open;
+            });
+            /* اللوح ينتقل من visibility:hidden، و.focus() على عنصر مخفيّ
+               لا يفعل شيئاً. الإطار التالي يكفي ليصير مرئياً. */
+            if (open) {
+                requestAnimationFrame(() => {
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.querySelector('.nav-link')?.focus();
+                    }
+                });
+            }
         };
 
         const syncNavOverlay = () => {
@@ -90,7 +106,13 @@
             link.addEventListener('click', () => setOpen(false));
         });
 
+        /* الحارس شرط لا تحسين: بدونه كانت كل نقرة في المستند تنادي setOpen(false)
+           فينفَّذ unlockPageScroll ومعه scrollTo(0, lockedScrollY) — وهي صفر ما لم
+           تُفتح القائمة قط. فكان كل رابط مرساة يُلغى بعد تنفيذه مباشرة: معالج
+           الرابط يمرّر نحو #contact، ثم تصل الفقاعة إلى المستند فتُعيد التمرير
+           إلى الصفر. «تواصل معي» وروابط التخطّي كانت معطّلة بهذا. */
         document.addEventListener('click', (e) => {
+            if (!navLinks.classList.contains('active')) return;
             if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target)) setOpen(false);
         });
 
@@ -141,6 +163,15 @@
             const top = target.getBoundingClientRect().top + window.scrollY - navHeight();
             const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+
+            /* preventDefault يلغي نقل التركيز الذي كان المتصفّح سيقوم به،
+               فكان مستخدم لوحة المفاتيح يرى الصفحة تنتقل وتركيزه لم يبرح
+               مكانه. tabindex="-1" يجعل الهدف قابلاً للتركيز برمجياً فقط. */
+            if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+            target.focus({ preventScroll: true });
+
+            /* والعنوان يتبع الموضع، فيعمل زرّ الرجوع ويصحّ نسخ الرابط */
+            history.replaceState(null, '', href);
         });
     });
 
@@ -163,6 +194,47 @@
     // ── روابط خارجية آمنة ─────────────────────────────────────────────────
     document.querySelectorAll('a[target="_blank"]').forEach((link) => {
         if (!link.hasAttribute('rel')) link.setAttribute('rel', 'noopener noreferrer');
+    });
+
+    /* ── مُوقِف شريط الشعارات ───────────────────────────────────────────────
+       WCAG 2.2.2 يوجب وسيلة إيقاف لأي حركة تلقائية تتجاوز خمس ثوانٍ. الشريط
+       يدور بلا نهاية في دورة ٥٢s. الإيقاف عند التحويم أُزيل بطلب، فالبديل
+       زرّ صريح — وهو يخدم اللمس أيضاً حيث لا تحويم أصلاً. */
+    document.querySelectorAll('[data-mq-toggle]').forEach((btn) => {
+        const track = document.querySelector('.mq__track');
+        if (!track) return;
+        btn.addEventListener('click', () => {
+            const paused = track.style.animationPlayState === 'paused';
+            track.style.animationPlayState = paused ? 'running' : 'paused';
+            btn.setAttribute('aria-pressed', String(!paused));
+            const label = paused
+                ? { ar: 'إيقاف حركة الشعارات', en: 'Pause logo motion' }
+                : { ar: 'تشغيل حركة الشعارات', en: 'Play logo motion' };
+            btn.setAttribute('aria-label', window.I18N ? window.I18N.t(label.ar, label.en) : label.ar);
+            btn.dataset.enLabel = label.en;
+        });
+    });
+
+    /* ── نسخ البريد ────────────────────────────────────────────────────────
+       ‏mailto: يفتح برنامجاً غير مهيّأ — أو لا شيء — عند من يستعمل بريد الويب
+       على الحاسوب، وهم الأكثرية. زرّ النسخ مخرج لا يعتمد على إعدادات النظام. */
+    document.querySelectorAll('[data-copy]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const value = btn.dataset.copy;
+            try {
+                await navigator.clipboard.writeText(value);
+            } catch {
+                const input = document.createElement('input');
+                input.value = value;
+                document.body.appendChild(input);
+                input.select();
+                try { document.execCommand('copy'); } catch { /* لا شيء */ }
+                input.remove();
+            }
+            const original = btn.textContent;
+            btn.textContent = window.I18N ? window.I18N.t('نُسخ ✓', 'Copied ✓') : 'نُسخ ✓';
+            setTimeout(() => { btn.textContent = original; }, 1800);
+        });
     });
 
     document.addEventListener('DOMContentLoaded', setActiveNavLink);

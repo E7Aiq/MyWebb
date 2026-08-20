@@ -37,6 +37,17 @@
       ]
     }
     </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="https://alzobaidi.me/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+    <meta property="og:url" content="https://alzobaidi.me/">
+    <meta property="og:title" content="محمد الزبيدي | محلل بيانات" data-en-content="Mohammed Alzobaidi | Data Analyst">
+    <meta property="og:description" content="مطوّر حلول البيانات والذكاء الاصطناعي — من أثر المشكلة إلى حلٍّ قابل للقياس." data-en-content="Data & AI solutions developer — from the impact of the problem to a measurable solution.">
+    <meta property="og:image" content="https://alzobaidi.me/assets/images/profile.jpg">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
     <a class="skip-link" data-en="Skip to content" href="#about">تخطَّ إلى المحتوى</a>
@@ -47,8 +58,8 @@
             <div class="nav-actions">
                 <ul class="nav-links" id="navLinks">
                     <li><a href="index.html" class="nav-link active" data-en="Home">الرئيسية</a></li>
-                    <li><a href="projects.html" class="nav-link brand-dhura"><span class="swash">ذُرى</span></a></li>
-                    <li><a href="articles.html" class="nav-link brand-ban"><span class="swash">بان</span></a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
                     <li><a href="#contact" class="nav-link" data-en="Contact">تواصل</a></li>
                 </ul>
 
@@ -82,12 +93,17 @@
                     <p class="hero-tagline" data-en="A number without context is noise; a question without a plan is ink on paper.">رقمٌ بلا سياق، ضجيج. وسؤالٌ بلا تخطيط، حبرٌ على ورق</p>
 
                     <div class="hero-cta">
+                        <!-- «ذُرى» و«بان» شقيقان: نفس المعالجة الهادئة ونفس
+                             الخلفية النظيفة. التعبئة الصلبة كانت تُثقل الشعار
+                             القرميدي وتفكّ التوأمة بينهما. -->
                         <a href="projects.html" class="btn btn-outline brand-dhura" aria-label="ذُرى — مشاريعي">
-                            <img class="btn-emblem" src="assets/logos/dhura.png?v=r27" alt="" aria-hidden="true" decoding="async">
+                            <img class="btn-emblem" src="assets/logos/dhura-20.webp" alt="" aria-hidden="true"
+                                 width="50" height="60" decoding="async">
                             <span class="swash">ذُرى</span>
                         </a>
                         <a href="articles.html" class="btn btn-outline brand-ban" aria-label="بان — مدوّنتي">
-                            <img class="btn-emblem" src="assets/logos/ban.png?v=r27" alt="" aria-hidden="true" decoding="async">
+                            <img class="btn-emblem" src="assets/logos/ban-20.webp" alt="" aria-hidden="true"
+                                 width="56" height="60" decoding="async">
                             <span class="swash">بان</span>
                         </a>
                         <a href="#contact" class="btn btn-secondary" data-en="Get in touch">تواصل معي</a>
@@ -95,8 +111,8 @@
                 </div>
 
                 <div class="hero-image">
-                    <img src="assets/images/profile.jpg" alt="محمد الزبيدي" class="profile-img"
-                         width="400" height="400" fetchpriority="high">
+                    <img src="assets/images/profile.webp" alt="محمد الزبيدي" class="profile-img"
+                         width="640" height="857" fetchpriority="high">
                 </div>
             </div>
         </section>
@@ -120,7 +136,8 @@
                         <span class="poetry-hemistich">له على الرأيِ تنقيبٌ ومطَّلعٌ</span>
                         <span class="poetry-hemistich">وفي المقاصدِ تصويبٌ وتصعيد</span>
                     </p>
-                    <a href="assets/Data____CV.pdf" class="btn btn-outline" download>
+                    <a href="assets/Mohammed-Alzobaidi-CV.pdf" class="btn btn-outline"
+                       download="Mohammed-Alzobaidi-CV.pdf">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -128,6 +145,7 @@
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
                         <span data-en="Download CV">تحميل السيرة الذاتية</span>
+                        <span class="btn-meta" data-en="PDF · 137 KB">PDF · ١٣٧ ك.ب</span>
                     </a>
                 </div>
             </div>
@@ -214,7 +232,16 @@
                 <p class="section-label rv" data-en="What I reach for to turn an idea into a solution">ما أمدّ يدي إليه لأحوّل الفكرة إلى حل</p>
             </div>
 
+            <!-- WCAG 2.2.2 يوجب مُوقِفاً لأي حركة تلقائية تتجاوز خمس ثوانٍ.
+                 الإيقاف عند التحويم أُزيل بطلب، والزرّ بديل يخدم اللمس أيضاً. -->
             <div class="mq">
+                <button class="mq-toggle" type="button" data-mq-toggle aria-pressed="false"
+                        aria-label="إيقاف حركة الشعارات" data-en-label="Pause logo motion">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+                        <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+                    </svg>
+                </button>
                 <ul class="mq__track">
                     <li class="stack-logo-wrap">
                         <img class="stack-logo" src="assets/logos/cursor.svg"
@@ -603,18 +630,32 @@
                            href="mailto:Mohammed@Alzobaidi.me?subject=%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9">
                             <span data-en="Write to me">اكتب لي رسالة</span>
                         </a>
+                        <!-- ‏mailto: يفتح برنامجاً غير مهيّأ — أو لا شيء — عند من
+                             يستعمل بريد الويب على الحاسوب، وهم الأكثرية. -->
+                        <button class="btn btn-secondary" type="button" data-copy="Mohammed@Alzobaidi.me"
+                                data-en="Copy email">نسخ البريد</button>
                     </p>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
+         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
     <footer class="footer">
-        <div class="container">
+        <div class="container footer-grid">
+            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
+                <a href="index.html" data-en="Home">الرئيسية</a>
+                <a href="projects.html" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="articles.html" data-en="Writing">بان — المقالات</a>
+                <a href="index.html#contact" data-en="Contact">تواصل</a>
+            </nav>
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
     <script src="js/i18n.js?v=r27"></script>
+
+    <script src="js/covers.js?v=r27"></script>
 
     <script src="main.js?v=r27"></script>
     <script src="animations.js?v=r27"></script>

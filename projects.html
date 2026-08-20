@@ -34,6 +34,17 @@
       ]
     }
     </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="https://alzobaidi.me/projects.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+    <meta property="og:url" content="https://alzobaidi.me/projects.html">
+    <meta property="og:title" content="ذُرى | محمد الزبيدي" data-en-content="Dhura — Projects | Mohammed Alzobaidi">
+    <meta property="og:description" content="مشاريع في تحليل البيانات وذكاء الأعمال." data-en-content="Projects in data analysis and business intelligence.">
+    <meta property="og:image" content="https://alzobaidi.me/assets/images/profile.jpg">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
     <a class="skip-link" data-en="Skip to projects" href="#projectsGrid">تخطَّ إلى المشاريع</a>
@@ -41,14 +52,14 @@
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="projects.html" class="logo logo-emblem">
-                <img src="assets/logos/dhura.png?v=r27" alt="ذُرى" width="360" height="440" decoding="async">
+            <a href="index.html" class="logo logo-emblem">
+                <img src="assets/logos/dhura.webp" alt="ذُرى" width="360" height="440" decoding="async">
             </a>
             <div class="nav-actions">
                 <ul class="nav-links" id="navLinks">
                     <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
-                    <li><a href="projects.html" class="nav-link brand-dhura active"><span class="swash">ذُرى</span></a></li>
-                    <li><a href="articles.html" class="nav-link brand-ban"><span class="swash">بان</span></a></li>
+                    <li><a href="projects.html" class="nav-link brand-dhura active" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="articles.html" class="nav-link brand-ban" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
                     <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
                 </ul>
 
@@ -71,7 +82,7 @@
         <header class="page-header breakout page-masthead">
             <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
             <figure class="masthead-emblem rv">
-                <img src="assets/logos/dhura.png?v=r27"
+                <img src="assets/logos/dhura.webp"
                      alt="قمم برتقالية متدرّجة — شعار مشاريع ذُرى"
                      width="360" height="440" fetchpriority="high" decoding="async">
             </figure>
@@ -91,6 +102,8 @@
                 <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true" data-en="All">الكل</button>
             </div>
 
+            <!-- منطقة حيّة: قارئ الشاشة لا يرى الشبكة تمتلئ ولا الفلتر يعمل -->
+            <p class="visually-hidden" id="gridStatus" role="status" aria-live="polite"></p>
             <div class="projects-grid" id="projectsGrid">
                 <div class="loading-state">
                     <div class="spinner" aria-hidden="true"></div>
@@ -114,14 +127,23 @@
     </main>
 
     <!-- Footer -->
+    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
+         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
     <footer class="footer">
-        <div class="container">
+        <div class="container footer-grid">
+            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
+                <a href="index.html" data-en="Home">الرئيسية</a>
+                <a href="projects.html" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="articles.html" data-en="Writing">بان — المقالات</a>
+                <a href="index.html#contact" data-en="Contact">تواصل</a>
+            </nav>
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="js/i18n.js?v=r27"></script>
+    <script src="js/covers.js?v=r27"></script>
     <script src="main.js?v=r27"></script>
     <script src="animations.js?v=r27"></script>
     <script src="projects.js?v=r27"></script>
