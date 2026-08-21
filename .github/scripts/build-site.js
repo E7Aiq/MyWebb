@@ -1623,6 +1623,9 @@ Sitemap: ${ctx.site.origin}/sitemap.xml
 /**
  * الصفحة الرئيسية و404 مكتوبتان بيد صاحبهما ويجب أن تبقيا كذلك. البناء لا
  * يعيد كتابتهما — يستبدل ما بين علامتين فقط، فيبقى كل ما عداهما بيده وحده.
+ *
+ * علامة مفقودة توقف البناء برسالة صريحة: الكتابة في موضع مُخمَّن أسوأ من
+ * التوقّف. وكذلك علامة مكرّرة أو معكوسة الترتيب — كلاهما منطقة تالفة.
  */
 function patchRegions(rel, regions) {
     const abs = path.join(ROOT, rel);
@@ -1637,11 +1640,76 @@ function patchRegions(rel, regions) {
             throw new Error(`علامة المنطقة المُدارة «${name}» مفقودة في ${rel}. `
                 + `أضف ${begin} … ${end} أو أعد الملف من git.`);
         }
-        html = html.slice(0, i + begin.length) + '\n' + content + '\n' + ' '.repeat(4) + html.slice(j);
+        if (j < i) {
+            throw new Error(`علامتا المنطقة «${name}» معكوستان في ${rel}: end قبل begin.`);
+        }
+        if (html.indexOf(begin, i + 1) !== -1 || html.indexOf(end, j + 1) !== -1) {
+            throw new Error(`المنطقة المُدارة «${name}» مكرّرة في ${rel} — لا يُعرف أيّها يُكتب.`);
+        }
+
+        // إزاحة علامة الإغلاق تتبع إزاحة علامة الفتح، فيبقى الترميز مرتّباً
+        const indent = html.slice(html.lastIndexOf('\n', i) + 1, i);
+        html = html.slice(0, i + begin.length) + '\n' + content + '\n' + indent + html.slice(j);
     }
 
     write(rel, html);
 }
+
+/* ── الأصول المُدارة ──────────────────────────────────────────────────────
+   باعث التحديث كان يُرفع بيد صاحب الموقع في ثلاثة مواضع: data/site.json ثم
+   index.html ثم 404.html. ونسيان واحدٍ منها كان يُفشل البناء — وهو سلوك
+   صحيح، لكن الخطوة اليدوية نفسها هي العلّة. القوائم هنا، والباعث من
+   site.json، فيُرفع في مكان واحد. */
+const PRELOAD_FONTS = [
+    'thmanyahserifdisplay-Bold.woff2',
+    'thmanyahseriftext-Regular.woff2',
+    'thmanyahsans-Regular.woff2'
+];
+
+const MANAGED_ASSETS = {
+    'index.html': {
+        css: [
+            { file: 'style.css' },
+            { file: 'animations.css' },
+            { file: 'project.css', note: 'بطاقات المختارات: المشروع في project.css والمقال في article.css' },
+            { file: 'article.css' },
+            { file: 'responsive.css' }
+        ],
+        js: ['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'projects.js', 'js/articles-list.js']
+    },
+    '404.html': {
+        css: [
+            { file: 'style.css' },
+            { file: 'animations.css' },
+            { file: 'article.css' },
+            { file: 'responsive.css' }
+        ],
+        js: ['js/i18n.js', 'main.js', 'animations.js']
+    }
+};
+
+function assetsRegion(cfg, v) {
+    const L = [];
+    L.push('    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->');
+    L.push(`    <script src="${C.asset('js/view-transitions.js', v)}"></script>`);
+    L.push('');
+    L.push('    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->');
+    PRELOAD_FONTS.forEach((f) =>
+        L.push(`    <link rel="preload" href="/assets/fonts/${f}" as="font" type="font/woff2" crossorigin>`));
+    L.push('');
+    L.push('    <!-- Styles -->');
+    cfg.css.forEach((entry) => {
+        if (entry.note) L.push(`    <!-- ${entry.note} -->`);
+        L.push(`    <link rel="stylesheet" href="${C.asset('css/' + entry.file, v)}">`);
+    });
+    return L.join('\n');
+}
+
+/** المناطق المُدارة المشتركة بين الصفحتين اليدويتين */
+const assetRegions = (rel, v) => ({
+    assets: assetsRegion(MANAGED_ASSETS[rel], v),
+    scripts: C.scripts(MANAGED_ASSETS[rel].js, v)
+});
 
 function homeRegions(ctx) {
     const site = ctx.site;
@@ -1684,11 +1752,81 @@ function homeRegions(ctx) {
         '    </script>'
     ].join('\n');
 
-    return {
+    return Object.assign(assetRegions('index.html', site.cacheBuster), {
         head,
         'featured-projects': ctx.projects.length ? projectCardHtml(ctx.projects[0]) : '',
         'featured-articles': ctx.articles.length ? articleCardHtml(ctx.articles[0]) : ''
-    };
+    });
+}
+
+/* ============================================================================
+   ١١·٥. سجلّ المعرّفات — يُدمَج ولا يُستبدَل
+   ============================================================================ */
+
+/**
+ * مساران في GitHub Actions يكتبان هذا الملف نفسه. الفارق الزمني بينهما
+ * (‏٠٣:٠٠ و٠٣:٣٠) هو خطّ الدفاع الأول، و`git pull --rebase` الثاني — لكن
+ * أياً منهما لا يحمي من كتابةٍ فوق كتابة داخل العملية نفسها: لو بدأ هذا
+ * البناء قبل أن يُودِع الآخر مقالاً جديداً، لكان `ctx.ledger` جاهلاً به
+ * ولمحاه الاستبدال.
+ *
+ * لذلك يُعاد قراءة الملف لحظة الكتابة لا لحظة البدء، ويُدمَج:
+ *   · مدخل موجود على القرص وغائب هنا ⇒ **يبقى**. لا يُحذف مدخل أبداً كأثر
+ *     جانبي — حذفه يكسر رابطاً منشوراً.
+ *   · مدخل في الجهتين ⇒ معرّف هذه التشغيلة يفوز، والأسماء المهجورة
+ *     تُجمع من الجهتين فلا يسقط جسر تحويل كتبه الآخر.
+ *
+ * والترتيب بالمفتاح لا بترتيب العرض: ترتيب العرض يتبدّل مع كل تغيير تاريخ،
+ * فيُنتج فرقاً وهمياً في git ويضاعف احتمال التعارض بين المسارين.
+ */
+function writeLedger(ledger) {
+    const rel = 'data/slugs.json';
+    const abs = path.join(ROOT, rel);
+
+    let onDisk = {};
+    if (fs.existsSync(abs)) {
+        try {
+            onDisk = JSON.parse(fs.readFileSync(abs, 'utf8'));
+        } catch (err) {
+            warn(`data/slugs.json تالف (${err.message}) — يُعاد بناؤه من هذه التشغيلة وحدها.`);
+        }
+    }
+
+    const merged = {};
+    const ids = [...new Set([...Object.keys(onDisk), ...Object.keys(ledger)])].sort();
+    let carried = 0;
+
+    for (const id of ids) {
+        const a = onDisk[id];
+        const b = ledger[id];
+
+        if (!b) { merged[id] = a; carried++; continue; }
+        if (!a) { merged[id] = b; continue; }
+
+        const aliases = new Set([...(a.aliases || []), ...(b.aliases || [])]);
+        if (a.slug && a.slug !== b.slug) aliases.add(a.slug);
+        aliases.delete(b.slug);
+
+        merged[id] = { slug: b.slug, aliases: [...aliases].sort(), title: b.title, kind: b.kind };
+    }
+
+    if (carried) {
+        note(`سجلّ المعرّفات: ${carried} مدخلاً محفوظاً من القرص لا مصدر له في هذه التشغيلة `
+            + '(محتوى غير منشور، أو تشغيلة أخرى كتبت قبل هذه) — أُبقيت كما هي.');
+    }
+
+    // تصادم بين معرّف محمول ومعرّف من هذه التشغيلة: لا يكسر مساراً مقدَّماً
+    // (الصفحات تُولَّد لعناصر هذه التشغيلة وحدها، وassignSlug يفضّ التصادم
+    // بلاحقة) لكنه يستحقّ أن يُقال بدل أن يُكتشَف لاحقاً.
+    const bySlug = new Map();
+    for (const [id, rec] of Object.entries(merged)) {
+        const key = `${rec.kind}:${rec.slug}`;
+        if (bySlug.has(key)) {
+            warn(`معرّفان متطابقان في السجلّ: «${rec.slug}» لـ ${bySlug.get(key)} و ${id}.`);
+        } else bySlug.set(key, id);
+    }
+
+    write(rel, JSON.stringify(merged, null, 2) + '\n');
 }
 
 /* ============================================================================
@@ -1834,6 +1972,7 @@ async function main() {
 
     // ── الصفحات اليدوية: المناطق المُدارة وحدها ──────────────────────────
     patchRegions('index.html', homeRegions(ctx));
+    patchRegions('404.html', assetRegions('404.html', site.cacheBuster));
 
     // ── بنية الزحف ───────────────────────────────────────────────────────
     const sitemaps = buildSitemapFiles(ctx);
@@ -1854,7 +1993,7 @@ async function main() {
     sweep(report.written);
 
     // ── السجلّ ───────────────────────────────────────────────────────────
-    write('data/slugs.json', JSON.stringify(ctx.ledger, null, 2) + '\n');
+    writeLedger(ctx.ledger);
 
     // ── الخلاصة ──────────────────────────────────────────────────────────
     report.counts.articles = ctx.articles.length;
@@ -1880,8 +2019,14 @@ async function main() {
         JSON.stringify(report, null, 2), 'utf8');
 }
 
-main().catch((err) => {
-    console.error('\n❌ فشل البناء:', err.message);
-    console.error(err.stack);
-    process.exit(1);
-});
+/* يُصدَّر للاختبار: writeLedger هو الموضع الوحيد الذي يتنافس عليه المساران،
+   ودمجه يستحقّ فحصاً مباشراً لا استنتاجاً. */
+module.exports = { writeLedger };
+
+if (require.main === module) {
+    main().catch((err) => {
+        console.error('\n❌ فشل البناء:', err.message);
+        console.error(err.stack);
+        process.exit(1);
+    });
+}

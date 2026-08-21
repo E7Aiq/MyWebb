@@ -2,7 +2,7 @@
   "_comment": "المصدر الوحيد لبيانات الموقع الوصفية. كل عنوان ووصف وبطاقة مشاركة في الموقع يُبنى من هنا — لا تُكتب هذه القيم في أي ملف HTML مباشرةً. راجع docs/SEO.md.",
 
   "origin": "https://alzobaidi.me",
-  "cacheBuster": "r30",
+  "cacheBuster": "r31",
 
   "name_ar": "محمد الزبيدي",
   "name_en": "Mohammed Alzobaidi",

@@ -11,20 +11,26 @@
     <script>(function(){var d=document.documentElement;d.classList.add('js');
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
+    <!-- ── منطقة مُدارة: وسوم الأصول وباعث التحديث. القوائم والباعث
+         مصدرهما data/site.json + .github/scripts/build-site.js — لا تُحرَّر
+         يدوياً. لرفع الباعث: ارفع cacheBuster في data/site.json وحده. ── -->
+    <!-- seo:assets:begin -->
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="js/view-transitions.js?v=r30"></script>
+    <script src="/js/view-transitions.js?v=r31"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
-    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
-    <link rel="stylesheet" href="css/style.css?v=r30">
-    <link rel="stylesheet" href="css/animations.css?v=r30">
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css?v=r31">
+    <link rel="stylesheet" href="/css/animations.css?v=r31">
     <!-- بطاقات المختارات: المشروع في project.css والمقال في article.css -->
-    <link rel="stylesheet" href="css/project.css?v=r30">
-    <link rel="stylesheet" href="css/article.css?v=r30">
-    <link rel="stylesheet" href="css/responsive.css?v=r30">
+    <link rel="stylesheet" href="/css/project.css?v=r31">
+    <link rel="stylesheet" href="/css/article.css?v=r31">
+    <link rel="stylesheet" href="/css/responsive.css?v=r31">
+    <!-- seo:assets:end -->
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -645,7 +651,7 @@
                 </div>
             </div>
         </article>
-    <!-- seo:featured-projects:end -->
+                            <!-- seo:featured-projects:end -->
                         </div>
                         <p class="section-more">
                             <a href="/projects/" class="btn btn-secondary" data-en="My projects">مشاريعي</a>
@@ -673,7 +679,7 @@
                 </div>
             </div>
         </a>
-    <!-- seo:featured-articles:end -->
+                            <!-- seo:featured-articles:end -->
                         </div>
                         <p class="section-more">
                             <a href="/articles/" class="btn btn-secondary" data-en="My articles">مقالاتي</a>
@@ -760,13 +766,14 @@
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-    <script src="js/i18n.js?v=r30"></script>
-
-    <script src="js/covers.js?v=r30"></script>
-
-    <script src="main.js?v=r30"></script>
-    <script src="animations.js?v=r30"></script>
-    <script src="projects.js?v=r30"></script>
-    <script src="js/articles-list.js?v=r30"></script>
+    <!-- seo:scripts:begin -->
+    <!-- Scripts -->
+    <script src="/js/i18n.js?v=r31"></script>
+    <script src="/js/covers.js?v=r31"></script>
+    <script src="/main.js?v=r31"></script>
+    <script src="/animations.js?v=r31"></script>
+    <script src="/projects.js?v=r31"></script>
+    <script src="/js/articles-list.js?v=r31"></script>
+    <!-- seo:scripts:end -->
 </body>
 </html>
