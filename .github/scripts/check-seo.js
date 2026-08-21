@@ -180,6 +180,16 @@ for (const p of content) {
         if (/"undefined"|"null"/.test(block.text)) {
             fail(p.url, `${type} فيه قيمة نصّية «undefined/null»`);
         }
+        /* حقلٌ فارغ أسوأ من حقل غائب: مصفوفة خاوية أو نصّ خاوٍ يُصرّح
+           بالمعرفة ثم لا يقدّم شيئاً، فيُقرأ إشارةً كاذبة. */
+        for (const [key, value] of Object.entries(data)) {
+            if (Array.isArray(value) && value.length === 0) {
+                fail(p.url, `${type}: الحقل «${key}» مصفوفة فارغة — احذفه أو املأه`);
+            }
+            if (typeof value === 'string' && !value.trim() && key !== '@id') {
+                fail(p.url, `${type}: الحقل «${key}» نصّ فارغ`);
+            }
+        }
         if (type === 'BreadcrumbList') {
             const items = data.itemListElement || [];
             items.forEach((el, i) => {

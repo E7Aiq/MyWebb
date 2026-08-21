@@ -68,9 +68,9 @@ const orderProjects = (p) => [...p].sort((x, y) => {
  * يكون شورك. السجلّ يحفظ المعرّف الأول، ويسجّل القديم في aliases فيُكتب له
  * جسر تحويل تلقائياً.
  */
-function assignSlug(item, ledger, used) {
+function assignSlug(item, ledger, used, desiredSlug) {
     const key = item.id;
-    const desired = S.slugify(item.title) || key.slice(0, 12);
+    const desired = desiredSlug || S.slugify(item.title) || key.slice(0, 12);
 
     const record = ledger[key] || { slug: null, aliases: [] };
     let slug = record.slug || desired;
@@ -194,37 +194,117 @@ function deriveMeta(ctx) {
    ============================================================================ */
 
 function buildTopics(ctx) {
-    const map = new Map();   // slug → {name, slug, items[]}
+    const all = [...ctx.articles, ...ctx.projects];
 
-    for (const item of [...ctx.articles, ...ctx.projects]) {
+    /* التجميع بمفتاح المطابقة العربي لا بالنصّ الخام: وسمان يختلفان بحرف
+       («الذكاء الاصطناعي» و«الذكاء الاصطناعى») كانا يُنتجان صفحتَي موضوع
+       تتقاسمان المحتوى وتتنافسان على النتيجة نفسها. راجع arabicKey في
+       lib/seo.js و docs/SEO.md §6. */
+    const groups = new Map();   // مفتاح → { variants, items }
+
+    for (const item of all) {
+        const counted = new Set();
         for (const name of item.topics) {
-            const slug = S.topicSlug(name);
-            if (!slug) continue;
-            if (!map.has(slug)) map.set(slug, { name, slug, url: C.topicUrl(slug), items: [] });
-            map.get(slug).items.push(item);
+            const key = S.arabicKey(name);
+            if (!key) continue;
+            if (!groups.has(key)) groups.set(key, { key, variants: new Map(), items: [] });
+            const g = groups.get(key);
+            g.variants.set(name, (g.variants.get(name) || 0) + 1);
+            // العنصر يُعدّ مرّة واحدة في الموضوع ولو حمل صيغتين منه
+            if (!counted.has(key)) { g.items.push(item); counted.add(key); }
         }
     }
 
-    // ترتيب ثابت: الأكثر عناصر أولاً، ثم أبجدياً — حتميّ عبر البناءات
-    ctx.topics = [...map.values()].sort((a, b) =>
+    /* الاسم المعروض: أشيع صيغة كُتب بها الوسم، ثم الأسبق أبجدياً عند
+       التعادل. حتميّ، ويحترم ما كتبه صاحب المحتوى — لا يُعرض المفتاح
+       المُطبَّع أبداً. */
+    for (const g of groups.values()) {
+        g.name = [...g.variants.entries()]
+            .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ar'))[0][0];
+        g.variantList = [...g.variants.keys()].sort();
+    }
+
+    /* المعرّف يمرّ بالسجلّ كما يمرّ معرّف المقال: أوّل معرّف أُعطي للموضوع
+       يثبت، فلا يتغيّر رابط مفهرَس لأن صيغة الكتابة الأشيع تبدّلت. */
+    const usedTopicSlugs = new Set();
+
+    /* المحاور تسكن فضاء /topics/ نفسه، فتُحجز معرّفاتها قبل الوسوم كي لا
+       يسبق وسمٌ محوراً إلى اسمه. المحور بنية يعلنها صاحب الموقع في
+       site.json، والوسم يأتي من Notion — والأوّل أثبت. */
+    ctx.pillars = (ctx.site.pillars || []).map((def) => {
+        const record = { id: `pillar:${def.id}`, title: def.name_ar, kind: 'pillar' };
+        const assigned = assignSlug(record, ctx.ledger, usedTopicSlugs, S.topicSlug(def.name_ar));
+        return Object.assign({
+            id: def.id,
+            name: def.name_ar,
+            nameEn: def.name_en,
+            keys: new Set((def.tags || []).map(S.arabicKey).filter(Boolean)),
+            topics: [],
+            items: [],
+            isPillar: true
+        }, assigned, { url: C.topicUrl(assigned.slug) });
+    });
+
+    const ordered = [...groups.values()].sort((a, b) => a.key.localeCompare(b.key));
+    for (const g of ordered) {
+        const record = { id: `topic:${g.key}`, title: g.name, kind: 'topic' };
+        Object.assign(g, assignSlug(record, ctx.ledger, usedTopicSlugs, S.topicSlug(g.name)));
+        g.url = C.topicUrl(g.slug);
+    }
+
+    const byKey = new Map(ordered.map((g) => [g.key, g]));
+
+    // ترتيب العرض: الأكثر عناصر أولاً، ثم أبجدياً — حتميّ عبر البناءات
+    ctx.topics = [...groups.values()].sort((a, b) =>
         b.items.length - a.items.length || a.name.localeCompare(b.name, 'ar'));
 
-    for (const item of [...ctx.articles, ...ctx.projects]) {
+    /* ربط كل وسم بمحوره، وجمع أعضاء المحور: موضوعاته وعناصره بلا تكرار */
+    for (const topic of ctx.topics) {
+        topic.pillar = ctx.pillars.find((pl) => pl.keys.has(topic.key)) || null;
+        if (topic.pillar) topic.pillar.topics.push(topic);
+    }
+    for (const pillar of ctx.pillars) {
+        const seenItems = new Set();
+        pillar.items = pillar.topics
+            .flatMap((t) => t.items)
+            .filter((i) => !seenItems.has(i.id) && seenItems.add(i.id));
+    }
+
+    const empty = ctx.pillars.filter((pl) => !pl.items.length);
+    if (empty.length) {
+        warn(`${empty.length} محاور بلا محتوى: `
+            + empty.map((pl) => `«${pl.name}»`).join('، ')
+            + ' — لا تُولَّد لها صفحات (صفحة محور فارغة تضرّ ولا تنفع). '
+            + 'راجع docs/CONTENT-PLAN.md لما يملؤها.');
+    }
+
+    const unmapped = ctx.topics.filter((t) => !t.pillar);
+    if (unmapped.length) {
+        note(`وسوم بلا محور: ${unmapped.map((t) => `«${t.name}»`).join('، ')} — `
+            + 'أضفها إلى pillars[].tags في data/site.json.');
+    }
+
+    const merged = ctx.topics.filter((g) => g.variantList.length > 1);
+    if (merged.length) {
+        merged.forEach((g) => note(`صيغ موحَّدة في موضوع «${g.name}»: ${g.variantList.join(' · ')}`));
+    }
+
+    for (const item of all) {
+        const seen = new Set();
         item.topicLinks = item.topics
-            .map((n) => map.get(S.topicSlug(n)))
-            .filter(Boolean);
+            .map((n) => byKey.get(S.arabicKey(n)))
+            .filter((g) => g && !seen.has(g.key) && seen.add(g.key));
     }
 
     // المرتبط: أكثر الموضوعات اشتراكاً، عبر النوعين، بلا تكرار النفس
-    const all = [...ctx.articles, ...ctx.projects];
     for (const item of all) {
-        const mine = new Set(item.topics.map(S.topicSlug));
+        const mine = new Set(item.topics.map(S.arabicKey).filter(Boolean));
         if (!mine.size) { item.related = []; continue; }
         item.related = all
             .filter((o) => o.id !== item.id)
             .map((o) => ({
                 item: o,
-                shared: o.topics.map(S.topicSlug).filter((t) => mine.has(t)).length
+                shared: [...new Set(o.topics.map(S.arabicKey))].filter((t) => mine.has(t)).length
             }))
             .filter((r) => r.shared > 0)
             .sort((a, b) => b.shared - a.shared
@@ -334,12 +414,12 @@ async function buildOgImages(ctx) {
         drawn++;
     }
 
-    // بطاقة لكل موضوع
-    for (const topic of ctx.topics) {
+    // بطاقة لكل موضوع، ولكل محور له محتوى
+    for (const topic of [...ctx.pillars.filter((pl) => pl.items.length), ...ctx.topics]) {
         const rel = `${dir}/topic-${topic.slug}.jpg`;
         const size = await OG.renderTitleCard({
             title: topic.name,
-            kicker: `${ctx.site.name_ar} — موضوع`,
+            kicker: `${ctx.site.name_ar} — ${topic.isPillar ? 'محور' : 'موضوع'}`,
             emblem: null,
             outAbs: path.join(ROOT, rel)
         });
@@ -1058,6 +1138,8 @@ function topicPage(topic, ctx) {
     const trail = [
         { name: 'الرئيسية', en: 'Home', url: '/' },
         { name: site.sections.topics.label_ar, en: site.sections.topics.label_en, url: '/topics/' },
+        // الوسم يجلس تحت محوره، فيقرأ الزاحف البنية لا القائمة المسطّحة
+        ...(topic.pillar ? [{ name: topic.pillar.name, url: topic.pillar.url }] : []),
         { name: topic.name, url: null }
     ];
 
@@ -1071,7 +1153,9 @@ function topicPage(topic, ctx) {
 
     const description = S.clampText(
         `كل ما كُتب وما بُني في «${topic.name}» على موقع ${site.name_ar}: ${counts}. `
-        + topic.items.map((i) => i.title).join('، '),
+        + (topic.isPillar && topic.topics.length
+            ? topic.topics.map((t) => t.name).join('، ')
+            : topic.items.map((i) => i.title).join('، ')),
         { min: 100, max: 160 }
     );
 
@@ -1113,8 +1197,20 @@ ${C.breadcrumb(trail)}
 
         <section class="articles-section breakout" id="topic-items" aria-label="محتوى الموضوع">
             <div class="articles-grid">
+${topic.isPillar && topic.topics.length ? `                <div><h2 class="article-footer-heading" data-en="Topics in this pillar">موضوعات هذا المحور</h2>
+            <div class="article-footer-more">
+${topic.topics.map((t) => `                <a href="${S.escapeAttr(t.url)}">
+                    <span class="article-footer-more-title">${S.escapeHtml(t.name)}</span>
+                    <span>${S.toArabicDigits(t.items.length)}</span></a>`).join('\n')}
+            </div></div>` : ''}
 ${articles.length ? `                <div><h2 class="article-footer-heading" data-en="From the Ban blog">من مدوّنة بان</h2>\n${list(articles)}</div>` : ''}
 ${projects.length ? `                <div><h2 class="article-footer-heading" data-en="From the Dhura projects">من مشاريع ذُرى</h2>\n${list(projects)}</div>` : ''}
+${topic.pillar ? `                <div><h2 class="article-footer-heading" data-en="Part of">ضمن محور</h2>
+            <div class="article-footer-more">
+                <a href="${S.escapeAttr(topic.pillar.url)}">
+                    <span class="article-footer-more-title">${S.escapeHtml(topic.pillar.name)}</span>
+                    <span>${S.toArabicDigits(topic.pillar.items.length)}</span></a>
+            </div></div>` : ''}
                 <a class="btn btn-secondary article-footer-back" href="/topics/" data-en="All topics">كل الموضوعات</a>
             </div>
         </section>
@@ -1137,12 +1233,23 @@ function topicsHubPage(ctx) {
         { name: t.label_ar, en: t.label_en, url: null }
     ];
 
-    const list = ctx.topics.length
-        ? `            <div class="article-footer-more">
-${ctx.topics.map((topic) => `                <a href="${S.escapeAttr(topic.url)}">
+    const rows = (topics) => `            <div class="article-footer-more">
+${topics.map((topic) => `                <a href="${S.escapeAttr(topic.url)}">
                     <span class="article-footer-more-title">${S.escapeHtml(topic.name)}</span>
                     <span>${S.toArabicDigits(topic.items.length)}</span></a>`).join('\n')}
-            </div>`
+            </div>`;
+
+    /* مجمَّعة بالمحاور لا قائمةً مسطّحة: البنية إشارة للزاحف كما هي دلالة
+       للقارئ. والمحاور الخالية لا تظهر — لا صفحة لها أصلاً. */
+    const live = ctx.pillars.filter((pl) => pl.items.length);
+    const loose = ctx.topics.filter((t) => !t.pillar);
+
+    const list = ctx.topics.length
+        ? [
+            ...live.map((pl) => `                <div><h2 class="article-footer-heading">${S.escapeHtml(pl.name)}</h2>
+${rows([pl, ...pl.topics])}</div>`),
+            ...(loose.length ? [`                <div><h2 class="article-footer-heading" data-en="Other topics">موضوعات أخرى</h2>\n${rows(loose)}</div>`] : [])
+        ].join('\n')
         : `            <p class="error-message">لا موضوعات بعد.</p>`;
 
     const head = C.head({
@@ -1207,9 +1314,23 @@ ${C.scripts(['js/i18n.js', 'main.js', 'animations.js'], site.cacheBuster)}
    ٨. البيانات المنظّمة
    ============================================================================ */
 
+/**
+ * الكيان «محمد الزبيدي». محرّكات البحث وأسطح الإجابة تحتاج أن تفهم **من**
+ * هو، لا ما تقوله صفحة بعينها — فهذا الكيان هو ما يُقتبس ويُنسب إليه.
+ *
+ * قاعدة صارمة: **لا حقل بلا مصدر على الموقع.** ‏alumniOf مثلاً غائب لأن
+ * الموقع لا يذكر جامعةً ولا شهادة في أي موضع؛ التصريح به ادّعاء لا بيان.
+ */
 function schemaPerson(ctx) {
     const site = ctx.site;
     const p = site.person;
+
+    // المحاور الأربعة بلسانين: هي ما يريد أن يُعرَف به، والزاحف لا يستنتجه
+    const pillars = (site.pillars || []).flatMap((pl) => [pl.name_ar, pl.name_en]);
+    const knowsAbout = [...new Set([...pillars, ...p.knowsAbout_ar])];
+
+    const country = (c) => ({ '@type': 'Country', name: c.name_ar, alternateName: c.name_en });
+
     return {
         '@context': 'https://schema.org',
         '@type': 'Person',
@@ -1219,10 +1340,15 @@ function schemaPerson(ctx) {
         url: `${site.origin}/`,
         image: `${site.origin}/${p.image}`,
         jobTitle: site.positioning.search_role_ar,
+        description: site.home.og_description_ar,
         email: `mailto:${p.email}`,
         telephone: p.telephone,
         address: { '@type': 'PostalAddress', addressCountry: p.addressCountry },
-        knowsAbout: p.knowsAbout_ar,
+        // مسنود بمفتاح الهاتف +966 وبـaddressCountry المعلن أصلاً
+        homeLocation: country((p.areaServed || []).find((c) => c.code === p.addressCountry)
+            || { name_ar: 'المملكة العربية السعودية', name_en: 'Saudi Arabia' }),
+        areaServed: (p.areaServed || []).map(country),
+        knowsAbout,
         sameAs: p.sameAs
     };
 }
@@ -1262,6 +1388,22 @@ function schemaForItem(item, ctx) {
     if (item.date) base.datePublished = S.isoDate(item.date);
     if (item.lastEdited) base.dateModified = S.isoDate(item.lastEdited);
     if (item.topics.length) base.keywords = item.topics.join(', ');
+
+    /* ‏about = موضوع النصّ الأعمّ (محوره)، و mentions = ما يذكره بعينه
+       (وسومه). كلاهما مشتقّ من قيم حقيقية في البيانات؛ وبلا وسوم لا
+       يُصدَر أيّهما — حقلٌ فارغ أسوأ من حقل غائب. */
+    const pillars = [...new Set((item.topicLinks || [])
+        .map((t) => t.pillar).filter(Boolean))];
+    if (pillars.length) {
+        base.about = pillars.map((pl) => ({
+            '@type': 'Thing', name: pl.name, url: `${site.origin}${pl.url}`
+        }));
+    }
+    if (item.topicLinks && item.topicLinks.length) {
+        base.mentions = item.topicLinks.map((t) => ({
+            '@type': 'Thing', name: t.name, url: `${site.origin}${t.url}`
+        }));
+    }
 
     if (item.kind === 'article') {
         return Object.assign({ '@type': 'BlogPosting' }, base, {
@@ -1464,6 +1606,9 @@ function collectUrls(ctx) {
 
     const urls = [
         { loc: `${site.origin}/`, lastmod: today, changefreq: 'weekly', priority: '1.0' },
+        ...(ctx.servicesPage
+            ? [{ loc: ctx.servicesPage.canonical, lastmod: today, changefreq: 'monthly', priority: '0.9' }]
+            : []),
         { loc: `${site.origin}/projects/`, lastmod: newest(ctx.projects, today), changefreq: 'weekly', priority: '0.9' },
         { loc: `${site.origin}/articles/`, lastmod: newest(ctx.articles, today), changefreq: 'weekly', priority: '0.9' },
         { loc: `${site.origin}/topics/`, lastmod: today, changefreq: 'weekly', priority: '0.6' }
@@ -1477,12 +1622,12 @@ function collectUrls(ctx) {
             priority: '0.8'
         });
     }
-    for (const topic of ctx.topics) {
+    for (const topic of [...ctx.pillars.filter((pl) => pl.items.length), ...ctx.topics]) {
         urls.push({
             loc: `${site.origin}${topic.url}`,
             lastmod: newest(topic.items, today),
             changefreq: 'monthly',
-            priority: '0.6'
+            priority: topic.isPillar ? '0.7' : '0.6'
         });
     }
 
@@ -1760,6 +1905,96 @@ function homeRegions(ctx) {
 }
 
 /* ============================================================================
+   ١١·٢. صفحة الخدمات — مهيّأة ومعطَّلة
+   ============================================================================ */
+
+/**
+ * الصفحة الوحيدة التي تخاطب العميل، وهي محذوفة اليوم بقرار صاحب الموقع.
+ * هذا المسار مهيّأ بالكامل ولا يعمل حتى يُرفع enabled — وحين يُرفع يشترط
+ * ثلاثة شروط قبل أن يكتب شيئاً، وكلٌّ منها يوقف البناء برسالة تقول ما
+ * ينقص بالضبط. لا يُخترع وصف، ولا تُستعاد صفحة، ولا يُفهرَس شيء ضمناً.
+ *
+ * @returns {object|null} وصف الصفحة إن كانت مفعّلة وصالحة، وإلا null
+ */
+function servicesPage(ctx) {
+    const cfg = ctx.site.services;
+    if (!cfg || !cfg.enabled) return null;
+
+    const abs = path.join(ROOT, cfg.path);
+    if (!fs.existsSync(abs)) {
+        throw new Error(
+            `services.enabled = true لكن الصفحة غير موجودة: ${cfg.path}\n`
+            + '   استعدها أولاً:  git checkout 4d514fc^ -- work-with-me/\n'
+            + '   ثم أضف علامتَي seo:head فيها. راجع data/site.json ← services._how_to_enable'
+        );
+    }
+    if (!cfg.description_ar || !cfg.title_ar) {
+        throw new Error(
+            'services.enabled = true لكن title_ar أو description_ar فارغ في data/site.json.\n'
+            + '   البناء لا يكتب وصفاً نيابةً عن صاحب الموقع — اكتبه بنفسك (١٥٠–١٦٠ محرفاً).'
+        );
+    }
+
+    const canonical = `${ctx.site.origin}${cfg.url}`;
+    const og = ctx.ogFixed.services || ctx.ogFixed.home;
+
+    const trail = [
+        { name: 'الرئيسية', en: 'Home', url: '/' },
+        { name: cfg.title_ar, url: null }
+    ];
+
+    const head = [
+        `    <meta name="description" content="${S.escapeAttr(cfg.description_ar)}">`,
+        `    <title>${S.escapeHtml(S.buildTitle(cfg.title_ar, ctx.site.name_ar))}</title>`,
+        `    <link rel="canonical" href="${canonical}">`,
+        '    <link rel="alternate" type="application/atom+xml" title="بان — مقالات محمد الزبيدي" href="/feed.xml">',
+        '    <meta property="og:type" content="website">',
+        '    <meta property="og:locale" content="ar_SA">',
+        `    <meta property="og:site_name" content="${S.escapeAttr(ctx.site.name_ar)}">`,
+        `    <meta property="og:url" content="${canonical}">`,
+        `    <meta property="og:title" content="${S.escapeAttr(cfg.title_ar)}">`,
+        `    <meta property="og:description" content="${S.escapeAttr(cfg.description_ar)}">`,
+        `    <meta property="og:image" content="${og.url}">`,
+        `    <meta property="og:image:width" content="${og.width}">`,
+        `    <meta property="og:image:height" content="${og.height}">`,
+        '    <meta name="twitter:card" content="summary_large_image">',
+        `    <meta name="twitter:title" content="${S.escapeAttr(cfg.title_ar)}">`,
+        `    <meta name="twitter:description" content="${S.escapeAttr(cfg.description_ar)}">`,
+        `    <meta name="twitter:image" content="${og.url}">`,
+        '    <script type="application/ld+json">',
+        S.jsonLd(schemaService(cfg, ctx)),
+        '    </script>',
+        '    <script type="application/ld+json">',
+        S.jsonLd(schemaBreadcrumb(trail, ctx)),
+        '    </script>'
+    ].join('\n');
+
+    patchRegions(cfg.path, { head });
+    note(`صفحة الخدمات مفعّلة ومفهرَسة: ${cfg.url}`);
+    return { url: cfg.url, canonical };
+}
+
+/** ProfessionalService — يُصدَر فقط مع صفحة خدمات مفهرَسة تسنده */
+function schemaService(cfg, ctx) {
+    const site = ctx.site;
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ProfessionalService',
+        '@id': `${site.origin}${cfg.url}#service`,
+        name: cfg.title_ar,
+        description: cfg.description_ar,
+        url: `${site.origin}${cfg.url}`,
+        inLanguage: 'ar',
+        provider: { '@id': `${site.origin}/#person` },
+        areaServed: (site.person.areaServed || []).map((c) => ({
+            '@type': 'Country', name: c.name_ar, alternateName: c.name_en
+        })),
+        ...(cfg.serviceTypes_ar && cfg.serviceTypes_ar.length
+            ? { serviceType: cfg.serviceTypes_ar } : {})
+    };
+}
+
+/* ============================================================================
    ١١·٥. سجلّ المعرّفات — يُدمَج ولا يُستبدَل
    ============================================================================ */
 
@@ -1915,6 +2150,8 @@ async function main() {
     // ── الموضوعات ────────────────────────────────────────────────────────
     write('topics/index.html', topicsHubPage(ctx));
     ctx.topics.forEach((topic) => write(`topics/${topic.slug}/index.html`, topicPage(topic, ctx)));
+    ctx.pillars.filter((pl) => pl.items.length)
+        .forEach((pl) => write(`topics/${pl.slug}/index.html`, topicPage(pl, ctx)));
 
     // ── جسور: المسارات القديمة والأسماء المهجورة والروابط القصيرة ────────
     write('articles.html', redirectStub({
@@ -1968,11 +2205,22 @@ async function main() {
         }));
         bridges++;
     }
+    for (const topic of ctx.topics) {
+        for (const alias of topic.aliases || []) {
+            write(`topics/${alias}/index.html`, redirectStub({
+                title: S.buildTitle(topic.name, site.name_ar),
+                canonical: `${site.origin}${topic.url}`,
+                target: topic.url, targetLabel: topic.name
+            }));
+            bridges++;
+        }
+    }
     report.counts.bridges = bridges;
 
     // ── الصفحات اليدوية: المناطق المُدارة وحدها ──────────────────────────
     patchRegions('index.html', homeRegions(ctx));
     patchRegions('404.html', assetRegions('404.html', site.cacheBuster));
+    ctx.servicesPage = servicesPage(ctx);
 
     // ── بنية الزحف ───────────────────────────────────────────────────────
     const sitemaps = buildSitemapFiles(ctx);

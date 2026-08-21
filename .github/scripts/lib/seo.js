@@ -154,6 +154,48 @@ function slugify(text, { maxWords = 9, maxChars = 60 } = {}) {
 /** معرّف موضوع — الموضوعات وسوم قصيرة، فلا حدّ كلمات عليها */
 const topicSlug = (name) => slugify(name, { maxWords: 12, maxChars: 80 });
 
+/* ── مفتاح المطابقة العربي ────────────────────────────────────────────────
+   العربية تُكتب بصيغ إملائية متعدّدة للكلمة الواحدة، والباحث يكتب أيّها
+   اتّفق: «الذكاء الاصطناعي» و«الذكاء الاصطناعى» و«ذكاء اصطناعي» شيء واحد
+   في ذهنه. وبلا توحيد، وسمان في Notion يختلفان بحرف واحد يُنتجان صفحتَي
+   موضوع منفصلتين، تتقاسمان المحتوى وتتنافسان على النتيجة نفسها.
+
+   هذا المفتاح **للمطابقة وحدها**: لا يُعرض، ولا يدخل الترميز، ولا يمسّ
+   نصّاً يقرؤه أحد. الاسم المعروض يبقى كما كُتب في Notion حرفاً بحرف —
+   بحركاته وهمزاته — فقواعد الطباعة وسمات خطّ ثمانية لا تُمسّ.
+
+   القواعد، بهذا الترتيب، وكلّها حتميّة:
+     ١. NFC، ثم حذف التطويل (ـ) والحركات.
+     ٢. أ إ آ ٱ ← ا      (صور الهمزة على الألف)
+     ٣. ة ← ه            (التاء المربوطة)
+     ٤. ى ← ي            (الألف المقصورة)
+     ٥. ؤ ← و  ·  ئ ← ي  (حاملا الهمزة)
+     ٦. «ال» التعريف تُحذف من أول كل كلمة **إن بقي بعدها ٣ محارف فأكثر**
+        — الشرط يمنع «الله» ← «له» و«الأم» ← «أم».
+     ٧. ما ليس حرفاً ولا رقماً ← فراغ، ثم طيّ الفراغات، ثم خفض اللاتيني.
+   ────────────────────────────────────────────────────────────────────── */
+const HAMZA_ALEF = /[\u0623\u0625\u0622\u0671]/g;   // أ إ آ ٱ
+
+function arabicKey(text) {
+    let t = String(text || '')
+        .normalize('NFC')
+        .replace(ARABIC_DIACRITICS, '')
+        .replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, '')
+        .replace(HAMZA_ALEF, 'ا')
+        .replace(/\u0629/g, 'ه')       // ة
+        .replace(/\u0649/g, 'ي')       // ى
+        .replace(/\u0624/g, 'و')       // ؤ
+        .replace(/\u0626/g, 'ي')       // ئ
+        .replace(/[^\p{L}\p{N}]+/gu, ' ')
+        .trim();
+
+    t = t.split(/\s+/)
+        .map((w) => (w.startsWith('ال') && w.length - 2 >= 3 ? w.slice(2) : w))
+        .join(' ');
+
+    return t.toLowerCase();
+}
+
 /** الرابط في الترميز: مسار مطلق من الجذر، مع ترميز نسبة للمحارف غير اللاتينية */
 const encodePath = (p) => String(p || '').split('/').map(encodeURIComponent).join('/');
 
@@ -199,6 +241,6 @@ module.exports = {
     readJson, writeFileIfChanged,
     escapeHtml, escapeAttr, escapeXml, jsonLd,
     htmlToText, proseParagraphs, deriveDescription, clampText,
-    buildTitle, slugify, topicSlug, encodePath,
+    buildTitle, slugify, topicSlug, arabicKey, encodePath,
     toArabicDigits, formatDate, readTime, isoDate, isLatin
 };

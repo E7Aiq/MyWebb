@@ -22,5 +22,71 @@
     "aliases": [],
     "title": "الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!",
     "kind": "article"
+  },
+  "pillar:ai-agents": {
+    "slug": "وكلاء-الذكاء-الاصطناعي",
+    "aliases": [],
+    "title": "وكلاء الذكاء الاصطناعي",
+    "kind": "pillar"
+  },
+  "pillar:ai-solutions": {
+    "slug": "حلول-الذكاء-الاصطناعي",
+    "aliases": [],
+    "title": "حلول الذكاء الاصطناعي",
+    "kind": "pillar"
+  },
+  "pillar:data-solutions": {
+    "slug": "حلول-البيانات",
+    "aliases": [],
+    "title": "حلول البيانات",
+    "kind": "pillar"
+  },
+  "pillar:intelligent-systems": {
+    "slug": "بناء-الأنظمة-الذكية",
+    "aliases": [],
+    "title": "بناء الأنظمة الذكية",
+    "kind": "pillar"
+  },
+  "topic:data analysis": {
+    "slug": "data-analysis",
+    "aliases": [],
+    "title": "Data Analysis",
+    "kind": "topic"
+  },
+  "topic:data integration": {
+    "slug": "data-integration",
+    "aliases": [],
+    "title": "Data Integration",
+    "kind": "topic"
+  },
+  "topic:data quality": {
+    "slug": "data-quality",
+    "aliases": [],
+    "title": "Data Quality",
+    "kind": "topic"
+  },
+  "topic:dax": {
+    "slug": "dax",
+    "aliases": [],
+    "title": "DAX",
+    "kind": "topic"
+  },
+  "topic:etl": {
+    "slug": "etl",
+    "aliases": [],
+    "title": "ETL",
+    "kind": "topic"
+  },
+  "topic:power bi": {
+    "slug": "power-bi",
+    "aliases": [],
+    "title": "Power BI",
+    "kind": "topic"
+  },
+  "topic:python": {
+    "slug": "python",
+    "aliases": [],
+    "title": "Python",
+    "kind": "topic"
   }
 }
