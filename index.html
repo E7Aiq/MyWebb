@@ -14,19 +14,19 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="js/view-transitions.js?v=r28"></script>
+    <script src="js/view-transitions.js?v=r29"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
-    <link rel="stylesheet" href="css/style.css?v=r28">
-    <link rel="stylesheet" href="css/animations.css?v=r28">
+    <link rel="stylesheet" href="css/style.css?v=r29">
+    <link rel="stylesheet" href="css/animations.css?v=r29">
     <!-- بطاقات المختارات: المشروع في project.css والمقال في article.css -->
-    <link rel="stylesheet" href="css/project.css?v=r28">
-    <link rel="stylesheet" href="css/article.css?v=r28">
-    <link rel="stylesheet" href="css/responsive.css?v=r28">
+    <link rel="stylesheet" href="css/project.css?v=r29">
+    <link rel="stylesheet" href="css/article.css?v=r29">
+    <link rel="stylesheet" href="css/responsive.css?v=r29">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -239,16 +239,11 @@
                 <p class="section-label rv" data-en="What I reach for to turn an idea into a solution">ما أمدّ يدي إليه لأحوّل الفكرة إلى حل</p>
             </div>
 
-            <!-- WCAG 2.2.2 يوجب مُوقِفاً لأي حركة تلقائية تتجاوز خمس ثوانٍ.
-                 الإيقاف عند التحويم أُزيل بطلب، والزرّ بديل يخدم اللمس أيضاً. -->
+            <!-- لا مُوقِف للشريط بقرار صاحب الموقع: أُزيل الإيقاف عند التحويم
+                 أولاً، ثم الزرّ الصريح — كان يجلس فوق شعار في الجوال فيبدو
+                 بلاطةً مكسورة. يبقى الشريط ساكناً تماماً تحت
+                 prefers-reduced-motion، وهي الحماية القائمة اليوم. -->
             <div class="mq">
-                <button class="mq-toggle" type="button" data-mq-toggle aria-pressed="false"
-                        aria-label="إيقاف حركة الشعارات" data-en-label="Pause logo motion">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <rect x="6" y="5" width="4" height="14" rx="1"></rect>
-                        <rect x="14" y="5" width="4" height="14" rx="1"></rect>
-                    </svg>
-                </button>
                 <ul class="mq__track">
                     <li class="stack-logo-wrap">
                         <img class="stack-logo" src="assets/logos/cursor.svg"
@@ -660,13 +655,13 @@
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-    <script src="js/i18n.js?v=r28"></script>
+    <script src="js/i18n.js?v=r29"></script>
 
-    <script src="js/covers.js?v=r28"></script>
+    <script src="js/covers.js?v=r29"></script>
 
-    <script src="main.js?v=r28"></script>
-    <script src="animations.js?v=r28"></script>
-    <script src="projects.js?v=r28"></script>
-    <script src="js/articles-list.js?v=r28"></script>
+    <script src="main.js?v=r29"></script>
+    <script src="animations.js?v=r29"></script>
+    <script src="projects.js?v=r29"></script>
+    <script src="js/articles-list.js?v=r29"></script>
 </body>
 </html>

@@ -170,6 +170,21 @@
   --red-9:   oklch(52.0% 0.180  27);
   --red-11:  oklch(48.0% 0.170  27);
   --green-9: oklch(52.0% 0.110 155);
+
+  /* ── درجات رحلة بناء الحل ────────────────────────────────────────────
+     لكل مرحلة لمسة لون خاصّة، مأخوذة من مفردات الموقع نفسها لا من خارجها:
+     تدرّج ذُرى (33)، ثم اللكنة (266)، ثم بان (202)، ثم أخضر الأثر (155).
+     الترتيب مقصود — يفتح دافئاً عند السؤال، ويبرد في البناء، وينتهي
+     أخضر عند القياس.
+
+     الإضاءة واحدة في الأربع (97.5%) والصبغة واحدة (0.016)، فلا يتغيّر إلا
+     التدرّج. بهذا تتمايز الدوائر ولا تتنافر: لا واحدة أثقل من أخرى، ولا
+     واحدة تسحب العين قبل جارتها. واللمسة خافتة عمداً — فرق إضاءتها عن
+     الورق دون 0.015، أي تُحسّ ولا تُعلن. */
+  --stage-1-tint: oklch(97.5% 0.016  33);  --stage-1-ink: oklch(45% 0.095  33);
+  --stage-2-tint: oklch(97.5% 0.016 266);  --stage-2-ink: oklch(45% 0.095 266);
+  --stage-3-tint: oklch(97.5% 0.016 202);  --stage-3-ink: oklch(45% 0.095 202);
+  --stage-4-tint: oklch(97.5% 0.016 155);  --stage-4-ink: oklch(45% 0.095 155);
   --green-11:oklch(45.0% 0.100 155);
 
   /* الحبر الخام لصبغ الظلال — ظلّ رمادي محايد فوق سطح دافئ يبدو متّسخاً */
@@ -778,6 +793,10 @@ time, .article-read-time, .article-card-date, .project-card-date,
     --a-6:#BBCEF6; --a-7:#96B0EB; --a-8:#6889D8; --a-9:#2A4A9B;
     --a-10:#172F77; --a-11:#2E4B9F; --a-12:#0C1B47;
     --red-9:#BA2B28; --red-11:#A92321; --green-9:#267B4C; --green-11:#17653C;
+    --stage-1-tint:#FFF3F0; --stage-1-ink:#823F31;
+    --stage-2-tint:#F2F7FF; --stage-2-ink:#3C538A;
+    --stage-3-tint:#EBFAFB; --stage-3-ink:#00646C;
+    --stage-4-tint:#EFFAF2; --stage-4-ink:#1E643D;
     --shadow-1:
       0 0 0 1px rgba(22,24,28,.06),
       0 1px 2px -1px rgba(22,24,28,.10),
@@ -1079,6 +1098,13 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 }
 
 .stage-card{ display: flex; flex-direction: column; }
+
+/* ‏<ol> فالترتيب هو المعنى، ولذلك nth-child لا data-motif: اللون يشفّر
+   موضع المرحلة في التسلسل، فلو أُعيد ترتيبها تبعتها درجاتها. */
+.stage-card:nth-child(1){ --stage-tint: var(--stage-1-tint); --stage-ink: var(--stage-1-ink); }
+.stage-card:nth-child(2){ --stage-tint: var(--stage-2-tint); --stage-ink: var(--stage-2-ink); }
+.stage-card:nth-child(3){ --stage-tint: var(--stage-3-tint); --stage-ink: var(--stage-3-ink); }
+.stage-card:nth-child(4){ --stage-tint: var(--stage-4-tint); --stage-ink: var(--stage-4-ink); }
 .stage-canvas{ display: none; }   /* محفوظ في العقد، لم يعد يُرسم عليه */
 
 .stage-number{
@@ -1115,9 +1141,12 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   font-size: var(--t-meta);
   color: var(--text-faint);
 }
-.stage-tag + .stage-tag::before{
+/* الفاصلة على الوسم السابق لا على التالي: بـ::before كانت تُفتتح بها
+   الأسطر الملتفّة — «· تطوير التطبيقات الذكية» في أول سطر جديد. وبـ::after
+   تبقى داخل الصندوق السطري للوسم الذي قبلها، فتلتفّ معه ذيلاً لا صدراً. */
+.stage-tag:not(:last-child)::after{
   content: '·';
-  margin-inline-end: var(--s-2);
+  margin-inline-start: var(--s-2);
 }
 
 /* ============================================================================
@@ -1151,36 +1180,14 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
    الأول يعالجه ltr على المضمار، والثاني لا يعالجه إلا ltr على الحاوية:
    عندها تلتصق الحافة اليسرى بالصفر ويفيض إلى اليمين كما صُمّمت الحركة.
    ولا يمسّ ذلك اتجاه الصفحة ولا أي نصّ — الشريط صور فقط. */
-.mq{ direction: ltr; position: relative; }
+.mq{
+  direction: ltr;
+  /* ‏overflow:hidden أعلاه يقصّ كل ما يتجاوز الصندوق — وظلّ البلاطات يتجاوزه
+     نحو ١٠px أسفل. بلا هذه المساحة يُبتَر الظلّ بخطّ أفقي حادّ عند الحافّة،
+     فتبدو البلاطات مقصوصة لا مرتفعة. */
+  padding-block: var(--s-3);
+}
 
-/* المُوقِف: صغير وخافت حتى يُطلَب، ويكبر تباينه عند التركيز والتحويم.
-   يقع في زاوية الشريط فوق قناع التلاشي حيث لا شعار يُحجَب. */
-.mq-toggle{
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-end: 0;
-  translate: 0 -50%;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  inline-size: 2rem;
-  block-size: 2rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--r-full, 999px);
-  background: var(--bg-surface);
-  color: var(--text-faint);
-  box-shadow: var(--shadow-1);
-  cursor: pointer;
-  opacity: .55;
-  transition: opacity var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
-}
-.mq-toggle:hover,
-.mq-toggle:focus-visible{ opacity: 1; color: var(--text); }
-@media (pointer: coarse){
-  /* على اللمس لا تحويم يكشفه، فيبدأ ظاهراً وبهدف لمس كامل */
-  .mq-toggle{ opacity: .9; inline-size: 2.75rem; block-size: 2.75rem; }
-}
 .mq__track{ direction: ltr; list-style: none; margin: 0; }
 
 /* ── إغلاق الحلقة: الفجوة الناقصة عند نقطة اللف ─────────────────────────
@@ -1229,7 +1236,10 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   padding: calc(var(--stack-size) * 0.15);
   border-radius: 22%;
   background: var(--bg-surface);
-  box-shadow: inset 0 0 0 1px var(--border-subtle);
+  /* كانت حلقةً داخليةً مسطّحة، فتبدو البلاطة مرسومةً على الورق لا موضوعةً
+     عليه. --shadow-1 يحمل الحلقة نفسها ومعها ارتفاع — وهو الظلّ ذاته الذي
+     تحمله بطاقات الموقع، فينتمي الشريط إلى لغتها بدل أن يقف خارجها. */
+  box-shadow: var(--shadow-1);
   list-style: none;
 }
 
@@ -1254,9 +1264,25 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
    شعار فاتحاً في هذه المجموعة، فلا حاجة إلى استثناء. */
 
 @media (max-width: 48rem){
-  .stack-logo-wrap{ --stack-size: 3.5rem; }   /* 56px */
+  /* الشريط في الجوال كان شريحةً نحيلة بين عنوانين كبيرين، فلا يقرأ قسماً.
+     البلاطة ‎56px ← ‎64px والفجوة ‎10 ← ‎12 ترفعه إلى وزن ما حوله. */
+  .stack-logo-wrap{ --stack-size: 4rem; }     /* 64px */
   /* المتغيّر وحده يتغيّر — الفجوة والحشو الختامي يتبعانه معاً */
-  .mq__track{ --mq-gap: 10px; }
+  .mq__track{
+    --mq-gap: 12px;
+    /* اتّساع البلاطة والفجوة يوسّع المضمار ‎5016px ← ‎5776، ولو بقيت المدّة
+       ‎52s لتسارع الشريط بالنسبة نفسها. ‎60s تُعيد السرعة إلى ‎48px/ث —
+       الإيقاع الذي كان، بمقاس أكبر. */
+    animation-duration: 60s;
+  }
+  /* التلاشي عند ‎12٪ يبتلع ‎45px من ‎375 — أي بلاطةً كاملة على كل طرف.
+     ‎8٪ يُبقي الحافّة ناعمة ويكشف شعاراً إضافياً على كل جانب. */
+  .mq{
+    -webkit-mask-image: linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+    mask-image: linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  }
+  /* المساحة فوق الشريط تُعاد توزيعاً: ‎32 قبله صارت ‎24، وحشوه ‎12 يكمّلها */
+  .stack .container{ margin-block-end: var(--s-6); }
 }
 
 /* حركة مخفّضة: الشريط يتوقّف ويصير صفّاً ساكناً قابلاً للتمرير باليد.
@@ -1367,10 +1393,76 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
      صورةً ولا يرى فعلاً واحداً. */
   .profile-img{ max-inline-size: 8rem; }
 
-  /* في عمود واحد لا معنى لخطّ أفقي واحد — يصير لكل مرحلة خطّها */
-  .journey-grid{ grid-template-columns: 1fr; gap: var(--s-12); }
+  /* ── رحلة بناء الحل: العمود الواحد يستحقّ عموداً فقرياً ────────────────
+     على المكتب تربط المراحلَ الأربعَ خطٌّ أفقي واحد يمرّ تحت الأرقام، فتُقرأ
+     رحلةً متّصلة لا قائمة. وفي عمود واحد كان ذلك الخطّ يُخفى ويُستعاض عنه
+     بخطّ صغير تحت كل رقم — فينفرط التسلسل إلى أربع كتل لا رابط بينها،
+     ويضيع المعنى الوحيد الذي يحمله القسم: أن هذه مراحل يتلو بعضها بعضاً.
+
+     هنا يُقلَب المحور لا يُلغى: الرقم يصير عقدةً، والخيط يصلها بالتالية،
+     وينقطع عند الأخيرة فتُعرَف نهايةً. الخيط يُرسم على البطاقة نفسها لا
+     على الشبكة — فينتهي تلقائياً مع آخر بطاقة بلا حساب ارتفاعات. */
+  .journey-grid{
+    grid-template-columns: 1fr;
+    --node: 2.25rem;                 /* 36px — قطر العقدة */
+    --node-gap: var(--s-4);          /* بين العقدة والنصّ */
+    --journey-gap: var(--s-12);      /* بين مرحلة وأخرى — على السلّم */
+    --spine-breath: 0.5rem;          /* فسحة تفصل الخيط عن العقدتين */
+    gap: var(--journey-gap);
+    padding-inline-start: calc(var(--node) + var(--node-gap));
+  }
+  /* الخطّ الأفقي لا محلّ له في عمود واحد */
   .journey-grid::before{ display: none; }
-  .stage-number{ border-block-end: 1px solid var(--border-subtle); }
+
+  .stage-card{ position: relative; }
+
+  /* الخيط: من أسفل العقدة، عابراً الفجوة، إلى عقدة المرحلة التالية */
+  .stage-card::before{
+    content: '';
+    position: absolute;
+    inset-inline-start: calc(-1 * (var(--node-gap) + var(--node) / 2));
+    inset-block-start: calc(var(--node) + var(--spine-breath));
+    inset-block-end: calc(var(--spine-breath) - var(--journey-gap));
+    inline-size: 1px;
+    background: var(--border-subtle);
+  }
+  .stage-card:last-child::before{ content: none; }
+
+  /* الرقم يخرج من مجرى النصّ ويصير عقدةً على الخيط. حجمه يصغر لأنه لم يعد
+     عنواناً في سطره، بل علامةً في دائرة — والدائرة هي ما يُرى أولاً. */
+  .stage-number{
+    position: absolute;
+    inset-inline-start: calc(-1 * (var(--node) + var(--node-gap)));
+    inset-block-start: 0;
+    display: grid;
+    place-items: center;
+    inline-size: var(--node);
+    block-size: var(--node);
+    padding: 0;
+    border-radius: var(--r-full);
+    /* لمسة المرحلة: تعبئة خافتة وحبر من التدرّج نفسه. الحلقة والارتفاع
+       يبقيان محايدين (--shadow-1) — لو تلوّنا أيضاً لصارت اللمسة إعلاناً. */
+    background: var(--stage-tint, var(--bg-surface));
+    box-shadow: var(--shadow-1);
+    color: var(--stage-ink, var(--text-muted));
+
+    /* الرقم بخطّ العرض لا بالسانس: سانس يرسم «١» عموداً مستقيماً بنهايات
+       مسطّحة، وثمانية العرض ترسمه بانحناءة وطرفٍ مرفوع، و«٤» بالتفافة.
+       لا خاصية OpenType تصنع هذا — فحصتُ الخطوط الخمسة عشر: لا swsh ولا
+       ss01–ss08 ولا salt ولا onum تمسّ الأرقام العربية-الهندية إطلاقاً.
+       الانحناء في رسم العائلة نفسها، فيؤخذ باختيارها.
+
+       والوزن 400 لا 500: وزن العرض المتوسط ليس محمَّلاً في الصفحة، وطلبه
+       يجرّ ملفاً كاملاً — قِسْتُه، ‎81 كيلوبايت لأربعة أرقام، والخطوط
+       أصلاً ثلثا وزن الصفحة. الأوزان المحمَّلة من هذه العائلة 400 و700،
+       و400 هو الأنسب لرقم صغير في دائرة: 700 يملأ الدائرة حبراً. */
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1rem;
+  }
+
+  /* الرقم لم يعد يشغل سطراً فوق العنوان، فالعنوان يصعد إلى رأس البطاقة */
+  .stage-title{ margin-block-start: 0; }
 }
 
 @media (max-width: 30rem){

@@ -196,25 +196,6 @@
         if (!link.hasAttribute('rel')) link.setAttribute('rel', 'noopener noreferrer');
     });
 
-    /* ── مُوقِف شريط الشعارات ───────────────────────────────────────────────
-       WCAG 2.2.2 يوجب وسيلة إيقاف لأي حركة تلقائية تتجاوز خمس ثوانٍ. الشريط
-       يدور بلا نهاية في دورة ٥٢s. الإيقاف عند التحويم أُزيل بطلب، فالبديل
-       زرّ صريح — وهو يخدم اللمس أيضاً حيث لا تحويم أصلاً. */
-    document.querySelectorAll('[data-mq-toggle]').forEach((btn) => {
-        const track = document.querySelector('.mq__track');
-        if (!track) return;
-        btn.addEventListener('click', () => {
-            const paused = track.style.animationPlayState === 'paused';
-            track.style.animationPlayState = paused ? 'running' : 'paused';
-            btn.setAttribute('aria-pressed', String(!paused));
-            const label = paused
-                ? { ar: 'إيقاف حركة الشعارات', en: 'Pause logo motion' }
-                : { ar: 'تشغيل حركة الشعارات', en: 'Play logo motion' };
-            btn.setAttribute('aria-label', window.I18N ? window.I18N.t(label.ar, label.en) : label.ar);
-            btn.dataset.enLabel = label.en;
-        });
-    });
-
     /* ── نسخ البريد ────────────────────────────────────────────────────────
        ‏mailto: يفتح برنامجاً غير مهيّأ — أو لا شيء — عند من يستعمل بريد الويب
        على الحاسوب، وهم الأكثرية. زرّ النسخ مخرج لا يعتمد على إعدادات النظام. */
