@@ -1582,3 +1582,53 @@ html:not(.js) .loading-state{ display: none; }
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ============================================================================
+   11. فتات الخبز — العنصر الوحيد الذي أضافه التصيير المسبق
+
+   مطلوب صراحةً كي يطابق BreadcrumbList في البيانات المنظّمة: ما يراه الزاحف
+   في الترميز يجب أن يراه القارئ في الصفحة، وإلّا كان الترميز ادّعاءً.
+
+   لا رمز جديد ولا لون جديد ولا مقاس خارج السلّم: خطّ الواجهة، ومقياس الميتا،
+   ولون النصّ الخافت — نفس ما يلبسه صفّ الميتا تحت العنوان مباشرةً. والفاصل
+   «·» هو الفاصل المعتمد في الموقع أصلاً (انظر .category-tag في project.css)،
+   وهو محايد الاتجاه فلا يقلبه bidi كما تُقلب الأسهم.
+   ============================================================================ */
+.breadcrumb{ margin-block-start: var(--s-6); }
+
+.breadcrumb-list{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  color: var(--text-faint);
+}
+
+.breadcrumb-item{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-inline-size: 0;
+}
+.breadcrumb-item + .breadcrumb-item::before{
+  content: '·';
+  color: var(--text-faint);
+}
+
+.breadcrumb a{ color: var(--text-muted); text-decoration: none; }
+.breadcrumb a:hover{ color: var(--accent-text); text-decoration: underline; }
+
+/* الفتاتة الأخيرة هي الصفحة الحالية — تُقصّ ولا تلتفّ سطرين تحت العنوان */
+.breadcrumb [aria-current="page"]{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-inline-size: 34ch;
+}

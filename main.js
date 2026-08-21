@@ -132,18 +132,30 @@
     // صفحات التفاصيل تنتمي إلى قسمها: article.html تحت «المقالات»،
     // و project-details.html تحت «المشاريع». المطابقة بالاسم وحدها كانت
     // تترك هاتين الصفحتين بلا رابط نشط إطلاقاً.
-    const SECTION_OF = {
-        'article.html': 'articles.html',
-        'project-details.html': 'projects.html'
-    };
+    /* المطابقة بالقسم لا بالملفّ: المسارات صارت أدلّة (/articles/<slug>/)
+       فلم يعد آخر جزء من المسار اسم صفحة يُقارَن. الأسماء القديمة
+       (article.html …) تبقى في النمط لأن جسور التحويل ما زالت تُقدَّم.
+       المجهول يعيد null فلا يُضيء شيئاً — صفحة موضوع لا تنتمي إلى قسم. */
+    function sectionOf(pathname) {
+        if (/^\/(articles(\/|$)|article\.html)/.test(pathname)) return 'articles';
+        if (/^\/(projects(\/|$)|project-details\.html)/.test(pathname)) return 'projects';
+        if (pathname === '/' || pathname === '/index.html') return 'home';
+        return null;
+    }
 
     function setActiveNavLink() {
-        let current = window.location.pathname.split('/').pop() || 'index.html';
-        current = SECTION_OF[current] || current;
+        const current = sectionOf(window.location.pathname);
 
         document.querySelectorAll('.nav-link').forEach((link) => {
-            const href = (link.getAttribute('href') || '').split('#')[0];
-            const isActive = href === current;
+            const raw = link.getAttribute('href') || '';
+            // رابط مرساة داخل الصفحة ليس وجهةَ قسم — «تواصل» لا يُضيء أبداً
+            let isActive = false;
+            if (current && !raw.includes('#')) {
+                let target = null;
+                try { target = sectionOf(new URL(raw, window.location.href).pathname); }
+                catch { target = null; }
+                isActive = target !== null && target === current;
+            }
             link.classList.toggle('active', isActive);
             if (isActive) link.setAttribute('aria-current', 'page');
             else link.removeAttribute('aria-current');

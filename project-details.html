@@ -2,174 +2,29 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="color-scheme" content="light">
-    <!-- بلا data-en: js/project.js يكتب العنوان والوصف الحقيقيين للمشروع،
-         وطبقة اللغة كانت تمرّ عليهما فتمحوهما وتعيد النصّ العام. -->
-    <meta name="description" content="تفاصيل المشروع - محمد الزبيدي">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المشروع | محمد الزبيدي</title>
-
-    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
-    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
-         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
-    <script>(function(){var d=document.documentElement;d.classList.add('js');
-    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
-
-    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="js/view-transitions.js?v=r29"></script>
-
-    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
-    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r29">
-    <link rel="stylesheet" href="css/animations.css?v=r29">
-    <link rel="stylesheet" href="css/article.css?v=r29">
-    <link rel="stylesheet" href="css/project.css?v=r29">
-    <link rel="stylesheet" href="css/responsive.css?v=r29">
-
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:type" content="article">
-    <meta property="og:locale" content="ar_SA">
-    <meta property="og:site_name" content="محمد الزبيدي">
-    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
-         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
-    <script type="speculationrules">
-    {
-      "prerender": [
-        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
-      ]
-    }
+    <link rel="canonical" href="https://alzobaidi.me/projects/">
+    <meta name="robots" content="noindex, follow">
+    <script>
+    /* الروابط المنشورة قبل الانتقال إلى المسارات النظيفة تصل هنا. الخريطة
+       مولَّدة في البناء، فلا طلب شبكة ولا انتظار. */
+    (function () {
+        var MAP = {"30c59148905a80f4b68ed83a2c460454":"/projects/beyond-the-numbers-a-strategic-bi-deep-dive/","30c59148905a8034bddedb74645b7831":"/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/"};
+        var id = new URLSearchParams(location.search).get('id');
+        var to = (id && MAP[id]) || "/projects/";
+        location.replace(to + location.hash);
+    })();
     </script>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/favicon.svg">
-    <link rel="canonical" href="https://alzobaidi.me/project-details.html">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta http-equiv="refresh" content="1; url=/projects/">
 </head>
 <body>
-    <a class="skip-link" data-en="Skip to project" href="#project-body">تخطَّ إلى المشروع</a>
-
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="projects.html" class="logo logo-emblem">
-                <img src="assets/logos/dhura.webp" alt="ذُرى" width="360" height="440" decoding="async">
-            </a>
-            <div class="nav-actions">
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
-                    <li><a href="projects.html" class="nav-link brand-dhura active" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
-                    <li><a href="articles.html" class="nav-link brand-ban" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
-                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
-                </ul>
-
-                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
-                <button class="lang-toggle" type="button" data-lang-toggle
-                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
-
-                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main id="projectContainer">
-
-        <!-- حالة التحميل (تُخفى بلا جافاسكربت عبر html:not(.js)) -->
-        <div id="project-loading" class="article-loading">
-            <div class="loading-spinner" aria-hidden="true"></div>
-            <p data-en="Loading project…">جاري تحميل المشروع...</p>
-        </div>
-
-        <noscript>
-            <div class="article-error" style="display:flex">
-                <h2 class="error-title" data-en="This page needs JavaScript">هذه الصفحة تحتاج جافاسكربت</h2>
-                <p class="error-message" data-en="The project details are fetched from a data file when the page opens.">تُجلب تفاصيل المشروع من ملف بيانات عند فتح الصفحة.</p>
-                <a href="projects.html" class="btn btn-primary" data-en="Browse the projects">تصفّح المشاريع</a>
-            </div>
-        </noscript>
-
-        <!-- حالة الخطأ -->
-        <div id="project-error" class="article-error" hidden>
-            <h2 class="error-title" data-en="Sorry!">عذراً!</h2>
-            <p class="error-message" data-en="We could not load this project.">لم نتمكن من تحميل تفاصيل المشروع.</p>
-            <a href="projects.html" class="btn btn-primary" data-en="Back to projects">العودة للمشاريع</a>
-        </div>
-
-        <!-- المشروع: نفس شبكة اختراق المقال — كتابات المشاريع أحوج إليها،
-             فجداولها وأكوادها وتضميناتها أعرض من نصّ المقال -->
-            <!-- dir="rtl" مثبَّت في الترميز لا في CSS، ولا يمسّه مبدّل اللغة:
-                 هذا المحتوى مصدره data/ وهو عربيّ كما كتبه صاحبه — العنوان
-                 والميتا والمتن. لغة الواجهة تغيّر ما حول المستند لا المستند
-                 نفسه، فيبقى مقروءاً كما نُشر في الوضعين. -->
-        <article class="article breakout" dir="rtl" lang="ar" id="projectShell" hidden>
-
-            <div class="article-cover-wrapper u-wide">
-                <img id="project-cover" class="project-detail-cover" src="" alt="" hidden>
-            </div>
-
-            <header class="article-header">
-                <h1 id="project-title" class="article-title"></h1>
-            </header>
-
-            <div class="article-rule" aria-hidden="true"></div>
-
-            <div class="article-meta">
-                <span id="project-date" class="project-detail-date"></span>
-                <span id="project-read-time" class="project-detail-read-time"></span>
-                <span id="project-categories" class="project-detail-categories"></span>
-            </div>
-
-            <div id="project-preview-wrapper" class="project-detail-preview-wrapper" hidden>
-                <a id="project-preview-link" href="#" class="btn btn-primary project-preview-btn"
-                   target="_blank" rel="noopener">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                    </svg>
-                    <span data-en="Live preview">معاينة المشروع</span>
-                </a>
-            </div>
-
-            <!-- محتوى المشروع — الحاوية نفسها شبكة الاختراق -->
-            <div id="project-body" class="article-body project-detail-body"></div>
-
-        </article>
-
-        <!-- تذييل: السابق/التالي + العودة للأرشيف -->
-        <nav class="article-footer breakout" id="projectFooter" aria-label="تصفّح المشاريع" hidden></nav>
-
-    </main>
-
-    <!-- Footer -->
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
-        <div class="container footer-grid">
-            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
-                <a href="index.html" data-en="Home">الرئيسية</a>
-                <a href="projects.html" data-en="Projects">ذُرى — المشاريع</a>
-                <a href="articles.html" data-en="Writing">بان — المقالات</a>
-                <a href="index.html#contact" data-en="Contact">تواصل</a>
-            </nav>
-            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="js/i18n.js?v=r29"></script>
-    <script src="js/covers.js?v=r29"></script>
-    <script src="main.js?v=r29"></script>
-    <script src="animations.js?v=r29"></script>
-    <script src="js/project.js?v=r29"></script>
-    <script src="effects.js?v=r29"></script>
+    <h1>مشاريع ذُرى</h1>
+    <p>انتقل هذا القسم إلى مسارات جديدة. اختر من القائمة:</p>
+    <ul>
+        <li><a href="/projects/beyond-the-numbers-a-strategic-bi-deep-dive/">Beyond the Numbers: A Strategic BI Deep Dive</a></li>
+        <li><a href="/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/">Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators</a></li>
+    </ul>
+    <p><a href="/projects/">كل المشاريع</a></p>
 </body>
 </html>

@@ -15,8 +15,11 @@
     const readTime = (m, w) => (window.I18N ? window.I18N.readTime(m, w) : `${m || 5} دقائق`);
     const formatDate = (d) => (window.I18N ? window.I18N.date(d) : '');
 
+    /* مطلقة من الجذر: الصفحات صارت تسكن أدلّة فرعية (/projects/<slug>/)،
+       والمسار النسبي كان سيطلب /projects/<slug>/data/projects.json. */
     const CONFIG = {
-        dataUrl: 'data/projects.json',
+        dataUrl: '/data/projects.json',
+        slugsUrl: '/data/slugs.json',
         gridId: 'projectsGrid',
         filtersId: 'projectFilters',
         featuredGridId: 'featuredProjectsGrid',
@@ -25,6 +28,29 @@
     };
 
     let allProjects = [];
+
+    /* خريطة المعرّف ← المسار النظيف، يكتبها البناء في data/slugs.json */
+    let slugMap = null;
+
+    async function fetchSlugs() {
+        if (slugMap) return slugMap;
+        try {
+            const response = await fetch(CONFIG.slugsUrl);
+            slugMap = response.ok ? await response.json() : {};
+        } catch {
+            slugMap = {};
+        }
+        return slugMap;
+    }
+
+    function hrefFor(id) {
+        const record = slugMap && slugMap[id];
+        if (!record || !record.slug) return `/project-details.html?id=${encodeURIComponent(id)}`;
+        return `/projects/${encodeURIComponent(record.slug)}/`;
+    }
+
+    /* أغلفة data/ نسبيّة («assets/…») — تُجذَّر كي تصحّ من أي عمق */
+    const assetUrl = (p) => (!p || /^(https?:)?\/\//i.test(p) || p.startsWith('/')) ? p : '/' + p;
 
     document.addEventListener('DOMContentLoaded', boot);
 
@@ -59,7 +85,24 @@
         // بعد نجاح محاولة تالية (تبديل اللغة يعيد البناء مثلاً).
         const errorState = document.getElementById(CONFIG.errorStateId);
         if (errorState) errorState.hidden = true;
+
+        /* الشبكة والفلاتر مصيَّرتان مسبقاً في البناء بنفس الترميز حرفاً بحرف.
+           لا يُعاد بناؤهما هنا — يُوصَل المستمع وحده. العلامة تُنزع فيُعاد
+           البناء عند تبديل اللغة. */
+        if (container.dataset.prerendered === '1') {
+            delete container.dataset.prerendered;
+            const filters = document.getElementById(CONFIG.filtersId);
+            if (filters) delete filters.dataset.prerendered;
+            /* التصيير المسبق عربيّ — انظر التعليق نفسه في js/articles-list.js */
+            if (!window.I18N || window.I18N.lang !== 'en') {
+                initFilters();
+                announce(container.querySelectorAll('.project-card').length);
+                return;
+            }
+        }
+
         try {
+            await fetchSlugs();
             allProjects = orderProjects(await fetchProjects());
             renderGrid(container, allProjects);
             buildFilters(allProjects);
@@ -91,7 +134,12 @@
     // ── index.html ───────────────────────────────────────────────────────
     async function loadFeaturedProjects() {
         const container = document.getElementById(CONFIG.featuredGridId);
+        if (container.dataset.prerendered === '1') {
+            delete container.dataset.prerendered;
+            if (!window.I18N || window.I18N.lang !== 'en') return;
+        }
         try {
+            await fetchSlugs();
             const featured = orderProjects(await fetchProjects()).slice(0, CONFIG.featuredCount);
             renderGrid(container, featured);
         } catch (error) {
@@ -129,9 +177,11 @@
     function createProjectCard(project) {
         const card = document.createElement('article');
         card.className = 'project-card rv';
+        // ‏data-id يقرأه مورف الانتقال: المسار النظيف لا يحمل المعرّف
+        card.dataset.id = project.id;
         card.dataset.categories = JSON.stringify(project.categories || []);
 
-        const href = `project-details.html?id=${encodeURIComponent(project.id)}`;
+        const href = hrefFor(project.id);
         const categories = (project.categories || []).slice(0, 4);
         const latinTitle = isLatin(project.title);
         // ‏last_edited تاريخ آخر مزامنة مع Notion، لا تاريخ نشر. عرضه كأنه
@@ -143,7 +193,7 @@
 
         const cover = project.cover
             ? `<div class="project-card-image-wrapper">
-                   <img class="project-card-image" src="${escapeAttr(project.cover)}" alt=""
+                   <img class="project-card-image" src="${escapeAttr(assetUrl(project.cover))}" alt=""
                         loading="lazy" decoding="async">
                </div>`
             : '';
@@ -165,7 +215,9 @@
                     : escapeHtml(project.title)}</h3>
                 <p class="project-card-summary">${escapeHtml(project.summary || '')}</p>
                 <div class="project-card-meta">
-                    <span class="project-card-date">${formatDate(when)}</span>
+                    <span class="project-card-date">${when
+                        ? `<time datetime="${escapeAttr(when)}">${escapeHtml(formatDate(when))}</time>`
+                        : ''}</span>
                     <span class="project-card-read">${project.read_time ? readTime(project.read_time) : ''}</span>
                 </div>
                 <div class="project-card-categories">

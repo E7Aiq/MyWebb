@@ -205,6 +205,10 @@
 .article-body > *:first-child,
 .project-detail-body > *:first-child{ margin-block-start: 0; }
 
+/* h1 مدرَج مع h2 وh3: التصيير المسبق ينزّل عناوين المتن إلى h2، فلو بقي
+   h1 خارج القاعدة لاختلف الفراغ فوق العنوان بين المسارين — الساكن
+   والمحقون وقت التشغيل — وهما يعرضان النصّ نفسه. */
+.article-body > h1, .project-detail-body > h1,
 .article-body > h2, .project-detail-body > h2,
 .article-body > h3, .project-detail-body > h3{ margin-block-start: 2em; }
 
@@ -238,8 +242,12 @@
   font-weight: 700;
   line-height: var(--lh-head);
 }
-.article-body h1.is-duplicate-title,
-.project-detail-body h1.is-duplicate-title{ display: none; }
+/* بلا وسم في المحدِّد: التصيير المسبق ينزل هذا العنوان إلى h2 كي لا تحمل
+   الصفحة عنوانين من المستوى الأول (h1 الصفحة + h1 المتن). المقياس لا يتغيّر
+   — القاعدتان أعلاه متطابقتان عائلةً وحجماً ووزناً — والفئة تبقى هي هي.
+   المحدِّد المقيَّد بـ h1 كان سيترك العنوان المكرّر ظاهراً بعد التنزيل. */
+.article-body .is-duplicate-title,
+.project-detail-body .is-duplicate-title{ display: none; }
 
 /* 28px — عند العتبة تماماً، فيبقى Display. لا خطّ فاصل تحته: الفصل من
    الهامش العلوي (2em) والمقياس، وهو ما كان يفعله الخطّ بلا داعٍ. */

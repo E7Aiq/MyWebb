@@ -1,0 +1,88 @@
+{
+  "_comment": "المصدر الوحيد لبيانات الموقع الوصفية. كل عنوان ووصف وبطاقة مشاركة في الموقع يُبنى من هنا — لا تُكتب هذه القيم في أي ملف HTML مباشرةً. راجع docs/SEO.md.",
+
+  "origin": "https://alzobaidi.me",
+  "cacheBuster": "r30",
+
+  "name_ar": "محمد الزبيدي",
+  "name_en": "Mohammed Alzobaidi",
+
+  "positioning": {
+    "_status": "UNDECIDED — قرار لصاحب الموقع. الموقع اليوم يقول شيئين مختلفين: العنوان والوصف في نتائج البحث يقولان «محلل بيانات»، والهيرو وبطاقة المشاركة يقولان «مطوّر حلول البيانات والذكاء الاصطناعي». البناء يحفظ كلًّا في مكانه كما هو اليوم — أي لا يتغيّر شيء في نتائج البحث — ويطبع تحذيراً حتى تتوحّدا. لتوحيدهما: اجعل القيمتين متطابقتين. راجع SEO-REPORT.md §4 المهمّة ١.",
+    "search_role_ar": "محلل بيانات",
+    "search_role_en": "Data Analyst",
+    "hero_role_ar": "مطوّر حلول البيانات والذكاء الاصطناعي",
+    "hero_role_en": "Data & AI Solutions Developer"
+  },
+
+  "home": {
+    "description_ar": "محمد الزبيدي - محلل بيانات متخصص في SQL و Power BI و Python",
+    "description_en": "Mohammed Alzobaidi — data analyst working in SQL, Power BI and Python",
+    "og_description_ar": "مطوّر حلول البيانات والذكاء الاصطناعي — من أثر المشكلة إلى حلٍّ قابل للقياس.",
+    "og_description_en": "Data & AI solutions developer — from the impact of the problem to a measurable solution."
+  },
+
+  "sections": {
+    "articles": {
+      "slug": "articles",
+      "brand_ar": "بان",
+      "brand_en": "Ban",
+      "label_ar": "المقالات",
+      "label_en": "Writing",
+      "title_ar": "بان | محمد الزبيدي",
+      "title_en": "Ban | Mohammed Alzobaidi",
+      "description_ar": "مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد",
+      "description_en": "Writing by Mohammed Alzobaidi on data analysis — SQL, Power BI, Python and more",
+      "og_description_ar": "مقالات في تحليل البيانات والذكاء الاصطناعي.",
+      "og_description_en": "Writing on data analysis and AI.",
+      "emblem": "assets/logos/ban.webp"
+    },
+    "projects": {
+      "slug": "projects",
+      "brand_ar": "ذُرى",
+      "brand_en": "Dhura",
+      "label_ar": "المشاريع",
+      "label_en": "Projects",
+      "title_ar": "ذُرى | محمد الزبيدي",
+      "title_en": "Dhura | Mohammed Alzobaidi",
+      "description_ar": "مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد",
+      "description_en": "Data analysis projects by Mohammed Alzobaidi — Power BI, Python, SQL and more",
+      "og_description_ar": "مشاريع في تحليل البيانات وذكاء الأعمال.",
+      "og_description_en": "Projects in data analysis and business intelligence.",
+      "emblem": "assets/logos/dhura.webp"
+    },
+    "topics": {
+      "slug": "topics",
+      "label_ar": "الموضوعات",
+      "label_en": "Topics",
+      "title_ar": "الموضوعات | محمد الزبيدي",
+      "description_ar": "فهرس الموضوعات التي يغطّيها الموقع؛ لكل موضوع صفحة تجمع ما كُتب وما بُني فيه."
+    }
+  },
+
+  "person": {
+    "email": "Mohammed@Alzobaidi.me",
+    "telephone": "+966583324981",
+    "image": "assets/images/profile.jpg",
+    "sameAs": [
+      "https://www.linkedin.com/in/mohammed-alzobaidi-b6965b27b/",
+      "https://x.com/e7aiq",
+      "https://github.com/E7Aiq"
+    ],
+    "knowsAbout_ar": [
+      "تحليل البيانات",
+      "ذكاء الأعمال",
+      "Power BI",
+      "Python",
+      "SQL",
+      "الذكاء الاصطناعي",
+      "هندسة البيانات"
+    ],
+    "addressCountry": "SA"
+  },
+
+  "_notes": {
+    "hasSiteSearch": false,
+    "_why": "لا يوجد بحث داخل الموقع، فلا يُصدَر SearchAction في WebSite — التصريح به بلا مسار بحث حقيقي بيانٌ كاذب لمحرّك البحث."
+  }
+}

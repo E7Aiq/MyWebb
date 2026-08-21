@@ -14,18 +14,18 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="js/view-transitions.js?v=r29"></script>
+    <script src="/js/view-transitions.js?v=r30"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
-    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r29">
-    <link rel="stylesheet" href="css/animations.css?v=r29">
-    <link rel="stylesheet" href="css/article.css?v=r29">
-    <link rel="stylesheet" href="css/responsive.css?v=r29">
+    <link rel="stylesheet" href="/css/style.css?v=r30">
+    <link rel="stylesheet" href="/css/animations.css?v=r30">
+    <link rel="stylesheet" href="/css/article.css?v=r30">
+    <link rel="stylesheet" href="/css/responsive.css?v=r30">
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
     <script type="speculationrules">
@@ -41,15 +41,15 @@
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo logo-emblem">
-                <img src="assets/logos/ban.webp" alt="بان" width="406" height="440" decoding="async">
+            <a href="/" class="logo logo-emblem">
+                <img src="/assets/logos/ban.webp" alt="بان" width="406" height="440" decoding="async">
             </a>
             <div class="nav-actions">
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
-                    <li><a href="projects.html" class="nav-link brand-dhura" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
-                    <li><a href="articles.html" class="nav-link brand-ban active" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
-                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                    <li><a href="/" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="/projects/" class="nav-link brand-dhura" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="/articles/" class="nav-link brand-ban active" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
+                    <li><a href="/#contact" class="nav-link" data-en="Contact">تواصل</a></li>
                 </ul>
 
                 <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
@@ -73,10 +73,11 @@
                 <h1 class="section-title" data-en="This page doesn’t exist">هذه الصفحة غير موجودة</h1>
                 <p class="notfound-text" data-en="The link may be old, or the address may have a typo. These are the ways in:">قد يكون الرابط قديماً، أو في العنوان خطأ إملائي. وهذه هي المداخل:</p>
                 <p class="notfound-links">
-                    <a class="btn btn-primary" href="index.html" data-en="Home">الرئيسية</a>
-                    <a class="btn btn-secondary" href="projects.html" data-en="Projects">ذُرى — المشاريع</a>
-                    <a class="btn btn-secondary" href="articles.html" data-en="Writing">بان — المقالات</a>
-                    <a class="btn btn-secondary" href="index.html#contact" data-en="Contact">تواصل</a>
+                    <a class="btn btn-primary" href="/" data-en="Home">الرئيسية</a>
+                    <a class="btn btn-secondary" href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
+                    <a class="btn btn-secondary" href="/articles/" data-en="Writing">بان — المقالات</a>
+                    <a class="btn btn-secondary" href="/topics/" data-en="Topics">الموضوعات</a>
+                    <a class="btn btn-secondary" href="/#contact" data-en="Contact">تواصل</a>
                 </p>
             </div>
         </section>
@@ -88,18 +89,18 @@
     <footer class="footer">
         <div class="container footer-grid">
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
-                <a href="index.html" data-en="Home">الرئيسية</a>
-                <a href="projects.html" data-en="Projects">ذُرى — المشاريع</a>
-                <a href="articles.html" data-en="Writing">بان — المقالات</a>
-                <a href="index.html#contact" data-en="Contact">تواصل</a>
+                <a href="/" data-en="Home">الرئيسية</a>
+                <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="/articles/" data-en="Writing">بان — المقالات</a>
+                <a href="/#contact" data-en="Contact">تواصل</a>
             </nav>
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="js/i18n.js?v=r29"></script>
-    <script src="main.js?v=r29"></script>
-    <script src="animations.js?v=r29"></script>
+    <script src="/js/i18n.js?v=r30"></script>
+    <script src="/main.js?v=r30"></script>
+    <script src="/animations.js?v=r30"></script>
 </body>
 </html>

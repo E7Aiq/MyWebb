@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد. منها: «Beyond the Numbers: A Strategic BI Deep Dive»،">
+    <title>ذُرى — المشاريع | محمد الزبيدي</title>
+
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="/js/view-transitions.js?v=r30"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css?v=r30">
+    <link rel="stylesheet" href="/css/animations.css?v=r30">
+    <link rel="stylesheet" href="/css/project.css?v=r30">
+    <link rel="stylesheet" href="/css/responsive.css?v=r30">
+
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="https://alzobaidi.me/projects/">
+    <link rel="alternate" type="application/atom+xml" title="بان — مقالات محمد الزبيدي" href="/feed.xml">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+    <meta property="og:url" content="https://alzobaidi.me/projects/">
+    <meta property="og:title" content="ذُرى | محمد الزبيدي">
+    <meta property="og:description" content="مشاريع في تحليل البيانات وذكاء الأعمال.">
+    <meta property="og:image" content="https://alzobaidi.me/assets/og/projects.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ذُرى | محمد الزبيدي">
+    <meta name="twitter:description" content="مشاريع في تحليل البيانات وذكاء الأعمال.">
+    <meta name="twitter:image" content="https://alzobaidi.me/assets/og/projects.jpg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "ذُرى — المشاريع",
+  "description": "مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد",
+  "url": "https://alzobaidi.me/projects/",
+  "inLanguage": "ar",
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "https://alzobaidi.me/#website"
+  },
+  "about": {
+    "@id": "https://alzobaidi.me/#person"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 2,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://alzobaidi.me/projects/beyond-the-numbers-a-strategic-bi-deep-dive/",
+        "name": "Beyond the Numbers: A Strategic BI Deep Dive"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://alzobaidi.me/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/",
+        "name": "Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators"
+      }
+    ]
+  }
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://alzobaidi.me/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ذُرى — المشاريع"
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+    <a class="skip-link" data-en="Skip to projects" href="#projectsGrid">تخطَّ إلى المشاريع</a>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo logo-emblem">
+                <img src="/assets/logos/dhura.webp" alt="ذُرى" width="360" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="/projects/" class="nav-link brand-dhura active" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="/articles/" class="nav-link brand-ban" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
+                    <li><a href="/#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="publication dhura">
+        <nav class="breadcrumb breakout" aria-label="مسار التنقّل" data-en-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+            <li class="breadcrumb-item"><a href="/" data-en="Home">الرئيسية</a></li>
+            <li class="breadcrumb-item"><span aria-current="page" data-en="Dhura — Projects">ذُرى — المشاريع</span></li>
+            </ol>
+        </nav>
+
+        <!-- ماستهيد «ذُرى» — العنوان، الشعار المفرّغ، الوصف، التعريف، ثم المقدّمة -->
+        <header class="page-header breakout page-masthead">
+            <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
+            <figure class="masthead-emblem rv">
+                <img src="/assets/logos/dhura.webp"
+                     alt="قمم برتقالية متدرّجة — شعار مشاريع ذُرى"
+                     width="360" height="440" fetchpriority="high" decoding="async">
+            </figure>
+            <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
+            <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
+                <span class="masthead-lead-label">ذُرى جمع ذروة؛</span> وهي المساحة التي أوثّق فيها أفضل ما وصلت إليه من مشاريع وتجارب في البيانات والذكاء الاصطناعي.
+            </p>
+            <div class="masthead-intro rv">
+                <p data-en="Every project here is an independent summit; it began with a question worth exploring, and took shape through research, experimentation, decisions, and overcoming challenges — until it reached a clear, usable solution.">كل مشروع هنا هو <strong>ذروة مستقلة</strong>؛ بدأ بسؤال يستحق الاستكشاف، وتشكّل عبر البحث والتجربة واتخاذ القرارات وتجاوز التحديات، حتى وصل إلى حلّ واضح وقابل للاستخدام.</p>
+                <p data-en="I don’t show only the final result, but what led to it: the problem, the approach, the decisions, and what I learned along the way.">لا أعرض النتيجة النهائية فحسب، بل ما قاد إليها: <strong>المشكلة، والمنهج، والقرارات، وما تعلّمته على الطريق.</strong></p>
+            </div>
+        </header>
+
+        <section class="projects-section breakout" aria-label="فهرس المشاريع" data-en-label="Project index">
+            <!-- الفلاتر مصيَّرة مسبقاً من categories[] في البيانات -->
+            <div class="filters" id="projectFilters" role="group" aria-label="تصفية المشاريع حسب التصنيف" data-en-label="Filter projects by category" data-prerendered="1">
+            <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true" data-en="All">الكل</button>
+            <button class="filter-btn" type="button" data-filter="DAX" aria-pressed="false">DAX</button>
+            <button class="filter-btn" type="button" data-filter="Data Analysis" aria-pressed="false">Data Analysis</button>
+            <button class="filter-btn" type="button" data-filter="Data Integration" aria-pressed="false">Data Integration</button>
+            <button class="filter-btn" type="button" data-filter="Data Quality" aria-pressed="false">Data Quality</button>
+            <button class="filter-btn" type="button" data-filter="ETL" aria-pressed="false">ETL</button>
+            <button class="filter-btn" type="button" data-filter="Power BI" aria-pressed="false">Power BI</button>
+            <button class="filter-btn" type="button" data-filter="Python" aria-pressed="false">Python</button>
+            </div>
+
+            <h2 class="visually-hidden" data-en="Projects">المشاريع</h2>
+            <p class="visually-hidden" id="gridStatus" role="status" aria-live="polite"></p>
+            <div class="projects-grid" id="projectsGrid" data-prerendered="1">
+        <article class="project-card rv" data-id="30c59148905a80f4b68ed83a2c460454" data-categories="[&quot;Power BI&quot;,&quot;Data Analysis&quot;,&quot;DAX&quot;]">
+            <div class="project-card-image-wrapper">
+                <img class="project-card-image" src="/assets/images/projects/30c59148905a80f4b68ed83a2c460454-cover.webp" alt=""
+                     loading="lazy" decoding="async" width="1600" height="900">
+            </div>
+            <div class="project-card-content">
+                <h3 class="project-card-title"><bdi dir="ltr">Beyond the Numbers: A Strategic BI Deep Dive</bdi></h3>
+                <p class="project-card-summary"></p>
+                <div class="project-card-meta">
+                    <span class="project-card-date"><time datetime="2025-12-02">٢ ديسمبر ٢٠٢٥</time></span>
+                    <span class="project-card-read">٥ دقائق قراءة</span>
+                </div>
+                <div class="project-card-categories"><span class="category-tag">Power BI</span><span class="category-tag">Data Analysis</span><span class="category-tag">DAX</span></div>
+                <div class="project-card-actions">
+                    <a class="project-card-btn project-card-btn-details project-card-link"
+                       href="/projects/beyond-the-numbers-a-strategic-bi-deep-dive/" data-en="Read more">اقرأ المزيد</a>
+                    <a class="project-card-btn project-card-btn-preview"
+                       href="https://app.powerbi.com/view?r=eyJrIjoiNzc1OWM5YWUtY2Y4Yi00MWY5LThiMDktNzdjYTFkZmU0NDgxIiwidCI6IjJjODZiYmZjLThkMDQtNDFmZi1hODNhLTk0MmYwNzVlMGY2MCIsImMiOjl9" target="_blank" rel="noopener" data-en="Live preview">معاينة المشروع</a>
+                </div>
+            </div>
+        </article>
+        <article class="project-card rv" data-id="30c59148905a8034bddedb74645b7831" data-categories="[&quot;ETL&quot;,&quot;Data Integration&quot;,&quot;Data Quality&quot;,&quot;Python&quot;]">
+            <div class="project-card-image-wrapper">
+                <img class="project-card-image" src="/assets/images/projects/30c59148905a8034bddedb74645b7831-cover.webp" alt=""
+                     loading="lazy" decoding="async" width="1600" height="900">
+            </div>
+            <div class="project-card-content">
+                <h3 class="project-card-title"><bdi dir="ltr">Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators</bdi></h3>
+                <p class="project-card-summary"></p>
+                <div class="project-card-meta">
+                    <span class="project-card-date"></span>
+                    <span class="project-card-read">١١ دقيقة قراءة</span>
+                </div>
+                <div class="project-card-categories"><span class="category-tag">ETL</span><span class="category-tag">Data Integration</span><span class="category-tag">Data Quality</span><span class="category-tag">Python</span></div>
+                <div class="project-card-actions">
+                    <a class="project-card-btn project-card-btn-details project-card-link"
+                       href="/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/" data-en="Read more">اقرأ المزيد</a>
+                    <a class="project-card-btn project-card-btn-preview"
+                       href="https://github.com/E7Aiq/Global-Life-Expectancy" target="_blank" rel="noopener" data-en="Live preview">معاينة المشروع</a>
+                </div>
+            </div>
+        </article>
+            </div>
+
+            <div class="error-state" id="errorState" hidden>
+                <h2 class="error-title" data-en="Could not load projects">تعذّر تحميل المشاريع</h2>
+                <p class="error-message" data-en="Something went wrong loading the projects. Please try again later.">حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
+                <button class="btn btn-secondary" type="button" onclick="location.reload()" data-en="Try again">إعادة المحاولة</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
+         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
+                <a href="/" data-en="Home">الرئيسية</a>
+                <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="/articles/" data-en="Writing">بان — المقالات</a>
+                <a href="/#contact" data-en="Contact">تواصل</a>
+            </nav>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/i18n.js?v=r30"></script>
+    <script src="/js/covers.js?v=r30"></script>
+    <script src="/main.js?v=r30"></script>
+    <script src="/animations.js?v=r30"></script>
+    <script src="/projects.js?v=r30"></script>
+</body>
+</html>
