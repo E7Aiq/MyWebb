@@ -237,7 +237,22 @@ for (const p of content) {
 }
 
 /* ── ٦. خريطة الموقع والتغذية و robots ───────────────────────────────────── */
-const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+/* ‏sitemap.xml إمّا خريطة واحدة أو فهرسٌ يشير إلى خرائط. الفحص يتبع الشكلين،
+   وإلّا مرّ فهرسٌ بخرائط مكسورة بلا أن يُلاحَظ. */
+const sitemapRaw = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+let sitemap = sitemapRaw;
+if (/<sitemapindex/.test(sitemapRaw)) {
+    const parts = [...sitemapRaw.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+    const merged = [];
+    for (const loc of parts) {
+        const rel = decodeURIComponent(loc.slice(ORIGIN.length + 1));
+        const abs = path.join(ROOT, rel);
+        if (!fs.existsSync(abs)) { fail('sitemap.xml', `الفهرس يشير إلى خريطة غير موجودة: ${rel}`); continue; }
+        merged.push(fs.readFileSync(abs, 'utf8'));
+    }
+    sitemap = merged.join('\n');
+    console.log(`   ℹ️  فهرس خرائط: ${parts.length} ملفاً`);
+}
 const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 const locSet = new Set(locs.map((l) => decodeURI(l)));
 

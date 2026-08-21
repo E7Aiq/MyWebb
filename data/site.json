@@ -16,6 +16,8 @@
   },
 
   "home": {
+    "_og_image": "بطاقة مشاركة الصفحة الرئيسية. null ⇒ تُرسَم من الاسم والدور بخطّ الموقع. لاستعمال صورة خاصّة: ضع مسارها هنا (مثال: \"assets/images/og-home.jpg\") — بمقاس 1200×630 أو ما يُقصّ إليه بلا قطع الوجه. الصورة الشخصية الحالية 640×857 عمودية، وقصّها يقطع الرأس.",
+    "og_image": null,
     "description_ar": "محمد الزبيدي - محلل بيانات متخصص في SQL و Power BI و Python",
     "description_en": "Mohammed Alzobaidi — data analyst working in SQL, Power BI and Python",
     "og_description_ar": "مطوّر حلول البيانات والذكاء الاصطناعي — من أثر المشكلة إلى حلٍّ قابل للقياس.",

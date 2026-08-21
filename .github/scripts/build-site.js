@@ -313,7 +313,19 @@ async function buildOgImages(ctx) {
     ctx.ogFixed = {};
     for (const f of fixed) {
         const rel = `${dir}/${f.key}.jpg`;
-        const size = await OG.renderTitleCard({
+
+        /* بطاقة الرئيسية قرارٌ لصاحب الموقع: الصورة الشخصية 640×857 عمودية،
+           وقصّها إلى 1200×630 يقطع الرأس — فالمرسومة أسلم افتراضاً. ومتى
+           وفّر صورة اجتماعية بالمقاس الصحيح (‎home.og_image في site.json)
+           استُعملت كما هي. القاعدة الأخرى لا تتغيّر: لا صورة شخصية لمقال. */
+        const supplied = f.key === 'home' ? (ctx.site.home.og_image || null) : null;
+        let size = null;
+        if (supplied) {
+            size = await OG.renderCoverCard(supplied, path.join(ROOT, rel));
+            if (size) note(`بطاقة الرئيسية من صورة موفَّرة: ${supplied}`);
+            else warn(`‎home.og_image يشير إلى ملف غير موجود: ${supplied} — رُسمت البطاقة من العنوان.`);
+        }
+        if (!size) size = await OG.renderTitleCard({
             title: f.title, kicker: f.kicker, emblem: f.emblem,
             outAbs: path.join(ROOT, rel)
         });
@@ -1100,11 +1112,11 @@ ${C.breadcrumb(trail)}
         </header>
 
         <section class="articles-section breakout" id="topic-items" aria-label="محتوى الموضوع">
-            <nav class="article-footer" aria-label="محتوى الموضوع">
-${articles.length ? `            <div><h2 class="article-footer-heading" data-en="From the Ban blog">من مدوّنة بان</h2>\n${list(articles)}</div>` : ''}
-${projects.length ? `            <div><h2 class="article-footer-heading" data-en="From the Dhura projects">من مشاريع ذُرى</h2>\n${list(projects)}</div>` : ''}
+            <div class="articles-grid">
+${articles.length ? `                <div><h2 class="article-footer-heading" data-en="From the Ban blog">من مدوّنة بان</h2>\n${list(articles)}</div>` : ''}
+${projects.length ? `                <div><h2 class="article-footer-heading" data-en="From the Dhura projects">من مشاريع ذُرى</h2>\n${list(projects)}</div>` : ''}
                 <a class="btn btn-secondary article-footer-back" href="/topics/" data-en="All topics">كل الموضوعات</a>
-            </nav>
+            </div>
         </section>
     </main>
 
@@ -1177,11 +1189,9 @@ ${C.breadcrumb(trail)}
         </header>
 
         <section class="articles-section breakout" id="topics-list" aria-label="فهرس الموضوعات">
-            <nav class="article-footer" aria-label="فهرس الموضوعات">
-                <div>
+            <div class="articles-grid">
 ${list}
-                </div>
-            </nav>
+            </div>
         </section>
     </main>
 
@@ -1390,7 +1400,64 @@ ${links}
    ١٠. خريطة الموقع، التغذية، robots
    ============================================================================ */
 
-function buildSitemap(ctx) {
+/* حدّ البروتوكول ٥٠ ألف رابط لكل ملف؛ والخمسة آلاف حدٌّ معقول يُبقي الملف
+   خفيفاً ويُسهّل على المفهرس التقاط ما تغيّر. يُتجاوَز في الاختبار عبر
+   SITEMAP_MAX كي لا يبقى فرعُ الانقسام شفرةً لم تُشغَّل قطّ. */
+const SITEMAP_MAX = Number(process.env.SITEMAP_MAX) || 5000;
+
+const sitemapDoc = (body) => `<?xml version="1.0" encoding="UTF-8"?>
+<!-- مولَّدة في كل بناء بـ .github/scripts/build-site.js — لا تُحرَّر يدوياً -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>
+`;
+
+/**
+ * يعيد ملفاً واحداً، أو — إن تجاوز العدد الحدّ — عدّة ملفات وفهرساً يجمعها.
+ * ‏robots.txt يشير إلى /sitemap.xml في الحالتين، فهو الملف أو الفهرس.
+ */
+function buildSitemapFiles(ctx) {
+    const urls = collectUrls(ctx);
+    report.counts.sitemapUrls = urls.length;
+
+    const entry = (u) => `  <url>
+    <loc>${S.escapeXml(u.loc)}</loc>
+    <lastmod>${u.lastmod}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`;
+
+    if (urls.length <= SITEMAP_MAX) {
+        return [{ rel: 'sitemap.xml', content: sitemapDoc(urls.map(entry).join('\n')) }];
+    }
+
+    const files = [];
+    const chunks = [];
+    for (let i = 0; i < urls.length; i += SITEMAP_MAX) chunks.push(urls.slice(i, i + SITEMAP_MAX));
+
+    chunks.forEach((chunk, i) => {
+        files.push({ rel: `sitemap-${i + 1}.xml`, content: sitemapDoc(chunk.map(entry).join('\n')) });
+    });
+
+    const newestOf = (chunk) => chunk.map((u) => u.lastmod).sort().pop();
+    files.push({
+        rel: 'sitemap.xml',
+        content: `<?xml version="1.0" encoding="UTF-8"?>
+<!-- فهرس خرائط — مولَّد في كل بناء. لا تُحرَّر يدوياً -->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${chunks.map((chunk, i) => `  <sitemap>
+    <loc>${ctx.site.origin}/sitemap-${i + 1}.xml</loc>
+    <lastmod>${newestOf(chunk)}</lastmod>
+  </sitemap>`).join('\n')}
+</sitemapindex>
+`
+    });
+
+    note(`خريطة الموقع انقسمت إلى ${chunks.length} ملفاً وفهرسٍ يجمعها (${urls.length} رابطاً > ${SITEMAP_MAX}).`);
+    return files;
+}
+
+function collectUrls(ctx) {
     const site = ctx.site;
     const today = (ctx.lastUpdated || new Date().toISOString()).slice(0, 10);
     const lastmodOf = (item) => (S.isoDate(item.lastEdited || item.date) || '').slice(0, 10) || today;
@@ -1419,20 +1486,7 @@ function buildSitemap(ctx) {
         });
     }
 
-    const body = urls.map((u) => `  <url>
-    <loc>${S.escapeXml(u.loc)}</loc>
-    <lastmod>${u.lastmod}</lastmod>
-    <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
-  </url>`).join('\n');
-
-    report.counts.sitemapUrls = urls.length;
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<!-- مولَّدة في كل بناء بـ .github/scripts/build-site.js — لا تُحرَّر يدوياً -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${body}
-</urlset>
-`;
+    return urls;
 }
 
 const newest = (items, fallback) => {
@@ -1782,7 +1836,16 @@ async function main() {
     patchRegions('index.html', homeRegions(ctx));
 
     // ── بنية الزحف ───────────────────────────────────────────────────────
-    write('sitemap.xml', buildSitemap(ctx));
+    const sitemaps = buildSitemapFiles(ctx);
+    sitemaps.forEach((f) => write(f.rel, f.content));
+    // ملفات انقسام سابقة لم تعد لازمة (تقلّص المحتوى أو عاد إلى ملف واحد)
+    const keep = new Set(sitemaps.map((f) => f.rel));
+    for (const name of fs.readdirSync(ROOT)) {
+        if (/^sitemap-\d+\.xml$/.test(name) && !keep.has(name)) {
+            fs.unlinkSync(path.join(ROOT, name));
+            console.log('   🧹 ' + name);
+        }
+    }
     write('feed.xml', buildFeed(ctx));
     write('robots.txt', buildRobots(ctx));
     write('.nojekyll', '');

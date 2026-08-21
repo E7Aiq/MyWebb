@@ -511,8 +511,18 @@
   transition: var(--transition-ui);
 }
 .article-footer-more a:hover{ color: var(--accent-text); background: var(--bg-element); }
-.article-footer-more-title{ min-inline-size: 0; }
-.article-footer-more span{
+/* min-inline-size:0 يسمح للعنصر المرن بالانكماش دون عرضه الأدنى الضمني،
+   و overflow-wrap يكسر كلمةً واحدة أطول من العمود (رابط أو مصطلح لاتيني). */
+.article-footer-more-title{ min-inline-size: 0; overflow-wrap: anywhere; }
+/* التسمية الجانبية وحدها — زمن القراءة أو نوع العنصر.
+   كان المحدِّد `.article-footer-more span` فيشمل العنوان أيضاً، وهو أعلى
+   تخصيصاً من `.article-footer-more-title`، فكان العنوان يُطبع بخطّ الميتا
+   ولونها ومعه white-space:nowrap. لم يظهر الأثر قطّ لأن هذه الكتلة لم
+   تُصيَّر ببيانات حقيقية: مع عنصرين اثنين يستوعبهما «السابق/التالي» فلا
+   يبقى ما يُدرَج. وأوّل ما صُيِّرت — في صفحات الموضوعات — منع nowrap عنوانَ
+   مشروعٍ طويلاً من الالتفاف، ففاض المستند إلى 703px عند شاشة 375px.
+   `span + span` يصيب الثانية وحدها: العنوان أوّلاً والتسمية بعده. */
+.article-footer-more a > span + span{
   font-family: var(--font-sans);
   font-size: var(--t-meta);
   font-weight: 400;
