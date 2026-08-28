@@ -2,7 +2,9 @@ name: Update Articles from Notion
 
 on:
   schedule:
-    # يعمل كل يوم الساعة 6 صباحاً بتوقيت السعودية (3 صباحاً UTC)
+    # يعمل كل يوم الساعة 6 صباحاً بتوقيت السعودية (3 صباحاً UTC).
+    # مسار المشاريع مُزاح إلى 3:30 — المساران يكتبان ملفّات مولَّدة
+    # مشتركة. راجع docs/SEO.md §10.
     - cron: '0 3 * * *'
   workflow_dispatch: # للتشغيل اليدوي من GitHub
 
@@ -32,6 +34,14 @@ jobs:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
         run: node .github/scripts/fetch-articles.js
+
+      # ── بعد الجلب لا قبله: طبقة البناء تقرأ ما كتبه الجالب ولا تمسّه ────
+      - name: Build static pages (pre-render + SEO)
+        run: |
+          npm install --no-audit --no-fund
+          node .github/scripts/build-site.js
+          node .github/scripts/check-seo.js
+
         
       - name: Commit and push changes
         run: |
@@ -40,5 +50,10 @@ jobs:
           # مجلد الصور شرط لا زينة: صار السكربت ينزّل الأغلفة وصور المتن
           # محلياً، فإن لم تُضَفّ هنا أشارت data/articles.json إلى ملفات
           # غير موجودة في المستودع — وهو ما وقع فعلاً في أول تشغيلة.
-          git add data/articles.json assets/images/articles/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🔄 تحديث المقالات من Notion - $(date +'%Y-%m-%d')" && git push)
+          # ‏git add على مسار غير موجود يُفشل الخطوة كلّها — وقد لا يوجد
+          # ‏topics/ مثلاً إن خلت البيانات من الوسوم. الحلقة تتسامح مع الغائب،
+          # و‎-A تلتقط الحذف أيضاً (الكنس يزيل صفحات ما لم يعد له مصدر).
+          for p in data/articles.json assets/images/articles/ articles/ projects/ topics/ a/ p/ assets/og/ data/slugs.json sitemap.xml feed.xml robots.txt .nojekyll index.html articles.html projects.html article.html project-details.html; do
+            git add -A -- "$p" 2>/dev/null || true
+          done
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🔄 تحديث المقالات من Notion - $(date +'%Y-%m-%d')" && git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push)

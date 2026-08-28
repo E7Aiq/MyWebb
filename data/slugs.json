@@ -1,0 +1,92 @@
+{
+  "30c59148905a8034bddedb74645b7831": {
+    "slug": "organizing-chaos-and-measuring-discrepancies-an-integrated",
+    "aliases": [],
+    "title": "Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators",
+    "kind": "project"
+  },
+  "30c59148905a80f4b68ed83a2c460454": {
+    "slug": "beyond-the-numbers-a-strategic-bi-deep-dive",
+    "aliases": [],
+    "title": "Beyond the Numbers: A Strategic BI Deep Dive",
+    "kind": "project"
+  },
+  "d7a7837479d646cb8e529f7df48ca801": {
+    "slug": "الهوية-بين-وطأة-الاعلام-وضعف-الشخصية",
+    "aliases": [],
+    "title": "الهُوية بين وطأة الاعلام وضعف الشخصية",
+    "kind": "article"
+  },
+  "e0b1daa47a964f308a4310c2f6494ba2": {
+    "slug": "الذكاء-الاصطناعي-في-كتابة-الإيميلات-متى-تستخدمه-ومتى-تتركه",
+    "aliases": [],
+    "title": "الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!",
+    "kind": "article"
+  },
+  "pillar:ai-agents": {
+    "slug": "وكلاء-الذكاء-الاصطناعي",
+    "aliases": [],
+    "title": "وكلاء الذكاء الاصطناعي",
+    "kind": "pillar"
+  },
+  "pillar:ai-solutions": {
+    "slug": "حلول-الذكاء-الاصطناعي",
+    "aliases": [],
+    "title": "حلول الذكاء الاصطناعي",
+    "kind": "pillar"
+  },
+  "pillar:data-solutions": {
+    "slug": "حلول-البيانات",
+    "aliases": [],
+    "title": "حلول البيانات",
+    "kind": "pillar"
+  },
+  "pillar:intelligent-systems": {
+    "slug": "بناء-الأنظمة-الذكية",
+    "aliases": [],
+    "title": "بناء الأنظمة الذكية",
+    "kind": "pillar"
+  },
+  "topic:data analysis": {
+    "slug": "data-analysis",
+    "aliases": [],
+    "title": "Data Analysis",
+    "kind": "topic"
+  },
+  "topic:data integration": {
+    "slug": "data-integration",
+    "aliases": [],
+    "title": "Data Integration",
+    "kind": "topic"
+  },
+  "topic:data quality": {
+    "slug": "data-quality",
+    "aliases": [],
+    "title": "Data Quality",
+    "kind": "topic"
+  },
+  "topic:dax": {
+    "slug": "dax",
+    "aliases": [],
+    "title": "DAX",
+    "kind": "topic"
+  },
+  "topic:etl": {
+    "slug": "etl",
+    "aliases": [],
+    "title": "ETL",
+    "kind": "topic"
+  },
+  "topic:power bi": {
+    "slug": "power-bi",
+    "aliases": [],
+    "title": "Power BI",
+    "kind": "topic"
+  },
+  "topic:python": {
+    "slug": "python",
+    "aliases": [],
+    "title": "Python",
+    "kind": "topic"
+  }
+}

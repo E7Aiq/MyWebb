@@ -1,0 +1,140 @@
+{
+  "_comment": "المصدر الوحيد لبيانات الموقع الوصفية. كل عنوان ووصف وبطاقة مشاركة في الموقع يُبنى من هنا — لا تُكتب هذه القيم في أي ملف HTML مباشرةً. راجع docs/SEO.md.",
+
+  "origin": "https://alzobaidi.me",
+  "cacheBuster": "r31",
+
+  "name_ar": "محمد الزبيدي",
+  "name_en": "Mohammed Alzobaidi",
+
+  "positioning": {
+    "_status": "محسومة بقرار صاحب الموقع (٢٢ أغسطس ٢٠٢٦): الدور واحد في كل سطح — نتائج البحث والهيرو وبطاقة المشاركة والبيانات المنظّمة. القيمتان الأربع أدناه يجب أن تبقى search_* مطابقة لـ hero_*؛ والفاحص ينبّه إن افترقتا.",
+    "search_role_ar": "مطوّر حلول البيانات والذكاء الاصطناعي",
+    "search_role_en": "Data & AI Solutions Developer",
+    "hero_role_ar": "مطوّر حلول البيانات والذكاء الاصطناعي",
+    "hero_role_en": "Data & AI Solutions Developer"
+  },
+
+  "home": {
+    "_og_image": "بطاقة مشاركة الصفحة الرئيسية. null ⇒ تُرسَم من الاسم والدور بخطّ الموقع. لاستعمال صورة خاصّة: ضع مسارها هنا (مثال: \"assets/images/og-home.jpg\") — بمقاس 1200×630 أو ما يُقصّ إليه بلا قطع الوجه. الصورة الشخصية الحالية 640×857 عمودية، وقصّها يقطع الرأس.",
+    "og_image": null,
+    "_description_draft": "⚠️ مسودّة تنتظر موافقة صاحب الموقع — لم يخترها هو. القيمة أدناه هي المرشّح «هـ» من خمسة مرشّحين في SEO-REPORT.md (ملحق ٢٢ أغسطس ٢٠٢٦ §٣). استبدلها بأي مرشّح آخر أو بصياغتك، ثم احذف هذا السطر. الوصف السابق كان ٥٩ محرفاً من أصل ١٥٠–١٦٠ متاحة.",
+    "description_ar": "مطوّر حلول البيانات والذكاء الاصطناعي في السعودية. أنظمة ذكية، ووكلاء AI، وأتمتة عمليات، ولوحات Power BI — للجمعيات والشركات، من المشكلة إلى أثر يُقاس.",
+    "description_en": "Data & AI Solutions Developer in Saudi Arabia. I help nonprofits and companies with process automation, KPI dashboards and impact measurement that ships.",
+    "og_description_ar": "مطوّر حلول البيانات والذكاء الاصطناعي — من أثر المشكلة إلى حلٍّ قابل للقياس.",
+    "og_description_en": "Data & AI solutions developer — from the impact of the problem to a measurable solution."
+  },
+
+  "_pillars": "المحاور الأربعة التي يريد صاحب الموقع أن يُعرَف بها. tags[] تربط وسوم Notion القائمة بمحورها — بلا إعادة تسمية في Notion وبلا اختراع وسم لمحتوى قائم. محور بلا أعضاء لا تُولَّد له صفحة: صفحة فارغة تضرّ ولا تنفع. راجع docs/CONTENT-PLAN.md لما يملأ المحاور الخالية.",
+  "pillars": [
+    {
+      "id": "data-solutions",
+      "name_ar": "حلول البيانات",
+      "name_en": "Data solutions",
+      "tags": ["Power BI", "Data Analysis", "DAX", "ETL", "Data Integration", "Data Quality", "Python"]
+    },
+    {
+      "id": "intelligent-systems",
+      "name_ar": "بناء الأنظمة الذكية",
+      "name_en": "Intelligent systems",
+      "tags": []
+    },
+    {
+      "id": "ai-agents",
+      "name_ar": "وكلاء الذكاء الاصطناعي",
+      "name_en": "AI agents",
+      "tags": []
+    },
+    {
+      "id": "ai-solutions",
+      "name_ar": "حلول الذكاء الاصطناعي",
+      "name_en": "AI solutions",
+      "tags": []
+    }
+  ],
+
+  "sections": {
+    "articles": {
+      "slug": "articles",
+      "brand_ar": "بان",
+      "brand_en": "Ban",
+      "label_ar": "المقالات",
+      "label_en": "Writing",
+      "title_ar": "بان | محمد الزبيدي",
+      "title_en": "Ban | Mohammed Alzobaidi",
+      "description_ar": "مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد",
+      "description_en": "Writing by Mohammed Alzobaidi on data analysis — SQL, Power BI, Python and more",
+      "og_description_ar": "مقالات في تحليل البيانات والذكاء الاصطناعي.",
+      "og_description_en": "Writing on data analysis and AI.",
+      "emblem": "assets/logos/ban.webp"
+    },
+    "projects": {
+      "slug": "projects",
+      "brand_ar": "ذُرى",
+      "brand_en": "Dhura",
+      "label_ar": "المشاريع",
+      "label_en": "Projects",
+      "title_ar": "ذُرى | محمد الزبيدي",
+      "title_en": "Dhura | Mohammed Alzobaidi",
+      "description_ar": "مشاريع محمد الزبيدي في تحليل البيانات - Power BI, Python, SQL والمزيد",
+      "description_en": "Data analysis projects by Mohammed Alzobaidi — Power BI, Python, SQL and more",
+      "og_description_ar": "مشاريع في تحليل البيانات وذكاء الأعمال.",
+      "og_description_en": "Projects in data analysis and business intelligence.",
+      "emblem": "assets/logos/dhura.webp"
+    },
+    "topics": {
+      "slug": "topics",
+      "label_ar": "الموضوعات",
+      "label_en": "Topics",
+      "title_ar": "الموضوعات | محمد الزبيدي",
+      "description_ar": "فهرس الموضوعات التي يغطّيها الموقع؛ لكل موضوع صفحة تجمع ما كُتب وما بُني فيه."
+    }
+  },
+
+  "services": {
+    "_status": "معطَّلة. الصفحة /work-with-me/ لم تعد موجودة: حذفها صاحب الموقع بنفسه في الإيداع 4d514fc بتاريخ ٢٠ أغسطس ٢٠٢٦. لم تُستعَد ولن تُستعاد بقرار آليّ — راجع SEO-REPORT.md (ملحق ٢٢ أغسطس) §٥ للحجّة كاملةً مع وضدّ.",
+    "_how_to_enable": "١) استعد الصفحة: git checkout 4d514fc^ -- work-with-me/  ٢) أضف علامتَي المنطقة المُدارة في <head>: <!-- seo:head:begin --> و<!-- seo:head:end -->، واحذف <meta name=\"robots\"> القديم  ٣) اكتب description_ar أدناه بنفسك (البناء يرفض العمل بوصف فارغ)  ٤) enabled: true  ٥) npm run seo",
+    "enabled": false,
+    "path": "work-with-me/index.html",
+    "url": "/work-with-me/",
+    "title_ar": "",
+    "description_ar": "",
+    "serviceTypes_ar": []
+  },
+
+  "person": {
+    "email": "Mohammed@Alzobaidi.me",
+    "telephone": "+966583324981",
+    "image": "assets/images/profile.jpg",
+    "sameAs": [
+      "https://www.linkedin.com/in/mohammed-alzobaidi-b6965b27b/",
+      "https://x.com/e7aiq",
+      "https://github.com/E7Aiq"
+    ],
+    "knowsAbout_ar": [
+      "تحليل البيانات",
+      "ذكاء الأعمال",
+      "Power BI",
+      "Python",
+      "SQL",
+      "الذكاء الاصطناعي",
+      "هندسة البيانات"
+    ],
+    "addressCountry": "SA",
+    "_areaServed": "النطاق الذي يخدمه — إشارة إقليمية للاستعلامات المقيَّدة ببلد («… في السعودية»). مصدره قرار صاحب الموقع في تحديد جمهوره، لا نصّاً في الصفحة؛ ويصير مسنوداً بنصّ متى نُشرت صفحة خدمات تقوله.",
+    "areaServed": [
+      { "code": "SA", "name_ar": "المملكة العربية السعودية", "name_en": "Saudi Arabia" },
+      { "code": "AE", "name_ar": "الإمارات العربية المتحدة", "name_en": "United Arab Emirates" },
+      { "code": "KW", "name_ar": "الكويت", "name_en": "Kuwait" },
+      { "code": "QA", "name_ar": "قطر", "name_en": "Qatar" },
+      { "code": "BH", "name_ar": "البحرين", "name_en": "Bahrain" },
+      { "code": "OM", "name_ar": "عُمان", "name_en": "Oman" }
+    ],
+    "_alumniOf": "غير مُصرَّح به: الموقع لا يذكر جامعةً ولا شهادة في أي موضع، فلا يُضاف الحقل. أضف السطر إلى صفحة «عني» أولاً، ثم يُضاف الحقل مسنوداً."
+  },
+
+  "_notes": {
+    "hasSiteSearch": false,
+    "_why": "لا يوجد بحث داخل الموقع، فلا يُصدَر SearchAction في WebSite — التصريح به بلا مسار بحث حقيقي بيانٌ كاذب لمحرّك البحث."
+  }
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="كل ما كُتب وما بُني في «ETL» على موقع محمد الزبيدي: مشروع واحد. Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health…">
+    <title>ETL | محمد الزبيدي</title>
+
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="/js/view-transitions.js?v=r31"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css?v=r31">
+    <link rel="stylesheet" href="/css/animations.css?v=r31">
+    <link rel="stylesheet" href="/css/article.css?v=r31">
+    <link rel="stylesheet" href="/css/responsive.css?v=r31">
+
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="https://alzobaidi.me/topics/etl/">
+    <link rel="alternate" type="application/atom+xml" title="بان — مقالات محمد الزبيدي" href="/feed.xml">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+    <meta property="og:url" content="https://alzobaidi.me/topics/etl/">
+    <meta property="og:title" content="ETL">
+    <meta property="og:description" content="كل ما كُتب وما بُني في «ETL» على موقع محمد الزبيدي: مشروع واحد. Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health…">
+    <meta property="og:image" content="https://alzobaidi.me/assets/og/topic-etl.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ETL">
+    <meta name="twitter:description" content="كل ما كُتب وما بُني في «ETL» على موقع محمد الزبيدي: مشروع واحد. Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health…">
+    <meta name="twitter:image" content="https://alzobaidi.me/assets/og/topic-etl.jpg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "ETL",
+  "description": "كل ما كُتب وما بُني في «ETL» على موقع محمد الزبيدي: مشروع واحد. Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health…",
+  "url": "https://alzobaidi.me/topics/etl/",
+  "inLanguage": "ar",
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "https://alzobaidi.me/#website"
+  },
+  "about": {
+    "@id": "https://alzobaidi.me/#person"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 1,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://alzobaidi.me/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/",
+        "name": "Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators"
+      }
+    ]
+  }
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://alzobaidi.me/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "الموضوعات",
+      "item": "https://alzobaidi.me/topics/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "حلول البيانات",
+      "item": "https://alzobaidi.me/topics/%D8%AD%D9%84%D9%88%D9%84-%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "ETL"
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+    <a class="skip-link" data-en="Skip to content" href="#topic-items">تخطَّ إلى المحتوى</a>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo logo-emblem">
+                <img src="/assets/logos/ban.webp" alt="بان" width="406" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="/projects/" class="nav-link brand-dhura" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="/articles/" class="nav-link brand-ban" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
+                    <li><a href="/#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="publication">
+        <nav class="breadcrumb breakout" aria-label="مسار التنقّل" data-en-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+            <li class="breadcrumb-item"><a href="/" data-en="Home">الرئيسية</a></li>
+            <li class="breadcrumb-item"><a href="/topics/" data-en="Topics">الموضوعات</a></li>
+            <li class="breadcrumb-item"><a href="/topics/%D8%AD%D9%84%D9%88%D9%84-%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA/">حلول البيانات</a></li>
+            <li class="breadcrumb-item"><span aria-current="page">ETL</span></li>
+            </ol>
+        </nav>
+
+        <header class="page-header breakout">
+            <h1 class="page-title rv">ETL</h1>
+            <p class="section-label rv">مشروع واحد في هذا الموضوع</p>
+        </header>
+
+        <section class="articles-section breakout" id="topic-items" aria-label="محتوى الموضوع">
+            <div class="articles-grid">
+
+
+                <div><h2 class="article-footer-heading" data-en="From the Dhura projects">من مشاريع ذُرى</h2>
+            <div class="article-footer-more">
+                <a href="/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/">
+                    <span class="article-footer-more-title">Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators</span>
+                    <span>١١ دقيقة</span></a>
+            </div></div>
+                <div><h2 class="article-footer-heading" data-en="Part of">ضمن محور</h2>
+            <div class="article-footer-more">
+                <a href="/topics/%D8%AD%D9%84%D9%88%D9%84-%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA/">
+                    <span class="article-footer-more-title">حلول البيانات</span>
+                    <span>٢</span></a>
+            </div></div>
+                <a class="btn btn-secondary article-footer-back" href="/topics/" data-en="All topics">كل الموضوعات</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
+         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
+                <a href="/" data-en="Home">الرئيسية</a>
+                <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="/articles/" data-en="Writing">بان — المقالات</a>
+                <a href="/#contact" data-en="Contact">تواصل</a>
+            </nav>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/i18n.js?v=r31"></script>
+    <script src="/main.js?v=r31"></script>
+    <script src="/animations.js?v=r31"></script>
+</body>
+</html>

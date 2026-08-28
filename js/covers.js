@@ -4,7 +4,10 @@
 (function () {
     'use strict';
 
-    const PLACEHOLDER = 'assets/images/cover-placeholder.svg';
+    /* مطلق من الجذر لا نسبيّ: صفحات التفاصيل صارت تسكن في أدلّة فرعية
+       (/articles/<slug>/)، والمسار النسبي كان سيُحلّ هناك إلى
+       /articles/<slug>/assets/… أي بديلٌ مكسور مكان صورة مكسورة. */
+    const PLACEHOLDER = '/assets/images/cover-placeholder.svg';
 
     function shellOf(img) {
         return img.closest('.article-cover-wrapper, .article-card-image-wrapper, .project-card-image-wrapper');

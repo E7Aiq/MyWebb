@@ -56,6 +56,9 @@
         const loadingEl = el('article-loading');
         const errorEl = el('article-error');
 
+        // الصفحة مصيَّرة مسبقاً ⇒ لا شيء يُجلب ولا شيء يُحقن
+        if (shell && shell.dataset.static === '1') return initStatic();
+
         const articleId = new URLSearchParams(window.location.search).get('id');
         if (!articleId) return showError(loadingEl, errorEl);
 
@@ -229,6 +232,42 @@
 
         host.innerHTML = html;
         host.hidden = false;
+    }
+
+
+    /**
+     * وضع الصفحة المصيَّرة مسبقاً.
+     *
+     * المحتوى كلّه في الترميز أصلاً: لا جلب ولا حقن ولا انتظار. يبقى شيئان
+     * لا يستطيع البناء أن يحسمهما لأنهما يتبعان لغة الواجهة التي يختارها
+     * القارئ: صياغة التاريخ وزمن القراءة. وما عداهما نصوصُ واجهة تحمل
+     * data-en فتتكفّل بها طبقة i18n وحدها.
+     */
+    function initStatic() {
+        const data = readPageData();
+        if (data) {
+            const dateEl = document.getElementById('article-date');
+            if (dateEl && data.date) {
+                const t = document.createElement('time');
+                t.setAttribute('datetime', data.date);
+                t.textContent = formatDate(data.date);
+                dateEl.replaceChildren(t);
+            }
+            const rtEl = document.getElementById('article-read-time');
+            if (rtEl && data.readTime) rtEl.textContent = readTime(data.readTime);
+        }
+
+        const copyBtn = document.querySelector('[data-copy-link]');
+        if (copyBtn && !copyBtn.dataset.wired) {
+            copyBtn.dataset.wired = '1';
+            copyBtn.addEventListener('click', copyLink);
+        }
+    }
+
+    function readPageData() {
+        const node = document.getElementById('pageData');
+        if (!node) return null;
+        try { return JSON.parse(node.textContent); } catch { return null; }
     }
 
     function showError(loadingEl, errorEl) {

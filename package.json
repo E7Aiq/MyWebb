@@ -1,0 +1,18 @@
+{
+  "name": "alzobaidi-me",
+  "private": true,
+  "version": "1.0.0",
+  "description": "alzobaidi.me — موقع ساكن يُبنى من Notion. لا إطار ولا حزم في المتصفّح؛ هذه التبعيات كلها تبعيات بناء لا تُشحن.",
+  "scripts": {
+    "build": "node .github/scripts/build-site.js",
+    "check": "node .github/scripts/check-seo.js",
+    "seo": "npm run build && npm run check",
+    "serve": "python3 -m http.server 5173 --bind 127.0.0.1"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "node-html-parser": "6.1.13",
+    "sharp": "0.33.4",
+    "wawoff2": "2.0.1"
+  }
+}

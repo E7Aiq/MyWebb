@@ -2,169 +2,29 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="color-scheme" content="light">
-    <!-- بلا data-en: js/article.js يكتب العنوان والوصف الحقيقيين للمقال،
-         وطبقة اللغة كانت تمرّ عليهما فتمحوهما وتعيد النصّ العام. -->
-    <meta name="description" content="مقال في تحليل البيانات - محمد الزبيدي">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المقال | محمد الزبيدي</title>
-
-    <!-- بوابة الكشف: بدونها لا يُخفى أي محتوى إطلاقاً (انظر animations.css) -->
-    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
-         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
-    <script>(function(){var d=document.documentElement;d.classList.add('js');
-    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
-
-    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="js/view-transitions.js?v=r29"></script>
-
-    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
-    <link rel="preload" href="assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css?v=r29">
-    <link rel="stylesheet" href="css/animations.css?v=r29">
-    <link rel="stylesheet" href="css/article.css?v=r29">
-    <link rel="stylesheet" href="css/responsive.css?v=r29">
-
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:type" content="article">
-    <meta property="og:locale" content="ar_SA">
-    <meta property="og:site_name" content="محمد الزبيدي">
-    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
-         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
-    <script type="speculationrules">
-    {
-      "prerender": [
-        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
-      ]
-    }
+    <link rel="canonical" href="https://alzobaidi.me/articles/">
+    <meta name="robots" content="noindex, follow">
+    <script>
+    /* الروابط المنشورة قبل الانتقال إلى المسارات النظيفة تصل هنا. الخريطة
+       مولَّدة في البناء، فلا طلب شبكة ولا انتظار. */
+    (function () {
+        var MAP = {"e0b1daa47a964f308a4310c2f6494ba2":"/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/","d7a7837479d646cb8e529f7df48ca801":"/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/"};
+        var id = new URLSearchParams(location.search).get('id');
+        var to = (id && MAP[id]) || "/articles/";
+        location.replace(to + location.hash);
+    })();
     </script>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/favicon.svg">
-    <link rel="canonical" href="https://alzobaidi.me/article.html">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta http-equiv="refresh" content="1; url=/articles/">
 </head>
 <body>
-    <a class="skip-link" data-en="Skip to article" href="#article-body">تخطَّ إلى المقال</a>
-
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="articles.html" class="logo logo-emblem">
-                <img src="assets/logos/ban.webp" alt="بان" width="406" height="440" decoding="async">
-            </a>
-            <div class="nav-actions">
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="index.html" class="nav-link" data-en="Home">الرئيسية</a></li>
-                    <li><a href="projects.html" class="nav-link brand-dhura" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
-                    <li><a href="articles.html" class="nav-link brand-ban active" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
-                    <li><a href="index.html#contact" class="nav-link" data-en="Contact">تواصل</a></li>
-                </ul>
-
-                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
-                <button class="lang-toggle" type="button" data-lang-toggle
-                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
-
-                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main id="articleContainer">
-
-        <!-- حالة التحميل. بلا جافاسكربت لا يوجد محتوى أصلاً (المقال يُجلب من
-             data/articles.json)، فيُخفى المؤشّر عبر html:not(.js) وتظهر رسالة
-             noscript بدل دوّارة تدور إلى الأبد. -->
-        <div id="article-loading" class="article-loading">
-            <div class="loading-spinner" aria-hidden="true"></div>
-            <p data-en="Loading article…">جاري تحميل المقال...</p>
-        </div>
-
-        <noscript>
-            <div class="article-error" style="display:flex">
-                <h2 class="error-title" data-en="This page needs JavaScript">هذه الصفحة تحتاج جافاسكربت</h2>
-                <p class="error-message" data-en="The article text is fetched from a data file when the page opens.">يُجلب نصّ المقال من ملف بيانات عند فتح الصفحة.</p>
-                <a href="articles.html" class="btn btn-primary" data-en="Browse the writing">تصفّح المقالات</a>
-            </div>
-        </noscript>
-
-        <!-- حالة الخطأ -->
-        <div id="article-error" class="article-error" hidden>
-            <h2 class="error-title" data-en="Sorry!">عذراً!</h2>
-            <p class="error-message" data-en="We could not load this article.">لم نتمكن من تحميل المقال.</p>
-            <a href="articles.html" class="btn btn-primary" data-en="Back to writing">العودة للمقالات</a>
-        </div>
-
-        <!-- المقال: شبكة الاختراق — الغلاف والترويسة كاملا العرض،
-             والمتن على مسار content مع اختراق الصور والجداول والأكواد -->
-            <!-- dir="rtl" مثبَّت في الترميز لا في CSS، ولا يمسّه مبدّل اللغة:
-                 هذا المحتوى مصدره data/ وهو عربيّ كما كتبه صاحبه — العنوان
-                 والميتا والمتن. لغة الواجهة تغيّر ما حول المستند لا المستند
-                 نفسه، فيبقى مقروءاً كما نُشر في الوضعين. -->
-        <article class="article breakout" dir="rtl" lang="ar" id="articleShell" hidden>
-
-            <!-- الغلاف: بعرض wide بنصف القطر نفسه الذي تأخذه كل أغلفة الموقع.
-                 كان u-full (حافة إلى حافة) وهو الشكل الوحيد الذي لا يقبل
-                 نصف قطر، فكان يتناقض مع الصورة الشخصية وأغلفة المشاريع. -->
-            <div class="article-cover-wrapper u-wide">
-                <img id="article-cover" class="article-cover" src="" alt="" hidden>
-            </div>
-
-            <!-- الترويسة على مسار القراءة: حافة واحدة تجمع العنوان بالمتن -->
-            <header class="article-header">
-                <h1 id="article-title" class="article-title"></h1>
-            </header>
-
-            <!-- محفوظ في العقد (§4)، وقد صار display:none: المقياس هو ما
-                 يفصل العنوان عن الميتا، لا خطّ رابع. -->
-            <div class="article-rule" aria-hidden="true"></div>
-
-            <!-- الميتا تسكن الهامش ملتصقةً بجانب المتن (≥76rem) -->
-            <div class="article-meta">
-                <span id="article-date" class="article-date"></span>
-                <span id="article-category" class="article-category"></span>
-                <span id="article-read-time" class="article-read-time"></span>
-            </div>
-
-            <!-- محتوى المقال — هذه الحاوية هي نفسها شبكة الاختراق -->
-            <div id="article-body" class="article-body"></div>
-
-        </article>
-
-        <!-- تذييل النشر: السابق/التالي + مقالات أخرى + العودة للأرشيف -->
-        <nav class="article-footer breakout" id="articleFooter" aria-label="تصفّح المقالات" data-en-label="Browse articles" hidden></nav>
-
-    </main>
-
-    <!-- Footer -->
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
-        <div class="container footer-grid">
-            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
-                <a href="index.html" data-en="Home">الرئيسية</a>
-                <a href="projects.html" data-en="Projects">ذُرى — المشاريع</a>
-                <a href="articles.html" data-en="Writing">بان — المقالات</a>
-                <a href="index.html#contact" data-en="Contact">تواصل</a>
-            </nav>
-            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="js/i18n.js?v=r29"></script>
-    <script src="js/covers.js?v=r29"></script>
-    <script src="main.js?v=r29"></script>
-    <script src="animations.js?v=r29"></script>
-    <script src="js/article.js?v=r29"></script>
-    <script src="effects.js?v=r29"></script>
+    <h1>مدوّنة بان</h1>
+    <p>انتقل هذا القسم إلى مسارات جديدة. اختر من القائمة:</p>
+    <ul>
+        <li><a href="/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/">الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!</a></li>
+        <li><a href="/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/">الهُوية بين وطأة الاعلام وضعف الشخصية</a></li>
+    </ul>
+    <p><a href="/articles/">كل المقالات</a></p>
 </body>
 </html>

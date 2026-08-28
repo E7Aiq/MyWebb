@@ -7,11 +7,13 @@
  * (pageswap)، وصورةُ البطل المطابقة لحظة الوصول (pagereveal)، ثم تُنزع
  * التسمية فور انتهاء الانتقال. فمجموعة واحدة تتحرّك، لا شبكة كاملة.
  *
- * التحدّي الخاصّ بهذا الموقع: غلاف التفاصيل يُجلب من JSON، فالبطل فارغ
- * لحظة التقاط «الحالة الجديدة» — فلا صورة يتوسّع إليها المورف. الحلّ:
- * نمرّر رابط الغلاف (وهو مخبَّأ أصلاً في كاش المتصفّح لأنه ظهر في البطاقة)
- * عبر sessionStorage، ونُظهر البطل في pagereveal قبل الالتقاط. ومع
- * التهيئة المسبقة (Speculation Rules) يكون البطل جاهزاً قبل النقر أصلاً.
+ * منذ الانتقال إلى المسارات النظيفة (/articles/<slug>/) لم يعد المعرّف في
+ * الرابط، فصار طرفا المورف يتعارفان بـ data-id: على البطاقة في القائمة،
+ * وعلى هيكل المقال/المشروع في صفحة التفاصيل. المسار وحده لا يكفي لأن
+ * المعرّف هو ما يضمن أن الصورتين لعنصرٍ واحد لا لعنصرين متشابهين.
+ *
+ * صفحات التفاصيل صارت مصيَّرة مسبقاً، فالبطل موجودٌ في الترميز عند الوصول
+ * ولا يحتاج تمرير الرابط عبر sessionStorage كما كان.
  *
  * تحسين تدريجي بحت: بلا دعم أو تحت prefers-reduced-motion، تتنقّل الصفحات
  * عادةً بلا أي أثر (الحدثان لا يُطلقان انتقالاً، والقواعد تُبطَل في style.css).
@@ -22,100 +24,77 @@
   // لا داعي لإرفاق مستمعات لن تُطلق انتقالاً أبداً.
   if (!('startViewTransition' in document)) return;
 
-  var KEY = 'vt:cover';   // {name, src} للزوج النشط، يعبر من المغادرة إلى الوصول
-
   function slug(id) {
     return String(id || '').replace(/[^A-Za-z0-9_-]/g, '-');
   }
 
-  // هل يشير الرابط إلى صفحة تفاصيل؟ يعيد {hero, name, id} أو null.
-  // الاسم يحمل معرّف العنصر فيتطابق طرفا المورف عبر المستندين.
-  function detailTarget(url) {
+  var KINDS = {
+    articles: { hero: 'article-cover', shell: 'articleShell', prefix: 'vt-art-' },
+    projects: { hero: 'project-cover', shell: 'projectShell', prefix: 'vt-proj-' }
+  };
+
+  // هل يشير الرابط إلى صفحة تفاصيل؟ يعيد وصف النوع أو null.
+  function detailKind(url) {
     if (!url) return null;
     try {
       var u = new URL(url, location.href);
-      var id = new URLSearchParams(u.search).get('id');
-      if (!id) return null;
-      if (u.pathname.endsWith('project-details.html')) {
-        return { hero: 'project-cover', shell: 'projectShell', load: 'project-loading', name: 'vt-proj-' + slug(id), id: id };
-      }
-      if (u.pathname.endsWith('article.html')) {
-        return { hero: 'article-cover', shell: 'articleShell', load: 'article-loading', name: 'vt-art-' + slug(id), id: id };
-      }
+      var m = u.pathname.match(/^\/(articles|projects)\/[^/]+\/?$/);
+      if (m) return Object.assign({ path: u.pathname }, KINDS[m[1]]);
     } catch (e) { /* رابط غير صالح */ }
     return null;
   }
 
-  // صورة البطاقة في صفحة القائمة/الرئيسية المطابقة للمعرّف. بطاقة المشروع
-  // رابطها منفصل عن صورتها (نصعد إلى .project-card)، وبطاقة/صدارة المقال
-  // هي نفسها <a> يحوي صورته.
-  function listImage(id) {
-    var links = document.querySelectorAll('a[href*="' + id + '"]');
+  // البطاقة المقصودة في صفحة القائمة/الرئيسية: يُبحث عنها بالمسار، ومنها
+  // يُقرأ المعرّف وتُلتقط الصورة. بطاقة المشروع رابطها منفصل عن صورتها
+  // (نصعد إلى .project-card)، وبطاقة/صدارة المقال هي نفسها <a> يحوي صورته.
+  function sourceFor(path) {
+    var links = document.querySelectorAll('a[href]');
     for (var i = 0; i < links.length; i++) {
       var a = links[i];
-      var img = a.querySelector('.article-card-image, .article-lead-cover');
-      if (img) return img;
-      var card = a.closest('.project-card');
-      if (card) {
-        var pi = card.querySelector('.project-card-image');
-        if (pi) return pi;
-      }
+      var href;
+      try { href = new URL(a.getAttribute('href'), location.href).pathname; } catch (e) { continue; }
+      if (href !== path) continue;
+
+      var host = a.closest('.project-card') || a;
+      var img = host.querySelector('.article-card-image, .article-lead-cover, .project-card-image');
+      var id = host.dataset ? host.dataset.id : null;
+      if (img && id) return { img: img, id: id };
     }
     return null;
   }
 
-  // ── المغادرة: سمِّ البطاقة المنقورة وحدها، وخبّئ غلافها للوصول ─────────
+  // ── المغادرة: سمِّ البطاقة المنقورة وحدها ────────────────────────────
   window.addEventListener('pageswap', function (e) {
     if (!e.viewTransition) return;
-    var t = detailTarget(e.activation && e.activation.entry && e.activation.entry.url);
+    var t = detailKind(e.activation && e.activation.entry && e.activation.entry.url);
     if (!t) return;
 
-    var img = listImage(t.id);
-    if (!img) return;
+    var src = sourceFor(t.path);
+    if (!src) return;
 
-    img.style.viewTransitionName = t.name;
-    img.style.setProperty('view-transition-class', 'morph');   // يعزل تنسيق المورف عن الجذر
-    try {
-      sessionStorage.setItem(KEY, JSON.stringify({ name: t.name, src: img.currentSrc || img.src }));
-    } catch (err) { /* التخزين ممتلئ أو محجوب — التهيئة المسبقة تكفي */ }
+    var name = t.prefix + slug(src.id);
+    src.img.style.viewTransitionName = name;
+    src.img.style.setProperty('view-transition-class', 'morph');   // يعزل تنسيق المورف عن الجذر
 
     // المستند المغادر يُتلف بعد الانتقال المتقاطع، فالتنظيف احتياطيّ لا أكثر.
     e.viewTransition.finished.finally(function () {
-      img.style.viewTransitionName = '';
-      img.style.removeProperty('view-transition-class');
+      src.img.style.viewTransitionName = '';
+      src.img.style.removeProperty('view-transition-class');
     });
   });
 
-  // ── الوصول: أظهر البطل ثم سمّه قبل الالتقاط ──────────────────────────
+  // ── الوصول: سمِّ البطل المطابق قبل الالتقاط ──────────────────────────
   window.addEventListener('pagereveal', function (e) {
     if (!e.viewTransition) return;
-    var t = detailTarget(location.href);
+    var t = detailKind(location.href);
     if (!t) return;
 
-    var stash = null;
-    try { stash = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (err) { /* تجاهل */ }
-    if (!stash || stash.name !== t.name) return;   // لم نأتِ من نقرة بطاقة مطابقة ⇒ تلاشٍ عاديّ
-    try { sessionStorage.removeItem(KEY); } catch (err2) { /* تجاهل */ }
-
+    var shell = document.getElementById(t.shell);
     var hero = document.getElementById(t.hero);
-    if (!hero) return;
+    if (!shell || !hero || !shell.dataset.id) return;
+    if (hero.hidden || !hero.getAttribute('src')) return;
 
-    // إن لم تكن التهيئة المسبقة قد ملأت البطل بعد: املأه من الرابط المخبَّأ
-    // واكشف الهيكل والدوّارة، كي تلتقط «الحالة الجديدة» صورةً حقيقية. عمليات
-    // تكرارية آمنة إن سبقها محمّل التفاصيل.
-    if (hero.hidden || !hero.getAttribute('src')) {
-      // فكّ تزامنيّ: الغلاف محلّي ومخبَّأ من البطاقة، فيُرسم في إطار الالتقاط
-      // نفسه بدل صندوق رماديّ يتوسّع ثم تقفز الصورة فوقه.
-      hero.decoding = 'sync';
-      if (stash.src) hero.src = stash.src;
-      hero.hidden = false;
-      var shell = document.getElementById(t.shell);
-      if (shell) shell.hidden = false;
-      var load = document.getElementById(t.load);
-      if (load) load.hidden = true;
-    }
-
-    hero.style.viewTransitionName = t.name;
+    hero.style.viewTransitionName = t.prefix + slug(shell.dataset.id);
     hero.style.setProperty('view-transition-class', 'morph');   // يطابق فئة البطاقة
     e.viewTransition.ready.finally(function () {
       hero.style.viewTransitionName = '';

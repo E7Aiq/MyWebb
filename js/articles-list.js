@@ -14,11 +14,40 @@
     const readTime = (m, w) => (window.I18N ? window.I18N.readTime(m, w) : `${m || 5} دقائق`);
     const formatDate = (d) => (window.I18N ? window.I18N.date(d) : '');
 
+    /* مطلقة من الجذر: هذه السكربتات تعمل الآن من /articles/ و/articles/<slug>/
+       أيضاً، والمسار النسبي كان سيطلب /articles/<slug>/data/articles.json. */
     const CONFIG = {
-        dataUrl: 'data/articles.json',
+        dataUrl: '/data/articles.json',
+        slugsUrl: '/data/slugs.json',
         containerId: 'articles-grid',
         featuredGridId: 'featuredArticlesGrid'   // أحدث مقال في الصفحة الرئيسية
     };
+
+    /* خريطة المعرّف ← المسار النظيف، يكتبها البناء في data/slugs.json.
+       بدونها تُبنى الروابط على الشكل القديم — وهو يعمل (جسر تحويل) لكنه
+       يكلّف قفزة، فالخريطة تُجلب مرّة وتُخبّأ. */
+    let slugMap = null;
+
+    async function fetchSlugs() {
+        if (slugMap) return slugMap;
+        try {
+            const response = await fetch(CONFIG.slugsUrl);
+            slugMap = response.ok ? await response.json() : {};
+        } catch {
+            slugMap = {};
+        }
+        return slugMap;
+    }
+
+    /* مسارات الأغلفة في data/ نسبيّة («assets/…»). من /articles/ أو من
+       /articles/<slug>/ تُحلّ إلى مسار لا وجود له، فتُجذَّر هنا. */
+    const assetUrl = (p) => (!p || /^(https?:)?\/\//i.test(p) || p.startsWith('/')) ? p : '/' + p;
+
+    function hrefFor(id) {
+        const record = slugMap && slugMap[id];
+        if (!record || !record.slug) return `/article.html?id=${encodeURIComponent(id)}`;
+        return `/articles/${encodeURIComponent(record.slug)}/`;
+    }
 
     document.addEventListener('DOMContentLoaded', boot);
 
@@ -37,7 +66,24 @@
     // ── articles.html ────────────────────────────────────────────────────
     async function init() {
         const container = document.getElementById(CONFIG.containerId);
+
+        /* الشبكة مصيَّرة مسبقاً في البناء. إعادة بنائها هنا تُنتج نفس الترميز
+           حرفاً بحرف، لكنها تهدم عقداً يراقبها IntersectionObserver أصلاً
+           وتُلغي أثر التصيير المسبق. تُترك كما هي، وتُعاد فقط عند تبديل
+           اللغة — وعندها تكون العلامة قد نُزعت. */
+        if (container.dataset.prerendered === '1') {
+            delete container.dataset.prerendered;
+            /* التصيير المسبق عربيّ — وهو الأصل. إن كانت لغة الواجهة إنجليزية
+               عند التحميل فلا مفرّ من إعادة البناء، وإلا بقيت تسميات
+               البطاقات وتواريخها عربيةً وحدها وسط واجهة إنجليزية. */
+            if (!window.I18N || window.I18N.lang !== 'en') {
+                announce(container.querySelectorAll('.article-card, .article-lead').length);
+                return;
+            }
+        }
+
         try {
+            await fetchSlugs();
             const articles = await fetchArticles();
             render(container, articles);
             announce(articles.length);
@@ -68,7 +114,12 @@
     // ── index.html — أحدث مقال وحده ───────────────────────────────────────
     async function loadFeatured() {
         const container = document.getElementById(CONFIG.featuredGridId);
+        if (container.dataset.prerendered === '1') {
+            delete container.dataset.prerendered;
+            if (!window.I18N || window.I18N.lang !== 'en') return;
+        }
         try {
+            await fetchSlugs();
             const [latest] = orderArticles(await fetchArticles());
             container.innerHTML = '';
             if (latest) container.appendChild(createArticleCard(latest));
@@ -118,11 +169,12 @@
     function createLead(article) {
         const a = document.createElement('a');
         a.className = 'article-lead rv';
-        a.href = `article.html?id=${encodeURIComponent(article.id)}`;
+        a.dataset.id = article.id;
+        a.href = hrefFor(article.id);
 
         // الصدارة فوق حدّ الشاشة ⇒ تُحمَّل بأولوية، والبقية كسولة.
         const cover = article.cover
-            ? `<img class="article-lead-cover" src="${escapeAttr(article.cover)}" alt=""
+            ? `<img class="article-lead-cover" src="${escapeAttr(assetUrl(article.cover))}" alt=""
                     loading="eager" fetchpriority="high" decoding="async">`
             : '';
 
@@ -149,7 +201,7 @@
         const a = document.createElement('a');
         a.className = 'article-card rv';
         a.dataset.id = article.id;
-        a.href = `article.html?id=${encodeURIComponent(article.id)}`;
+        a.href = hrefFor(article.id);
 
         const tags = (article.tags || []).slice(0, 3);
 
@@ -157,7 +209,7 @@
         // فتبقى العناوين عناوين حقيقية ويبقى مخطّط المستند سليماً.
         const cover = article.cover
             ? `<div class="article-card-image-wrapper">
-                   <img class="article-card-image" src="${escapeAttr(article.cover)}" alt=""
+                   <img class="article-card-image" src="${escapeAttr(assetUrl(article.cover))}" alt=""
                         loading="lazy" decoding="async">
                </div>`
             : '';
@@ -188,7 +240,9 @@
     function metaRow(article) {
         return `
             <div class="article-card-meta">
-                <span class="article-card-date">${formatDate(article.date)}</span>
+                <span class="article-card-date">${article.date
+                    ? `<time datetime="${escapeAttr(article.date)}">${escapeHtml(formatDate(article.date))}</time>`
+                    : ''}</span>
                 <span class="article-card-category">${escapeHtml(article.category || '')}</span>
                 <span class="article-read-time">${readTime(article.read_time)}</span>
             </div>

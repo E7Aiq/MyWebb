@@ -2,8 +2,12 @@ name: Update Projects from Notion
 
 on:
   schedule:
-    # يعمل كل يوم الساعة 6 صباحاً بتوقيت السعودية (3 صباحاً UTC)
-    - cron: '0 3 * * *'
+    # يعمل كل يوم الساعة 6:30 صباحاً بتوقيت السعودية (3:30 صباحاً UTC).
+    # مُزاح نصف ساعة عن مسار المقالات عمداً: المساران يكتبان الملفّات
+    # المولَّدة نفسها (sitemap.xml · feed.xml · data/slugs.json ·
+    # assets/og/* · أشجار الصفحات)، وتشغيلهما في الدقيقة نفسها يجعل
+    # أحدهما يبني على شجرة عملٍ يغيّرها الآخر. راجع docs/SEO.md §10.
+    - cron: '30 3 * * *'
   workflow_dispatch: # للتشغيل اليدوي من GitHub
 
 jobs:
@@ -33,9 +37,22 @@ jobs:
           NOTION_PROJECTS_DATABASE_ID: ${{ secrets.NOTION_PROJECTS_DATABASE_ID }}
         run: node .github/scripts/fetch-projects.js
 
+      # ── بعد الجلب لا قبله: طبقة البناء تقرأ ما كتبه الجالب ولا تمسّه ────
+      - name: Build static pages (pre-render + SEO)
+        run: |
+          npm install --no-audit --no-fund
+          node .github/scripts/build-site.js
+          node .github/scripts/check-seo.js
+
+
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add data/projects.json assets/images/projects/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🔄 تحديث المشاريع من Notion - $(date +'%Y-%m-%d')" && git push)
+          # ‏git add على مسار غير موجود يُفشل الخطوة كلّها — وقد لا يوجد
+          # ‏topics/ مثلاً إن خلت البيانات من الوسوم. الحلقة تتسامح مع الغائب،
+          # و‎-A تلتقط الحذف أيضاً (الكنس يزيل صفحات ما لم يعد له مصدر).
+          for p in data/projects.json assets/images/projects/ articles/ projects/ topics/ a/ p/ assets/og/ data/slugs.json sitemap.xml feed.xml robots.txt .nojekyll index.html articles.html projects.html article.html project-details.html; do
+            git add -A -- "$p" 2>/dev/null || true
+          done
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🔄 تحديث المشاريع من Notion - $(date +'%Y-%m-%d')" && git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push)

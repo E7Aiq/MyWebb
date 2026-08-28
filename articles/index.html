@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد. أحدث المنشور: «الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!»،">
+    <title>مدوّنة بان | محمد الزبيدي</title>
+
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="/js/view-transitions.js?v=r31"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css?v=r31">
+    <link rel="stylesheet" href="/css/animations.css?v=r31">
+    <link rel="stylesheet" href="/css/article.css?v=r31">
+    <link rel="stylesheet" href="/css/responsive.css?v=r31">
+
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="https://alzobaidi.me/articles/">
+    <link rel="alternate" type="application/atom+xml" title="بان — مقالات محمد الزبيدي" href="/feed.xml">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+    <meta property="og:url" content="https://alzobaidi.me/articles/">
+    <meta property="og:title" content="بان | محمد الزبيدي">
+    <meta property="og:description" content="مقالات في تحليل البيانات والذكاء الاصطناعي.">
+    <meta property="og:image" content="https://alzobaidi.me/assets/og/articles.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="بان | محمد الزبيدي">
+    <meta name="twitter:description" content="مقالات في تحليل البيانات والذكاء الاصطناعي.">
+    <meta name="twitter:image" content="https://alzobaidi.me/assets/og/articles.jpg">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "مدوّنة بان",
+  "description": "مقالات محمد الزبيدي في تحليل البيانات - SQL, Power BI, Python والمزيد",
+  "url": "https://alzobaidi.me/articles/",
+  "inLanguage": "ar",
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "https://alzobaidi.me/#website"
+  },
+  "about": {
+    "@id": "https://alzobaidi.me/#person"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 2,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://alzobaidi.me/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/",
+        "name": "الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://alzobaidi.me/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/",
+        "name": "الهُوية بين وطأة الاعلام وضعف الشخصية"
+      }
+    ]
+  }
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://alzobaidi.me/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "بان — المقالات"
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+    <a class="skip-link" data-en="Skip to articles" href="#articles-grid">تخطَّ إلى المقالات</a>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo logo-emblem">
+                <img src="/assets/logos/ban.webp" alt="بان" width="406" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="/projects/" class="nav-link brand-dhura" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="/articles/" class="nav-link brand-ban active" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
+                    <li><a href="/#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="publication">
+        <nav class="breadcrumb breakout" aria-label="مسار التنقّل" data-en-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+            <li class="breadcrumb-item"><a href="/" data-en="Home">الرئيسية</a></li>
+            <li class="breadcrumb-item"><span aria-current="page" data-en="Ban — Writing">بان — المقالات</span></li>
+            </ol>
+        </nav>
+
+        <!-- رأس الصفحة: ماستهيد مدوّنة «بان» — الشعار، الاسم، تعريفه، ثم المقدّمة -->
+        <header class="page-header breakout ban-masthead">
+            <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
+            <figure class="ban-emblem rv">
+                <img src="/assets/logos/ban.webp"
+                     alt="ريشة زرقاء على ورقة — شعار مدوّنة بان"
+                     width="406" height="440" fetchpriority="high" decoding="async">
+            </figure>
+            <p class="ban-kicker rv" data-en="Reflections &amp; essays">خاطرة ومقال</p>
+            <p class="ban-definition rv" data-en="Bān, in Arabic: to appear and become clear.">
+                <span class="ban-def-label">بان في اللغة:</span> ظهر واتّضح.
+            </p>
+            <div class="ban-intro rv">
+                <p data-en="Here I write about what stirs my curiosity and is worth pausing over — in technology and work, in reading and experience, and in ideas that knock on the mind and do not leave quickly.">أكتب هنا عمّا يثير فضولي ويستحق التوقّف عنده؛ في التقنية والعمل، وفي القراءة والتجارب، وفي الأفكار التي تطرق الذهن ولا تغادره سريعًا.</p>
+                <p data-en="A space for what I learn, what I see from a different angle, and what deserves to be understood deeply — to be written and published with care.">مساحة لما أتعلمه، وما أراه من زاوية مختلفة، وما يستحق أن يُفهم بعمق، ليُكتب ويُنشر بإحسان.</p>
+            </div>
+        </header>
+
+        <!-- الفهرس: مقال الصدارة ثم القائمة — مصيَّر مسبقاً، وجافاسكربت
+             تعيد بناءه عند تبديل اللغة وحده. -->
+        <section class="articles-section breakout" aria-label="فهرس المقالات" data-en-label="Article index">
+            <p class="visually-hidden" id="gridStatus" role="status" aria-live="polite"></p>
+            <div id="articles-grid" class="articles-grid" data-prerendered="1">
+        <a class="article-lead rv" data-id="e0b1daa47a964f308a4310c2f6494ba2" href="/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/">
+            <img class="article-lead-cover" src="/assets/images/articles/e0b1daa47a964f308a4310c2f6494ba2-cover.webp" alt=""
+                 loading="eager" fetchpriority="high" decoding="async" width="1600" height="900">
+            <h2 class="article-lead-title">الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!</h2>
+            <div class="article-card-meta">
+                <span class="article-card-date"><time datetime="2025-04-12">١٢ أبريل ٢٠٢٥</time></span>
+                <span class="article-card-category"></span>
+                <span class="article-read-time">٣ دقائق قراءة</span>
+            </div>
+        </a>
+        <a class="article-card rv" data-id="d7a7837479d646cb8e529f7df48ca801" href="/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/">
+            <div class="article-card-image-wrapper">
+                <img class="article-card-image" src="/assets/images/articles/d7a7837479d646cb8e529f7df48ca801-cover.webp" alt=""
+                     loading="lazy" decoding="async" width="1600" height="900">
+            </div>
+            <div class="article-card-content">
+                <h3 class="article-card-title">الهُوية بين وطأة الاعلام وضعف الشخصية</h3>
+                <p class="article-card-title-en"></p>
+                <p class="article-card-description"></p>
+            <div class="article-card-meta">
+                <span class="article-card-date"><time datetime="2023-09-09">٩ سبتمبر ٢٠٢٣</time></span>
+                <span class="article-card-category"></span>
+                <span class="article-read-time">دقيقتان قراءة</span>
+            </div>
+                <div class="article-card-footer">
+                    <div class="article-card-tags"></div>
+                </div>
+            </div>
+        </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
+         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
+                <a href="/" data-en="Home">الرئيسية</a>
+                <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="/articles/" data-en="Writing">بان — المقالات</a>
+                <a href="/#contact" data-en="Contact">تواصل</a>
+            </nav>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/i18n.js?v=r31"></script>
+    <script src="/js/covers.js?v=r31"></script>
+    <script src="/main.js?v=r31"></script>
+    <script src="/animations.js?v=r31"></script>
+    <script src="/js/articles-list.js?v=r31"></script>
+</body>
+</html>
