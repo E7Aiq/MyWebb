@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="نظام يحوّل طلبات الشراكة المتناثرة على واتساب ورسائل متفرقة إلى مسار واحد منظّم — أربع أسئلة فيرد الشريك، ثم موعد فعلي متاح، ثم متابعة كاملة حتى المحضر الموقَّع. أول تطبيق له لصالح جمعية اعتدال، لكنه مبني كمنتج مستقل قابل للتخصيص لأي جهة تستقبل شراكات وتتعب من تشتت طلباتها.">
+    <title>نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع</title>
+
+    <!-- بوابة الكشف + اللغة: يعملان قبل الرسم فلا وميض ولا قفزة اتجاه.
+         بدون بوابة .js لا يُخفى أي محتوى إطلاقاً (انظر animations.css). -->
+    <script>(function(){var d=document.documentElement;d.classList.add('js');
+    try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
+
+    <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
+    <script src="/js/view-transitions.js?v=r31"></script>
+
+    <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
+    <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahseriftext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css?v=r31">
+    <link rel="stylesheet" href="/css/animations.css?v=r31">
+    <link rel="stylesheet" href="/css/article.css?v=r31">
+    <link rel="stylesheet" href="/css/project.css?v=r31">
+    <link rel="stylesheet" href="/css/responsive.css?v=r31">
+
+    <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
+         فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
+    <script type="speculationrules">
+    {
+      "prerender": [
+        { "source": "document", "eagerness": "moderate", "where": { "href_matches": "/*" } }
+      ]
+    }
+    </script>
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="https://alzobaidi.me/projects/%D9%86%D8%B8%D8%A7%D9%85-%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA-%D9%85%D9%86-%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83-%D8%AD%D8%AA%D9%89-%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1-%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9/">
+    <link rel="alternate" type="application/atom+xml" title="بان — مقالات محمد الزبيدي" href="/feed.xml">
+
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="ar_SA">
+    <meta property="og:site_name" content="محمد الزبيدي">
+    <meta property="og:url" content="https://alzobaidi.me/projects/%D9%86%D8%B8%D8%A7%D9%85-%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA-%D9%85%D9%86-%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83-%D8%AD%D8%AA%D9%89-%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1-%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9/">
+    <meta property="og:title" content="نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع">
+    <meta property="og:description" content="نظام يحوّل طلبات الشراكة المتناثرة على واتساب ورسائل متفرقة إلى مسار واحد منظّم — أربع أسئلة فيرد الشريك، ثم موعد فعلي متاح، ثم متابعة كاملة حتى المحضر الموقَّع. أول تطبيق له لصالح جمعية اعتدال، لكنه مبني كمنتج مستقل قابل للتخصيص لأي جهة تستقبل شراكات وتتعب من تشتت طلباتها.">
+    <meta property="og:image" content="https://alzobaidi.me/assets/og/project-3cd59148905a80a58b32c118d41562d3.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع">
+    <meta property="article:published_time" content="2026-08-05T00:00:00.000Z">
+    <meta property="article:modified_time" content="2026-08-31T07:57:00.000Z">
+    <meta property="article:tag" content="Venture Engineering">
+    <meta property="article:tag" content="Web Development">
+    <meta property="article:tag" content="Backend’s">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع">
+    <meta name="twitter:description" content="نظام يحوّل طلبات الشراكة المتناثرة على واتساب ورسائل متفرقة إلى مسار واحد منظّم — أربع أسئلة فيرد الشريك، ثم موعد فعلي متاح، ثم متابعة كاملة حتى المحضر الموقَّع. أول تطبيق له لصالح جمعية اعتدال، لكنه مبني كمنتج مستقل قابل للتخصيص لأي جهة تستقبل شراكات وتتعب من تشتت طلباتها.">
+    <meta name="twitter:image" content="https://alzobaidi.me/assets/og/project-3cd59148905a80a58b32c118d41562d3.jpg">
+    <script type="application/ld+json">
+{
+  "@type": "CreativeWork",
+  "@context": "https://schema.org",
+  "headline": "نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع",
+  "name": "نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع",
+  "description": "نظام يحوّل طلبات الشراكة المتناثرة على واتساب ورسائل متفرقة إلى مسار واحد منظّم — أربع أسئلة فيرد الشريك، ثم موعد فعلي متاح، ثم متابعة كاملة حتى المحضر الموقَّع. أول تطبيق له لصالح جمعية اعتدال، لكنه مبني كمنتج مستقل قابل للتخصيص لأي جهة تستقبل شراكات وتتعب من تشتت طلباتها.",
+  "image": [
+    "https://alzobaidi.me/assets/og/project-3cd59148905a80a58b32c118d41562d3.jpg"
+  ],
+  "url": "https://alzobaidi.me/projects/%D9%86%D8%B8%D8%A7%D9%85-%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA-%D9%85%D9%86-%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83-%D8%AD%D8%AA%D9%89-%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1-%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9/",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://alzobaidi.me/projects/%D9%86%D8%B8%D8%A7%D9%85-%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA-%D9%85%D9%86-%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83-%D8%AD%D8%AA%D9%89-%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1-%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9/"
+  },
+  "inLanguage": "ar",
+  "author": {
+    "@id": "https://alzobaidi.me/#person"
+  },
+  "publisher": {
+    "@id": "https://alzobaidi.me/#person"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "https://alzobaidi.me/#website"
+  },
+  "datePublished": "2026-08-05T00:00:00.000Z",
+  "dateModified": "2026-08-31T07:57:00.000Z",
+  "keywords": "Venture Engineering, Web Development, Backend’s",
+  "mentions": [
+    {
+      "@type": "Thing",
+      "name": "Venture Engineering",
+      "url": "https://alzobaidi.me/topics/venture-engineering/"
+    },
+    {
+      "@type": "Thing",
+      "name": "Web Development",
+      "url": "https://alzobaidi.me/topics/web-development/"
+    },
+    {
+      "@type": "Thing",
+      "name": "Backend’s",
+      "url": "https://alzobaidi.me/topics/backend-s/"
+    }
+  ],
+  "creator": {
+    "@id": "https://alzobaidi.me/#person"
+  },
+  "genre": [
+    "Venture Engineering",
+    "Web Development",
+    "Backend’s"
+  ],
+  "workExample": {
+    "@type": "WebPage",
+    "url": "https://etedal-preview.vercel.app/"
+  }
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "الرئيسية",
+      "item": "https://alzobaidi.me/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ذُرى — المشاريع",
+      "item": "https://alzobaidi.me/projects/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع"
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+    <a class="skip-link" data-en="Skip to project" href="#project-body">تخطَّ إلى المشروع</a>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="/projects/" class="logo logo-emblem">
+                <img src="/assets/logos/dhura.webp" alt="ذُرى" width="360" height="440" decoding="async">
+            </a>
+            <div class="nav-actions">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/" class="nav-link" data-en="Home">الرئيسية</a></li>
+                    <li><a href="/projects/" class="nav-link brand-dhura active" aria-label="ذُرى — المشاريع" data-en-label="Dhura — Projects"><span class="swash">ذُرى</span> <span class="nav-gloss" data-en="Projects">المشاريع</span></a></li>
+                    <li><a href="/articles/" class="nav-link brand-ban" aria-label="بان — المقالات" data-en-label="Ban — Writing"><span class="swash">بان</span> <span class="nav-gloss" data-en="Writing">المقالات</span></a></li>
+                    <li><a href="/#contact" class="nav-link" data-en="Contact">تواصل</a></li>
+                </ul>
+
+                <!-- يعرض اللغة التي سينتقل إليها، لا التي هو فيها -->
+                <button class="lang-toggle" type="button" data-lang-toggle
+                        lang="en" aria-label="Switch to English" title="Switch to English">EN</button>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="قائمة التنقل" data-en-label="Navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="projectContainer">
+
+        <nav class="breadcrumb breakout" aria-label="مسار التنقّل" data-en-label="Breadcrumb">
+            <ol class="breadcrumb-list">
+            <li class="breadcrumb-item"><a href="/" data-en="Home">الرئيسية</a></li>
+            <li class="breadcrumb-item"><a href="/projects/" data-en="Dhura — Projects">ذُرى — المشاريع</a></li>
+            <li class="breadcrumb-item"><span aria-current="page">نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع</span></li>
+            </ol>
+        </nav>
+
+        <!-- المحتوى مصيَّر مسبقاً: لا جلب، ولا دوّارة، ولا رسالة noscript.
+             dir="rtl" مثبَّت في الترميز ولا يمسّه مبدّل اللغة — المصدر عربيّ
+             كما كتبه صاحبه. -->
+        <article class="article breakout" dir="rtl" lang="ar" id="projectShell" data-id="3cd59148905a80a58b32c118d41562d3" data-static="1">
+
+            <div class="article-cover-wrapper u-wide">
+                <img id="project-cover" class="project-detail-cover" src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-cover.webp" alt="" width="1536" height="1024">
+            </div>
+
+            <header class="article-header">
+                <h1 id="project-title" class="article-title">نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع</h1>
+            </header>
+
+            <div class="article-rule" aria-hidden="true"></div>
+
+            <div class="article-meta">
+                <span id="project-date" class="project-detail-date"><time datetime="2026-08-05">٥ أغسطس ٢٠٢٦</time></span>
+                <span id="project-read-time" class="project-detail-read-time">٨ دقائق قراءة</span>
+                <span id="project-categories" class="project-detail-categories"><span class="category-tag">Venture Engineering</span><span class="category-tag">Web Development</span><span class="category-tag">Backend’s</span></span>
+            </div>
+
+            <div id="project-preview-wrapper" class="project-detail-preview-wrapper">
+                <a id="project-preview-link" href="https://etedal-preview.vercel.app/" class="btn btn-primary project-preview-btn"
+                   target="_blank" rel="noopener">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span data-en="Live preview">معاينة المشروع</span>
+                </a>
+            </div>
+            <div id="project-body" class="article-body project-detail-body">
+<blockquote>
+<p><strong>الحالة:</strong> ✅ نظام مكتمل يعمل فعلياً — أول تطبيق له لصالح جمعية اعتدال للتكافل والاستدامة، وقابل للتخصيص لأي جهة أخرى<br><strong>أبرز المؤشرات:</strong> ٩٥٣ فحصاً تلقائياً ناجحاً | ٣٠ تحديثاً على قاعدة البيانات | سرعة الاستجابة تحسّنت من ١٦١٠ إلى ٢١ جزءاً من الألف من الثانية</p>
+</blockquote>
+<hr>
+<h2>📑 1. لماذا هذا المشروع؟ (المشكلة والسياق)</h2>
+<p>أي جهة تستقبل طلبات شراكة — جمعية، شركة، أو جهة حكومية — تواجه نفس الفوضى: الطلبات تصل من قنوات متفرقة، رسالة هنا واتصال هناك، فيضيع نصفها ونصفها الآخر بين اكثر من موظف وأكثر من مسؤول، ويبدأ التنسيق من الصفر في كل مرة.</p>
+<p>بنيت نظاماً لا يستقبل &quot;رسالة&quot; يبدأ منها المنسّق، بل يجمّع كل شيء في نظام واحد واضح: أربعة أسئلة بسيطة، ثم موعد من المواعيد المتاحة فعلاً. المنسّق يستقبل طلباً جاهزاً للعمل عليه، لا رسالة يفهمها ثم يبدأ يتصرف بها.</p>
+<p>أول تطبيق فعلي لهذا النظام كان لصالح جمعية اعتدال للتكافل والاستدامة، لكن المشكلة والحل عامّان بطبيعتهما، والنظام نفسه مصمم كمنتج مستقل قائم بذاته لا كأداة داخلية مقفلة على جهة واحدة. يغطي ثلاثة أجزاء: <strong>مسار الشريك</strong> (الصفحة التي يفتحها الشريك من رابط واتساب ليقدّم طلبه)، <strong>لوحة تحكم داخلية للمنسّق</strong>، و<strong>قاعة لقاء</strong> تدير الاجتماع من الترحيب والعرض التقديمي حتى التوقيع النهائي.</p>
+<p> <em>صفحة الهبوط الرئيسية</em></p>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-0.webp" alt loading="lazy" decoding="async" width="1600" height="1667"></figure>
+<hr>
+<h2>🧩 2. أول قرار صعب: كيف أتعامل مع الحجم الصغير؟ (فرضية التصميم)</h2>
+<p>كان الأسلم أن أبني نظاماً &quot;قابلاً للتوسع&quot; بلوحات إحصائيات كبيرة ومهام خلفية معقدة، تحسباً لنمو مستقبلي. تمهّلت، ونظرت في الرقم الواقعي لأي جهة بحجم مشابه: طلب أو طلبان في اليوم فقط. على هذا الرقم بُنيت الفكرة بشكل كامل، لا أكثر ولا أقل.</p>
+<p>من هذه الفرضية خرجت بأربعة مبادئ بسيطة التزمت بها في كل قرار لاحق:</p>
+<ul>
+<li><strong>الحجم الصغير</strong>: لا لوحات إحصائيات معقدة، ولا استطلاعات، ولا مهام تلقائية كثيرة — فقط مهمة يومية واحدة بسيطة تراجع كل شيء</li>
+<li><strong>الهوية تُطلب لاحقاً</strong>: لا يُسأل الشريك عن اسمه وبياناته إلا بعد أن يعرف بالضبط ماذا سيحصل عليه</li>
+<li><strong>قاعدة البيانات هي الحارس الحقيقي</strong>: أي قيد فعلي على من يقدر يرى ماذا، يُفرض داخل قاعدة البيانات نفسها، لا فقط بإخفاء زر في الشاشة</li>
+<li><strong>النص العربي بيانات، لا جزء من الكود</strong>: كل نص يظهر للمستخدم مخزَّن في ملف منفصل يمكن تعديله بسهولة، بدل أن يكون مدفوناً داخل كود البرنامج بحيث يحتاج مبرمجاً لتغيير كلمة واحدة</li>
+</ul>
+<p>هذا المبدأ الأخير تحديداً هو ما يجعل النظام قابلاً لإعادة الاستخدام: اسم الجهة، قطاعاتها، فرص التعاون التي تعرضها، وحتى نصوص الرسائل — كلها بيانات قابلة للاستبدال، لا شيء مكتوب باسم جهة بعينها داخل الكود نفسه.</p>
+<hr>
+<h2>🔗 3. بناء المسار: محتوى يتغيّر حسب من يقرأه</h2>
+<p>الفكرة الأساسية: القطاع الذي يختاره الشريك (شركة خاصة، جمعية، جهة حكومية...) يعيد كتابة كل ما يليه في المسار. شركة خاصة ترى فرص تعاون تناسبها؛ جهة غير ربحية ترى فرصاً مختلفة تماماً. الشاشة نفسها لا تتغيّر، لكن محتواها يتبدّل تلقائياً حسب الإجابة السابقة.</p>
+<p>بنيت هذا بحيث ينتج القطاع مع نوع الطلب حوالي 12 نسخة مختلفة من المحتوى، دون أن يحتاج المسار نفسه لأي شاشات إضافية أو تفريعات — العدد ثابت، والمتغيّر هو الكلام المعروض فقط. المسار سبع شاشات: القطاع → نوع الطلب → فرص التعاون → نوع اللقاء → الموعد → ثلاثة حقول بيانات بسيطة → مراجعة وإرسال.</p>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-1.webp" alt loading="lazy" decoding="async" width="1600" height="482"></figure>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-2.webp" alt loading="lazy" decoding="async" width="1600" height="1045"></figure>
+<p><strong>لحظة الإرسال: أقل من 4 ثوانٍ، مقسّمة بذكاء</strong></p>
+<p>بمجرد ضغط الشريك على زر الإرسال، يُحفظ طلبه في قاعدة البيانات خلال ربع ثانية فقط. بعدها ينتظر النظام إنشاء غرفة اجتماع زووم لأنها جزء أساسي من التأكيد، لكنه لا ينتظر إرسال البريد الإلكتروني — البريد يُرسل في الخلفية دون أن يُبطئ الشاشة التي يراها الشريك. النتيجة: تأكيد سريع، دون أن يشعر المستخدم بأي من هذا التعقيد خلفه.</p>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-3.webp" alt loading="lazy" decoding="async" width="1600" height="873"></figure>
+<hr>
+<h2>🔢 4. القواعد التي فكّرت فيها طويلاً (منطق لوحة المنسّق)</h2>
+<p>لم أصمم لوحة المنسّق لتعرض &quot;كل شيء&quot;، بل لتجيب على سؤال واحد فقط: <strong>هل فات شيء؟</strong></p>
+<p><strong>أ- سبع حالات فقط، وأبرزها هو ما يظهر</strong></p>
+<p>كل طلب شراكة يقع في واحدة من سبع حالات واضحة:</p>
+<ul>
+<li>متأخر عن الوقت المحدد لمرحلته</li>
+<li>معلّق دون أي رد — ويُصنَّف &quot;غير معروف&quot; وليس &quot;فاشلاً&quot;، لأننا فعلياً لا نعرف السبب</li>
+<li>بانتظار رد الشريك</li>
+<li>جاهز للانتقال للمرحلة التالية</li>
+<li>يسير بشكل طبيعي ضمن الوقت المحدد</li>
+<li>مكتمل</li>
+<li>ملغى، بسبب مكتوب وموثّق</li>
+</ul>
+<p>النظام يفحص هذه الحالات بالترتيب، ويعرض للمنسّق أول حالة تنطبق فقط — حتى لا يغرق بمعلومات متضاربة عن نفس الطلب.</p>
+<p>اللوحة موزّعة على ست مراحل — تعارف، اجتماع، عرض، اتفاقية، تنفيذ، تقرير — لكل واحدة منها مهلة زمنية معقولة (من 3 أيام إلى 45 يوماً حسب المرحلة)، وهذه المهل نفسها قابلة لإعادة الضبط حسب دورة عمل أي جهة تتبنى النظام. تجاوز المهلة لا يُكتشف لاحقاً بالصدفة، بل يظهر بنفسه فوراً على أنه &quot;بلا حراك&quot;.</p>
+<p><strong>ب- تجميد المحضر: المنع، لا الإلغاء بخجل</strong></p>
+<p>بمجرد اعتماد المحضر، يُقفل نهائياً ولا يقدر أحد يعدّل فيه بعد ذلك — حتى لو كان هو من كتبه أصلاً. ما فيه خيار &quot;إلغاء&quot; يسحب صفة &quot;موقَّع&quot; عن المحضر بهدوء دون أن يلاحظ أحد. لو احتجنا فعلاً نتراجع عن توقيع، لازم نمرّ بخطوة واضحة اسمها &quot;سحب التواقيع&quot;، وتطلب سبباً مكتوباً يُحفظ في سجل النظام.</p>
+<p>سجل الأنشطة نفسه لا يقبل تعديلاً ولا حذفاً؛ وحتى الحذف حين يحدث فعلاً قابل للتراجع عنه ويطلب سبباً — القاعدة تحفظ الحقيقة كاملة حتى لو حاول أحد التستر عليها لاحقاً.</p>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-4.webp" alt loading="lazy" decoding="async" width="1600" height="511"></figure>
+<hr>
+<h2>💡 5. قرارات قيست بالأرقام قبل أن تُتَّخذ</h2>
+<p>هذا الجزء هو الأقرب لقلبي في المشروع: لم أتخذ قراراً تقنياً بالحدس او التوقع، بل قِسته أولاً.</p>
+<p><strong>أولاً: أحرف إنجليزية في الرابط، عربي كامل في الصفحة</strong></p>
+<p>جرّبت الاسم العربي الكامل داخل الرابط نفسه، فوجدت أنه يُقطع عند أول حرف عربي في المعاينات التي تظهر عند مشاركة الرابط على واتساب وغيره — يعني رابط شبه ميت فعلياً. وحين حوّلته إلى ترميز آخر، تحوّل 104 من أصل 178 حرفاً إلى رموز غريبة غير مقروءة. القرار: أحرف إنجليزية بسيطة داخل الرابط نفسه، بينما الاسم العربي الكامل — أياً كانت الجهة المالكة للنظام — يظهر واضحاً في عنوان الصفحة والبطاقة والبريد ونص واتساب.</p>
+<p><strong>ثانياً: تقريب الخادم من قاعدة البيانات جغرافياً</strong></p>
+<p>اكتشفت أن الجزء البرمجي الذي يعالج الطلبات كان يعمل من منطقة جغرافية بعيدة عن قاعدة البيانات نفسها، فكل عملية بحث عن بيانات كانت تقطع مسافة طويلة ذهاباً وإياباً عبر الإنترنت. غيّرت المنطقة الجغرافية للخادم بسطر إعداد واحد فقط، لكن الفرق كان جذرياً:</p>
+<div class="prose-scroll" tabindex="0" role="region" aria-label="جدول"><table>
+<thead>
+<tr>
+<th>المقياس</th>
+<th>قبل</th>
+<th>بعد</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>سرعة استرجاع البيانات</td>
+<td>1610 جزء من الألف من الثانية</td>
+<td>21 جزء من الألف من الثانية</td>
+</tr>
+<tr>
+<td>زمن تحميل صفحة المواعيد</td>
+<td>4.10 ثانية</td>
+<td>0.79 ثانية</td>
+</tr>
+</tbody></table></div>
+<p><strong>ثالثاً: القيد الحقيقي في قاعدة البيانات، لا في الشاشة</strong></p>
+<p>صلاحية رؤية أي بيانات تُفرض داخل قاعدة البيانات نفسها، لا فقط بإخفاء زر في الواجهة. ما لا يحق لمستخدم رؤيته لا يصل إلى جهازه أصلاً — حتى لو حاول الوصول المباشر برابط لا يخصه.</p>
+<hr>
+<h2>🎨 6. قرارات التصميم (تجربة الشريك ولوحة المنسّق)</h2>
+<p><strong>لا نسخة منفصلة للجوال</strong></p>
+<p>المسار نفسه يعمل على الجوال تماماً كما على الحاسوب، دون شاشات موازية تحتاج صيانة مضاعفة — قرار وفّر وقت تطوير كبير على مشروع بهذا الحجم، والاهم ان تجربة الجوال جدا سلسه ومميزة لهذا كان لا داعي لتطوير تجربة منفصله فقط تجربة واحده مبنيه بشكل سلس وواضح</p>
+<p><strong>ملف اللقاء: كل شيء في مكان واحد</strong></p>
+<p>جدول الأعمال، قائمة الحضور، رابط الاجتماع، القاعة، والمحضر — كلها في ملف واحد، لا أربعة أماكن متفرقة يبحث فيها المنسّق في كل مرة.</p>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-5.webp" alt loading="lazy" decoding="async" width="1600" height="511"></figure>
+<p><strong>قاعدة تسمية صارمة</strong></p>
+<p>كل رابط يُرسل يذكر اسم المؤسسة الشريكة صراحة في عنوانه — لا كلمة &quot;الشريك&quot; ولا &quot;الجهة&quot; كصيغة عامة باهتة. تفصيل صغير، لكنه يجعل كل رابط مُتعرَّفاً عليه فوراً ، وهو نفس ما يجعل النظام يبدو مصمماً خصيصاً لكل جهة تستخدمه، لا كأداة عامة أُعيدت تسميتها فقط.</p>
+<p><strong>مهمة تلقائية يومية، بخطوتين منفصلتين لا خطوة واحدة</strong></p>
+<p>بنيت مهمة صغيرة تعمل تلقائياً كل يوم دون أي تدخل من المنسق : خطوة أولى تعيد إرسال أي دعوة لم يصل تأكيد استلامها كل 3 ساعات، وخطوة ثانية منفصلة تُرسل تذكيراً بلقاء الغد الساعة 9 صباحاً فقط. فصلت الخطوتين عمداً، لأن دمجهما كان يعني إما إزعاج الشريك برسائل تذكير مكررة، أو تأخّر إعادة إرسال دعوة ضائعة فعلاً.</p>
+<figure><img src="/assets/images/projects/3cd59148905a80a58b32c118d41562d3-content-6.webp" alt loading="lazy" decoding="async" width="1600" height="511"></figure>
+<hr>
+<h2>🏁 7. ما تعلمته فعلاً</h2>
+<p>أهم درس في هذا المشروع: القرار الجيد ليس الذي يبدو صحيحاً بالتوقع والافتراض، بل الذي يُقاس بالأرقام ويجرّب قبل أن يُتخذ. الفرق بين 1610 جزء من الألف من الثانية و21 فقط، أو بين رابط عربي مقطوع ورابط سليم، لم يكن تخميناً — كان رقماً وضعته أمامي قبل أن أكتب سطر الحل.</p>
+<p>الدرس الثاني: بناء نظام لجهة واحدة أولاً لا يعني تصميمه لها حصراً. الفصل المبكر بين &quot;طريقة عمل النظام&quot; و&quot;بيانات الجهة نفسها&quot; (الاسم، القطاعات، النصوص) هو ما يحوّل مشروعاً داخلياً إلى منتج تقدر أي جهة أخرى تتبناه دون إعادة بناء من الصفر.</p>
+<p>الدرس الثالث: القيود الخارجية تصنع حلولاً أذكى من الحرية المطلقة. الخطة المجانية لاستضافة الموقع كانت تسمح بمهمة تلقائية واحدة فقط يومياً، لا كل ثلاث ساعات كما أردت. بدل الترقية المباشرة لخطة مدفوعة، صممت حلاً بديلاً: إعادة محاولة تلقائية كل مرة يفتح فيها المنسّق لوحته، بالإضافة إلى طريقة احتياطية لتشغيل المهمة يدوياً من خارج النظام عند الحاجة. ولاحقاً يتم ترقية النظام بعد تجربته والتأكد من كفاءته وايضا الترقية بقيت خياراً جاهزاً بسطر واحد لو احتجناها في اي وقت .</p>
+<p>وأخيراً — النظام مرّ فعلياً بعوائق تقنية حقيقية أثناء البناء، أبرزها توقّف اتصال البريد الإلكتروني الرسمي للجهة المستضيفة عن العمل في مرحلة معينة. الفرق بين مشروع منشور فعلاً ومشروع &quot;شبه جاهز&quot; هو أن هذه العوائق تُحل واحدة تلو الأخرى بدل أن تبقى معلّقة خلف عبارة &quot;قيد الإصلاح&quot; او الاقتناع بالقليل— وهذا العائق تحديداً انحل، والنظام يعمل اليوم بكامل تدفقه من طلب الشريك والعرض التقديمي حتى المحضر الموقَّع.</p>
+<hr>
+<p><em>البناء: Next.js 16 · React 19 · TypeScript · Tailwind 4 · Supabase (قاعدة بيانات Postgres مع قيود وصول على مستوى الصف) · استضافة Vercelالتكاملات: Zoom · بريد إلكتروني · واتساب — واجهة عربية من اليمين إلى اليسار بتقويمين ميلادي وهجريأول نشر فعلي: جمعية اعتدال للتكافل والاستدامة — والنظام مصمم كمنتج مستقل قابل للتخصيص لأي جهة أخرى</em></p>
+            <div class="share-buttons-container">
+                <span class="share-buttons-label" data-en="Share this project">شارك المشروع</span>
+                <div class="share-buttons-row">
+                    <button class="share-icon-btn" type="button" data-copy-link aria-label="نسخ الرابط" data-en-label="Copy link"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:none"
+        stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6-6"/><path d="M11 6l1-1a4 4 0 0 1 6 6l-2 2"/><path d="M13 18l-1 1a4 4 0 0 1-6-6l2-2"/></svg></button>
+                    <a class="share-icon-btn" href="https://twitter.com/intent/tweet?text=%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA%3A%20%D9%85%D9%86%20%D8%B7%D9%84%D8%A8%20%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83%20%D8%AD%D8%AA%D9%89%20%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D9%8E%D9%91%D8%B9&amp;url=https%3A%2F%2Falzobaidi.me%2Fprojects%2F%25D9%2586%25D8%25B8%25D8%25A7%25D9%2585-%25D8%25A5%25D8%25AF%25D8%25A7%25D8%25B1%25D8%25A9-%25D8%25A7%25D9%2584%25D8%25B4%25D8%25B1%25D8%25A7%25D9%2583%25D8%25A7%25D8%25AA-%25D9%2585%25D9%2586-%25D8%25B7%25D9%2584%25D8%25A8-%25D8%25A7%25D9%2584%25D8%25B4%25D8%25B1%25D9%258A%25D9%2583-%25D8%25AD%25D8%25AA%25D9%2589-%25D8%25A7%25D9%2584%25D9%2585%25D8%25AD%25D8%25B6%25D8%25B1-%25D8%25A7%25D9%2584%25D9%2585%25D9%2588%25D9%2582%25D8%25B9%2F" target="_blank" rel="noopener" aria-label="مشاركة على X" data-en-label="Share on X"><svg width="17" height="17" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a class="share-icon-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Falzobaidi.me%2Fprojects%2F%25D9%2586%25D8%25B8%25D8%25A7%25D9%2585-%25D8%25A5%25D8%25AF%25D8%25A7%25D8%25B1%25D8%25A9-%25D8%25A7%25D9%2584%25D8%25B4%25D8%25B1%25D8%25A7%25D9%2583%25D8%25A7%25D8%25AA-%25D9%2585%25D9%2586-%25D8%25B7%25D9%2584%25D8%25A8-%25D8%25A7%25D9%2584%25D8%25B4%25D8%25B1%25D9%258A%25D9%2583-%25D8%25AD%25D8%25AA%25D9%2589-%25D8%25A7%25D9%2584%25D9%2585%25D8%25AD%25D8%25B6%25D8%25B1-%25D8%25A7%25D9%2584%25D9%2585%25D9%2588%25D9%2582%25D8%25B9%2F" target="_blank" rel="noopener" aria-label="مشاركة على LinkedIn" data-en-label="Share on LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                    <a class="share-icon-btn" href="https://wa.me/?text=%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA%3A%20%D9%85%D9%86%20%D8%B7%D9%84%D8%A8%20%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83%20%D8%AD%D8%AA%D9%89%20%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1%20%D8%A7%D9%84%D9%85%D9%88%D9%82%D9%8E%D9%91%D8%B9%20https%3A%2F%2Falzobaidi.me%2Fprojects%2F%25D9%2586%25D8%25B8%25D8%25A7%25D9%2585-%25D8%25A5%25D8%25AF%25D8%25A7%25D8%25B1%25D8%25A9-%25D8%25A7%25D9%2584%25D8%25B4%25D8%25B1%25D8%25A7%25D9%2583%25D8%25A7%25D8%25AA-%25D9%2585%25D9%2586-%25D8%25B7%25D9%2584%25D8%25A8-%25D8%25A7%25D9%2584%25D8%25B4%25D8%25B1%25D9%258A%25D9%2583-%25D8%25AD%25D8%25AA%25D9%2589-%25D8%25A7%25D9%2584%25D9%2585%25D8%25AD%25D8%25B6%25D8%25B1-%25D8%25A7%25D9%2584%25D9%2585%25D9%2588%25D9%2582%25D8%25B9%2F" target="_blank" rel="noopener" aria-label="مشاركة على WhatsApp" data-en-label="Share on WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.359.101 11.945c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a11.882 11.882 0 005.71 1.447h.006c6.585 0 11.946-5.359 11.949-11.945a11.85 11.85 0 00-3.48-8.404"/></svg></a>
+                </div>
+            </div>
+            </div>
+
+        </article>
+
+        <nav class="article-footer breakout" id="projectFooter" aria-label="تصفّح المشاريع" data-en-label="Browse projects">
+            <div class="article-nav">
+                <a class="article-nav-item prev" href="/projects/%D8%B2%D8%A7%D8%AF-%D8%AD%D9%84-%D8%A3%D8%B2%D9%85%D8%A9-%D9%86%D8%A7%D9%81%D8%B0%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D9%82/">
+                    <span class="article-nav-label" data-en="Previous project">المشروع السابق</span>
+                    <span class="article-nav-title">زاد، حل أزمة نافذة السياق</span></a>
+                <a class="article-nav-item next" href="/projects/%D8%A5%D8%B3%D8%AA%D8%AE%D9%84%D8%A7%D8%B5-%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA-%D9%85%D8%AE%D8%AA%D9%84%D9%81-%D8%A7%D9%84%D9%85%D9%86%D8%B4%D8%A2%D8%AA-%D9%85%D9%86-%D8%AE%D8%B1%D8%A7%D8%A6%D8%B7-%D9%82%D9%88%D9%82%D9%84/">
+                    <span class="article-nav-label" data-en="Next project">المشروع التالي</span>
+                    <span class="article-nav-title">إستخلاص بيانات مختلف المنشآت من خرائط قوقل</span></a>
+            </div>
+            <div><h2 class="article-footer-heading" data-en="More projects">مشاريع أخرى</h2><div class="article-footer-more">
+                <a href="/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/">
+                    <span class="article-footer-more-title">تسوية بيانات الأعمار العالمية: من ست مصادر إلى مصدر واحد</span>
+                    <span>١١ دقيقة</span></a>
+                <a href="/projects/beyond-the-numbers-a-strategic-bi-deep-dive/">
+                    <span class="article-footer-more-title">أفضل الممارسات لبناء داشبورد مميز</span>
+                    <span>٥ دقائق</span></a>
+            </div></div>
+            <div><h2 class="article-footer-heading" data-en="Topics">الموضوعات</h2><div class="article-footer-more">
+                <a href="/topics/venture-engineering/">
+                    <span class="article-footer-more-title">Venture Engineering</span>
+                    <span>١</span></a>
+                <a href="/topics/web-development/">
+                    <span class="article-footer-more-title">Web Development</span>
+                    <span>١</span></a>
+                <a href="/topics/backend-s/">
+                    <span class="article-footer-more-title">Backend’s</span>
+                    <span>١</span></a>
+            </div></div>
+            <a class="btn btn-secondary article-footer-back" href="/projects/" data-en="All projects">كل المشاريع</a>
+        </nav>
+
+    </main>
+
+    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
+         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
+                <a href="/" data-en="Home">الرئيسية</a>
+                <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
+                <a href="/articles/" data-en="Writing">بان — المقالات</a>
+                <a href="/#contact" data-en="Contact">تواصل</a>
+            </nav>
+            <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script type="application/json" id="pageData">{"kind":"project","id":"3cd59148905a80a58b32c118d41562d3","title":"نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع","date":"2026-08-05","readTime":8,"url":"https://alzobaidi.me/projects/%D9%86%D8%B8%D8%A7%D9%85-%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A7%D8%AA-%D9%85%D9%86-%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D9%83-%D8%AD%D8%AA%D9%89-%D8%A7%D9%84%D9%85%D8%AD%D8%B6%D8%B1-%D8%A7%D9%84%D9%85%D9%88%D9%82%D8%B9/"}</script>
+
+    <!-- Scripts -->
+    <script src="/js/i18n.js?v=r31"></script>
+    <script src="/js/covers.js?v=r31"></script>
+    <script src="/main.js?v=r31"></script>
+    <script src="/animations.js?v=r31"></script>
+    <script src="/js/project.js?v=r31"></script>
+    <script src="/effects.js?v=r31"></script>
+</body>
+</html>
