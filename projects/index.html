@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r31"></script>
+    <script src="/js/view-transitions.js?v=r32"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,10 +21,11 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r31">
-    <link rel="stylesheet" href="/css/animations.css?v=r31">
-    <link rel="stylesheet" href="/css/project.css?v=r31">
-    <link rel="stylesheet" href="/css/responsive.css?v=r31">
+    <link rel="stylesheet" href="/css/style.css?v=r32">
+    <link rel="stylesheet" href="/css/animations.css?v=r32">
+    <link rel="stylesheet" href="/css/project.css?v=r32">
+    <link rel="stylesheet" href="/css/subscribe.css?v=r32">
+    <link rel="stylesheet" href="/css/responsive.css?v=r32">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -115,7 +116,7 @@
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
             <a href="/" class="logo logo-emblem">
-                <img src="/assets/logos/dhura.webp" alt="ذُرى" width="360" height="440" decoding="async">
+                <img src="/assets/logos/dhura.webp" alt="ذُرى" width="349" height="440" decoding="async">
             </a>
             <div class="nav-actions">
                 <ul class="nav-links" id="navLinks">
@@ -152,8 +153,8 @@
             <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
             <figure class="masthead-emblem rv">
                 <img src="/assets/logos/dhura.webp"
-                     alt="قمم برتقالية متدرّجة — شعار مشاريع ذُرى"
-                     width="360" height="440" fetchpriority="high" decoding="async">
+                     alt="مجلّد برتقالي تتصاعد منه كواكب ونجوم — شعار مشاريع ذُرى"
+                     width="349" height="440" fetchpriority="high" decoding="async">
             </figure>
             <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
             <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
@@ -230,6 +231,43 @@
                 <p class="error-message" data-en="Something went wrong loading the projects. Please try again later.">حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
                 <button class="btn btn-secondary" type="button" onclick="location.reload()" data-en="Try again">إعادة المحاولة</button>
             </div>
+
+            <section class="sub-card sub-dhura brand-dhura rv"
+                     data-list="dhura" aria-labelledby="subTitle-dhura">
+                <p class="sub-kicker" data-en="Email updates">تحديثات بالبريد</p>
+                <h2 class="sub-title" id="subTitle-dhura"
+                    data-en="New Dhura work, straight to you">جديد ذُرى يصلك أوّلاً</h2>
+                <p class="sub-lede" data-en="A new project goes up, you get one email. Nothing else, and you can leave whenever you like.">يُنشر مشروع جديد، فيصلك بريد واحد. لا شيء غير ذلك، ويمكنك الخروج متى شئت.</p>
+
+                <button class="btn btn-primary sub-open" type="button"
+                        aria-expanded="false" aria-controls="subPanel-dhura"
+                        data-en="Subscribe">اشترك</button>
+
+                <div class="sub-panel" id="subPanel-dhura">
+                    <div>
+                        <form class="sub-form" novalidate>
+                            <div class="sub-field">
+                                <label class="visually-hidden" for="subEmail-dhura"
+                                       data-en="Your email address">بريدك الإلكتروني</label>
+                                <input type="email" id="subEmail-dhura" name="email"
+                                       autocomplete="email" inputmode="email" dir="ltr"
+                                       placeholder="name@example.com" required>
+                            </div>
+                            <button class="btn btn-primary sub-submit" type="submit"
+                                    data-en="Subscribe to Dhura">فعّل اشتراك ذُرى</button>
+                        </form>
+
+                        <label class="switch">
+                            <input type="checkbox" class="switch-input" id="subAlso-dhura">
+                            <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                            <span class="switch-label"
+                                  data-en="Send me new Ban work too">وصّلني بجديد بان أيضاً</span>
+                        </label>
+
+                        <p class="sub-note" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
         </section>
     </main>
 
@@ -246,12 +284,13 @@
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-
+    <script>window.SUBSCRIBE_CONFIG={"url":"https://hswidotyrnlvkkeddszn.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2lkb3R5cm5sdmtrZWRkc3puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3Njg2NDQsImV4cCI6MjA5NjM0NDY0NH0.H_xibI87OI0Vj_ae_Y_TwPuljQYH0NEQSFWkTM0BL1M"};</script>
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r31"></script>
-    <script src="/js/covers.js?v=r31"></script>
-    <script src="/main.js?v=r31"></script>
-    <script src="/animations.js?v=r31"></script>
-    <script src="/projects.js?v=r31"></script>
+    <script src="/js/i18n.js?v=r32"></script>
+    <script src="/js/covers.js?v=r32"></script>
+    <script src="/main.js?v=r32"></script>
+    <script src="/animations.js?v=r32"></script>
+    <script src="/projects.js?v=r32"></script>
+    <script src="/js/subscribe.js?v=r32"></script>
 </body>
 </html>

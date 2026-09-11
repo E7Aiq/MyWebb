@@ -1,0 +1,244 @@
+/* ============================================================================
+   بطاقة الاشتراك — ذُرى و بان
+   ============================================================================
+
+   بطاقة بعرض wide في ذيل الفهرس: صورة القسم، وحجاب يجعل النصّ مقروءاً،
+   وزرّ واحد يفتح النموذج. لا رمز لون جديد ولا خطّ جديد — الألوان من
+   ‎.brand-dhura/.brand-ban‎ القائمتين، والمقاسات من رموز المسافات.
+
+   الحجاب شرط لا زينة: متوسّط سطوع الصورتين ٤٢٪، والنصّ الأبيض عليهما
+   مباشرةً يرسب في التباين. التدرّج يثبّت الطرف السفلي — حيث يسكن النصّ —
+   عند سطوع يضمن ≥7:1.
+   ============================================================================ */
+
+.sub-card{
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  min-block-size: clamp(21rem, 40vw, 27rem);
+  display: grid;
+  align-content: end;
+  padding: clamp(var(--s-6), 4.5vw, var(--s-12));
+  color: var(--n-1);
+  box-shadow: var(--shadow-1);
+}
+
+/* الصورة: عنصر زائف لا <img> — زخرفية بحتة، فلا تدخل شجرة الوصول أصلاً */
+.sub-card::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--sub-image);
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.03);          /* يمنع ظهور حافّة عند تكبير الحجاب */
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.sub-card::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    oklch(18% 0.020 var(--sub-hue) / 0.94) 0%,
+    oklch(18% 0.020 var(--sub-hue) / 0.86) 32%,
+    oklch(22% 0.030 var(--sub-hue) / 0.55) 62%,
+    oklch(30% 0.040 var(--sub-hue) / 0.22) 100%
+  );
+}
+.sub-card:hover::before{ transform: scale(1.06); }
+
+.sub-dhura{ --sub-image: url("/assets/images/subscribe-dhura.webp"); --sub-hue: 33; }
+.sub-ban  { --sub-image: url("/assets/images/subscribe-ban.webp");   --sub-hue: 202; }
+
+/* ── النصّ ─────────────────────────────────────────────────────────────── */
+.sub-kicker{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: oklch(92% 0.030 var(--sub-hue));
+  margin-block-end: var(--s-2);
+}
+.sub-title{
+  font-family: var(--font-display);
+  font-size: var(--t-title);
+  font-weight: 700;
+  line-height: var(--lh-head);
+  color: var(--n-1);
+  margin-block-end: var(--s-3);
+  text-wrap: balance;
+}
+.sub-lede{
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-lede);
+  color: oklch(94% 0.006 var(--sub-hue));
+  max-inline-size: 34rem;
+  margin-block-end: var(--s-6);
+}
+
+/* ── الزرّ الفاتح ───────────────────────────────────────────────────────── */
+.sub-open{
+  justify-self: start;
+  background: var(--n-1);
+  color: oklch(28% 0.090 var(--sub-hue));
+  border: none;
+  box-shadow: none;
+}
+.sub-open:hover{ background: #fff; color: oklch(22% 0.100 var(--sub-hue)); }
+
+/* ── اللوح ─────────────────────────────────────────────────────────────── */
+/* grid-template-rows: 0fr→1fr يحرّك الارتفاع بلا رقم سحريّ ولا قياس في JS */
+.sub-panel{
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out),
+    opacity            var(--dur-mid)  var(--ease-out);
+}
+.sub-card.is-open .sub-panel{ grid-template-rows: 1fr; opacity: 1; }
+.sub-panel > div{ overflow: hidden; min-block-size: 0; }
+.sub-card.is-open .sub-open{ display: none; }
+
+.sub-form{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+  margin-block-end: var(--s-4);
+}
+.sub-field{
+  flex: 1 1 15rem;
+  min-inline-size: 0;
+}
+.sub-card input[type="email"]{
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: 0.5rem var(--s-4);
+  border-radius: var(--r-pill);
+  border: none;
+  background: oklch(100% 0 0 / 0.94);
+  color: var(--n-12);
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  box-shadow: inset 0 0 0 1.5px oklch(100% 0 0 / 0.35);
+  transition: box-shadow var(--dur-fast) var(--ease-out);
+}
+.sub-card input[type="email"]::placeholder{ color: var(--n-9); }
+.sub-card input[type="email"]:focus-visible{
+  outline: none;
+  box-shadow: inset 0 0 0 2px oklch(55% 0.120 var(--sub-hue));
+}
+.sub-submit{
+  flex: 0 0 auto;
+  background: oklch(55% 0.135 var(--sub-hue));
+  color: #fff;
+  border: none;
+}
+.sub-submit:hover{ background: oklch(49% 0.140 var(--sub-hue)); }
+.sub-submit[disabled]{ opacity: 0.6; cursor: progress; }
+
+/* ── المفتاح الانزلاقي ─────────────────────────────────────────────────── */
+/* يبدأ من جهة البداية المنطقية وينزلق إلى النهاية: في RTL من اليمين إلى
+   اليسار، وفي LTR بالعكس — بقلب إشارة الإزاحة وحدها. */
+.switch{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  color: oklch(94% 0.006 var(--sub-hue));
+  user-select: none;
+}
+.switch-input{
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  opacity: 0; margin: 0;
+  pointer-events: none;
+}
+.switch-track{
+  --dir: -1;                      /* RTL: الإبهام ينزلق يساراً */
+  position: relative;
+  flex: 0 0 auto;
+  inline-size: 3rem;
+  block-size: 1.75rem;
+  border-radius: var(--r-pill);
+  background: oklch(100% 0 0 / 0.22);
+  box-shadow: inset 0 0 0 1.5px oklch(100% 0 0 / 0.30);
+  transition:
+    background var(--dur-mid) var(--ease-out),
+    box-shadow var(--dur-mid) var(--ease-out);
+}
+[dir="ltr"] .switch-track{ --dir: 1; }
+
+.switch-thumb{
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0.1875rem;
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+  border-radius: 50%;
+  background: var(--n-1);
+  box-shadow: 0 1px 3px oklch(20% 0 0 / 0.35);
+  transform: translateY(-50%);
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+.switch-input:checked + .switch-track{
+  background: oklch(62% 0.140 var(--sub-hue));
+  box-shadow: inset 0 0 0 1.5px oklch(72% 0.130 var(--sub-hue));
+}
+.switch-input:checked + .switch-track .switch-thumb{
+  transform: translateY(-50%) translateX(calc(var(--dir) * 1.25rem));
+}
+.switch-input:focus-visible + .switch-track{
+  outline: 2px solid oklch(88% 0.060 var(--sub-hue));
+  outline-offset: 3px;
+}
+
+/* ── الرسالة بعد الإرسال ───────────────────────────────────────────────── */
+.sub-note{
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  line-height: var(--lh-ui);
+  margin-block-start: var(--s-3);
+  min-block-size: 1.5rem;
+}
+.sub-note:empty{ margin-block-start: 0; min-block-size: 0; }
+.sub-note[data-state="ok"]{ color: oklch(90% 0.080 155); }
+.sub-note[data-state="error"]{ color: oklch(84% 0.100 27); }
+
+/* الحالة النهائية: النموذج يُستبدل برسالة واحدة، فلا يُرسل مرّتين */
+.sub-done{
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: var(--lh-lede);
+  color: var(--n-1);
+}
+
+/* ── تقليل الحركة ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  .sub-card::before,
+  .sub-panel,
+  .switch-track,
+  .switch-thumb{ transition-duration: 1ms; }
+  .sub-card:hover::before{ transform: scale(1.03); }
+}
+
+/* ── الجوال ────────────────────────────────────────────────────────────── */
+@media (max-width: 48rem){
+  .sub-card{ min-block-size: clamp(19rem, 70vw, 24rem); }
+  .sub-form{ gap: var(--s-2); }
+  .sub-field{ flex: 1 1 100%; }
+  .sub-submit{ inline-size: 100%; }
+  .sub-open{ inline-size: 100%; justify-self: stretch; }
+}
+
+/* بلا جافاسكربت لا يفتح اللوح، فيُخفى الزرّ: زرٌّ ظاهر لا يستجيب أسوأ من
+   غيابه. النصّ والصورة يبقيان، فتبقى البطاقة مفهومة ومقروءة. */
+html:not(.js) .sub-open{ display: none; }

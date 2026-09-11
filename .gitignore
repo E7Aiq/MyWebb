@@ -5,3 +5,13 @@ node_modules/
 .cache/
 
 .DS_Store
+
+# أسرار التشغيل — لا تدخل المستودع أبداً.
+# المفتاح العامّ (anon) ليس منها: هو منشور عمداً في data/site.json، وأمانه
+# في سياسات قاعدة البيانات لا في إخفائه. أما service_role ورمز الإدارة
+# (sbp_) فمكانهما GitHub Secrets وحدها. راجع docs/SUBSCRIBE.md.
+.env
+.env.*
+!.env.example
+*.pem
+secrets/
