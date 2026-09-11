@@ -1,14 +1,36 @@
 {
   "30c59148905a8034bddedb74645b7831": {
     "slug": "organizing-chaos-and-measuring-discrepancies-an-integrated",
-    "aliases": [],
-    "title": "Organizing Chaos and Measuring Discrepancies: An Integrated Data Pipeline for Global Health Indicators",
+    "aliases": [
+      "تسوية-بيانات-الأعمار-العالمية-من-ست-مصادر-إلى-مصدر"
+    ],
+    "title": "تسوية بيانات الأعمار العالمية: من ست مصادر إلى مصدر واحد",
     "kind": "project"
   },
   "30c59148905a80f4b68ed83a2c460454": {
     "slug": "beyond-the-numbers-a-strategic-bi-deep-dive",
+    "aliases": [
+      "أفضل-الممارسات-لبناء-داشبورد-مميز"
+    ],
+    "title": "أفضل الممارسات لبناء داشبورد مميز",
+    "kind": "project"
+  },
+  "3cd59148905a807ba484ef707ed9c6f2": {
+    "slug": "زاد-حل-أزمة-نافذة-السياق",
     "aliases": [],
-    "title": "Beyond the Numbers: A Strategic BI Deep Dive",
+    "title": "زاد، حل أزمة نافذة السياق",
+    "kind": "project"
+  },
+  "3cd59148905a80a58b32c118d41562d3": {
+    "slug": "نظام-إدارة-الشراكات-من-طلب-الشريك-حتى-المحضر-الموقع",
+    "aliases": [],
+    "title": "نظام إدارة الشراكات: من طلب الشريك حتى المحضر الموقَّع",
+    "kind": "project"
+  },
+  "3cd59148905a80d7a718cedbf4a19d90": {
+    "slug": "إستخلاص-بيانات-مختلف-المنشآت-من-خرائط-قوقل",
+    "aliases": [],
+    "title": "إستخلاص بيانات مختلف المنشآت من خرائط قوقل",
     "kind": "project"
   },
   "d7a7837479d646cb8e529f7df48ca801": {
@@ -46,6 +68,24 @@
     "aliases": [],
     "title": "بناء الأنظمة الذكية",
     "kind": "pillar"
+  },
+  "topic:ai solution": {
+    "slug": "ai-solution",
+    "aliases": [],
+    "title": "Ai Solution",
+    "kind": "topic"
+  },
+  "topic:backend s": {
+    "slug": "backend-s",
+    "aliases": [],
+    "title": "Backend’s",
+    "kind": "topic"
+  },
+  "topic:context window": {
+    "slug": "context-window",
+    "aliases": [],
+    "title": "Context Window",
+    "kind": "topic"
   },
   "topic:data analysis": {
     "slug": "data-analysis",
@@ -87,6 +127,30 @@
     "slug": "python",
     "aliases": [],
     "title": "Python",
+    "kind": "topic"
+  },
+  "topic:venture engineering": {
+    "slug": "venture-engineering",
+    "aliases": [],
+    "title": "Venture Engineering",
+    "kind": "topic"
+  },
+  "topic:vibe engineering": {
+    "slug": "vibe-engineering",
+    "aliases": [],
+    "title": "Vibe Engineering",
+    "kind": "topic"
+  },
+  "topic:web development": {
+    "slug": "web-development",
+    "aliases": [],
+    "title": "Web Development",
+    "kind": "topic"
+  },
+  "topic:web scraping": {
+    "slug": "web-scraping",
+    "aliases": [],
+    "title": "Web Scraping",
     "kind": "topic"
   }
 }
