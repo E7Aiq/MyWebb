@@ -141,6 +141,50 @@ for (const p of content) {
     }
 }
 
+/* ── ٢·٥. الأسرار ────────────────────────────────────────────────────────────
+   المفتاح العامّ (anon) منشور عمداً — راجع docs/SUBSCRIBE.md §1. وما عداه
+   لا يجوز أن يدخل المستودع أبداً: رمز إدارة Supabase، أو مفتاح service_role،
+   أو مفتاح Resend. الفحص يقرأ الملفّات النصّية كلّها لا المولَّدة وحدها،
+   لأن التسرّب يقع في الإعداد لا في الصفحات. */
+const SECRET_PATTERNS = [
+    [/\bsbp_[A-Za-z0-9]{20,}/, 'رمز إدارة Supabase (sbp_)'],
+    [/\bre_[A-Za-z0-9_]{20,}/, 'مفتاح Resend (re_)'],
+    [/\bsb_secret_[A-Za-z0-9_-]{10,}/, 'مفتاح Supabase سرّي']
+];
+
+function scanSecrets(dir = ROOT) {
+    const SKIP = new Set(['node_modules', '.git', '.cache', 'assets']);
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.name.startsWith('.') && entry.name !== '.github') continue;
+        const abs = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            if (!SKIP.has(entry.name)) scanSecrets(abs);
+            continue;
+        }
+        if (!/\.(html|js|json|md|yml|yaml|css|txt)$/.test(entry.name)) continue;
+        const rel = path.relative(ROOT, abs);
+        const text = fs.readFileSync(abs, 'utf8');
+        for (const [re, label] of SECRET_PATTERNS) {
+            if (re.test(text)) fail(rel, `سرٌّ مكشوف — ${label}. انقله إلى GitHub Secrets واحذفه من الملف.`);
+        }
+    }
+}
+scanSecrets();
+
+/* المفتاح المنشور يجب أن يكون anon لا غيره: JWT فيه role. خلطهما يحوّل
+   الموقع من «مفتاح لا يمنح شيئاً» إلى «مفتاح يمنح كل شيء». */
+if (site.subscribe && site.subscribe.enabled) {
+    const key = site.subscribe.anon_key || '';
+    try {
+        const payload = JSON.parse(Buffer.from(key.split('.')[1], 'base64').toString('utf8'));
+        if (payload.role !== 'anon') {
+            fail('data/site.json', `المفتاح المنشور دوره «${payload.role}» لا «anon» — هذا تسريب صلاحيات.`);
+        }
+    } catch {
+        fail('data/site.json', 'المفتاح المنشور ليس JWT صالحاً — تحقّق منه.');
+    }
+}
+
 /* ── ٣. البيانات المنظّمة ────────────────────────────────────────────────── */
 const REQUIRED = {
     Person: ['name', 'url'],

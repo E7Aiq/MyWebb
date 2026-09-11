@@ -2,7 +2,7 @@
   "_comment": "المصدر الوحيد لبيانات الموقع الوصفية. كل عنوان ووصف وبطاقة مشاركة في الموقع يُبنى من هنا — لا تُكتب هذه القيم في أي ملف HTML مباشرةً. راجع docs/SEO.md.",
 
   "origin": "https://alzobaidi.me",
-  "cacheBuster": "r31",
+  "cacheBuster": "r32",
 
   "name_ar": "محمد الزبيدي",
   "name_en": "Mohammed Alzobaidi",
@@ -89,6 +89,13 @@
       "title_ar": "الموضوعات | محمد الزبيدي",
       "description_ar": "فهرس الموضوعات التي يغطّيها الموقع؛ لكل موضوع صفحة تجمع ما كُتب وما بُني فيه."
     }
+  },
+
+  "_subscribe": "إعداد الاشتراك بالبريد. المفتاح أدناه هو المفتاح العامّ (anon) وهو منشور عمداً — لا بد أن يصل المتصفّح كي يعمل النموذج على موقع ساكن، ولا يوجد مكان يُخفى فيه. أمانه ليس في إخفائه: قاعدة البيانات لا تمنح حامله قراءةً للجدول ولا كتابةً مباشرة فيه، وإنما استدعاء دالّتين محكومتين. المفتاحان السرّيان (service_role ورمز الإدارة sbp_) لا يظهران هنا ولا في أي ملف بالمستودع — مكانهما GitHub Secrets. راجع docs/SUBSCRIBE.md.",
+  "subscribe": {
+    "enabled": true,
+    "url": "https://hswidotyrnlvkkeddszn.supabase.co",
+    "anon_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2lkb3R5cm5sdmtrZWRkc3puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3Njg2NDQsImV4cCI6MjA5NjM0NDY0NH0.H_xibI87OI0Vj_ae_Y_TwPuljQYH0NEQSFWkTM0BL1M"
   },
 
   "services": {

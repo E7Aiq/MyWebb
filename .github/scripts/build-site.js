@@ -871,7 +871,7 @@ function detailPage(item, ordered, index, ctx) {
 
     const emblem = isArticle
         ? { href: '/articles/', src: '/assets/logos/ban.webp', alt: 'بان', w: 406, h: 440 }
-        : { href: '/projects/', src: '/assets/logos/dhura.webp', alt: 'ذُرى', w: 360, h: 440 };
+        : { href: '/projects/', src: '/assets/logos/dhura.webp', alt: 'ذُرى', w: 349, h: 440 };
 
     return `${head}
 <body>
@@ -967,7 +967,7 @@ function articlesIndexPage(ctx) {
             imageHeight: ctx.ogFixed.articles.height,
             title: s.title_ar, description: s.og_description_ar
         },
-        css: ['style.css', 'animations.css', 'article.css', 'responsive.css'],
+        css: ['style.css', 'animations.css', 'article.css', 'subscribe.css', 'responsive.css'],
         jsonLd: [schemaCollection({
             name: `مدوّنة ${s.brand_ar}`, description: s.description_ar,
             url: canonical, items: ctx.articles
@@ -1010,12 +1010,13 @@ ${C.breadcrumb(trail)}
             <div id="articles-grid" class="articles-grid" data-prerendered="1">
 ${grid}
             </div>
+${subscribeCard('ban', ctx)}
         </section>
     </main>
 
 ${C.FOOTER}
-
-${C.scripts(['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'js/articles-list.js'], site.cacheBuster)}
+${subscribeConfig(ctx)}
+${C.scripts(['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'js/articles-list.js', 'js/subscribe.js'], site.cacheBuster)}
 </body>
 </html>
 `;
@@ -1054,7 +1055,7 @@ function projectsIndexPage(ctx) {
             imageHeight: ctx.ogFixed.projects.height,
             title: s.title_ar, description: s.og_description_ar
         },
-        css: ['style.css', 'animations.css', 'project.css', 'responsive.css'],
+        css: ['style.css', 'animations.css', 'project.css', 'subscribe.css', 'responsive.css'],
         jsonLd: [schemaCollection({
             name: `${s.brand_ar} — ${s.label_ar}`, description: s.description_ar,
             url: canonical, items: ctx.projects
@@ -1066,7 +1067,7 @@ function projectsIndexPage(ctx) {
 <body>
     <a class="skip-link" data-en="Skip to projects" href="#projectsGrid">تخطَّ إلى المشاريع</a>
 
-${C.navbar('projects', { href: '/', src: '/assets/logos/dhura.webp', alt: 'ذُرى', w: 360, h: 440 })}
+${C.navbar('projects', { href: '/', src: '/assets/logos/dhura.webp', alt: 'ذُرى', w: 349, h: 440 })}
 
     <!-- Main Content -->
     <main class="publication dhura">
@@ -1077,8 +1078,8 @@ ${C.breadcrumb(trail)}
             <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
             <figure class="masthead-emblem rv">
                 <img src="/assets/logos/dhura.webp"
-                     alt="قمم برتقالية متدرّجة — شعار مشاريع ذُرى"
-                     width="360" height="440" fetchpriority="high" decoding="async">
+                     alt="مجلّد برتقالي تتصاعد منه كواكب ونجوم — شعار مشاريع ذُرى"
+                     width="349" height="440" fetchpriority="high" decoding="async">
             </figure>
             <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
             <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
@@ -1107,15 +1108,142 @@ ${grid}
                 <p class="error-message" data-en="Something went wrong loading the projects. Please try again later.">حدث خطأ في تحميل المشاريع. يرجى المحاولة لاحقاً.</p>
                 <button class="btn btn-secondary" type="button" onclick="location.reload()" data-en="Try again">إعادة المحاولة</button>
             </div>
+${subscribeCard('dhura', ctx)}
         </section>
     </main>
 
 ${C.FOOTER}
-
-${C.scripts(['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'projects.js'], site.cacheBuster)}
+${subscribeConfig(ctx)}
+${C.scripts(['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'projects.js', 'js/subscribe.js'], site.cacheBuster)}
 </body>
 </html>
 `;
+}
+
+/* ── بطاقة الاشتراك ─────────────────────────────────────────────────────── */
+
+/**
+ * بطاقة واحدة تخدم القسمين: القسم الذي تسكنه هو الأساس، والآخر خيارٌ
+ * بمفتاح انزلاقي. لا تُولَّد إن كان الاشتراك معطَّلاً في site.json.
+ *
+ * الزرّ الفاتح يعتمد جافاسكربت فيُخفى بدونها (html:not(.js)) — زرٌّ ظاهر
+ * لا يفعل شيئاً أسوأ من غيابه. والصورة والنصّ يبقيان في الحالتين.
+ */
+function subscribeCard(list, ctx) {
+    const cfg = ctx.site.subscribe;
+    if (!cfg || !cfg.enabled) return '';
+
+    const isDhura = list === 'dhura';
+    const self    = isDhura ? 'ذُرى' : 'بان';
+    const other   = isDhura ? 'بان' : 'ذُرى';
+    const selfEn  = isDhura ? 'Dhura' : 'Ban';
+    const otherEn = isDhura ? 'Ban' : 'Dhura';
+    const thing   = isDhura ? 'مشروع' : 'مقال';
+    const thingEn = isDhura ? 'project' : 'piece';
+    const brand   = isDhura ? 'brand-dhura' : 'brand-ban';
+
+    return `
+            <section class="sub-card sub-${list} ${brand} rv"
+                     data-list="${list}" aria-labelledby="subTitle-${list}">
+                <p class="sub-kicker" data-en="Email updates">تحديثات بالبريد</p>
+                <h2 class="sub-title" id="subTitle-${list}"
+                    data-en="New ${selfEn} work, straight to you">جديد ${self} يصلك أوّلاً</h2>
+                <p class="sub-lede" data-en="A new ${thingEn} goes up, you get one email. Nothing else, and you can leave whenever you like.">يُنشر ${thing} جديد، فيصلك بريد واحد. لا شيء غير ذلك، ويمكنك الخروج متى شئت.</p>
+
+                <button class="btn btn-primary sub-open" type="button"
+                        aria-expanded="false" aria-controls="subPanel-${list}"
+                        data-en="Subscribe">اشترك</button>
+
+                <div class="sub-panel" id="subPanel-${list}">
+                    <div>
+                        <form class="sub-form" novalidate>
+                            <div class="sub-field">
+                                <label class="visually-hidden" for="subEmail-${list}"
+                                       data-en="Your email address">بريدك الإلكتروني</label>
+                                <input type="email" id="subEmail-${list}" name="email"
+                                       autocomplete="email" inputmode="email" dir="ltr"
+                                       placeholder="name@example.com" required>
+                            </div>
+                            <button class="btn btn-primary sub-submit" type="submit"
+                                    data-en="Subscribe to ${selfEn}">فعّل اشتراك ${self}</button>
+                        </form>
+
+                        <label class="switch">
+                            <input type="checkbox" class="switch-input" id="subAlso-${list}">
+                            <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                            <span class="switch-label"
+                                  data-en="Send me new ${otherEn} work too">وصّلني بجديد ${other} أيضاً</span>
+                        </label>
+
+                        <p class="sub-note" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>`;
+}
+
+/**
+ * صفحة إلغاء الاشتراك.
+ *
+ * noindex عن قصد: صفحة أداة لا محتوى، ولا معنى لظهورها في نتائج البحث.
+ * ولذلك تُستثنى من خريطة الموقع ومن فحص الصفحات اليتيمة — الفاحص يقرأ
+ * وسم robots فيعاملها معاملة الجسور.
+ *
+ * الرابط يحمل رمزاً عشوائياً لا بريداً، ويعمل بنقرة واحدة بلا تسجيل دخول:
+ * الحاجز أمام الخروج أسوأ ما في نشرة بريدية، وهو أيضاً ما يجعل المستقبِل
+ * يضغط «بلاغ مزعج» بدلاً منه فيحرق سمعة النطاق المُرسِل.
+ */
+function unsubscribePage(ctx) {
+    const site = ctx.site;
+    const head = C.head({
+        title: S.buildTitle('إلغاء الاشتراك', site.name_ar),
+        description: 'إدارة اشتراكك في تحديثات ذُرى وبان.',
+        canonical: `${site.origin}/unsubscribe/`,
+        ogType: 'website',
+        og: { image: ctx.ogFixed.home.url, imageWidth: ctx.ogFixed.home.width,
+              imageHeight: ctx.ogFixed.home.height, title: 'إلغاء الاشتراك', description: 'إدارة اشتراكك.' },
+        css: ['style.css', 'animations.css', 'article.css', 'subscribe.css', 'responsive.css'],
+        robots: 'noindex, follow',
+        jsonLd: [],
+        cacheBuster: site.cacheBuster
+    });
+
+    return `${head}
+<body>
+    <a class="skip-link" data-en="Skip to content" href="#unsubRoot">تخطَّ إلى المحتوى</a>
+${C.navbar(null, { href: '/', src: '/favicon.svg', alt: site.name_ar, w: 32, h: 32 })}
+
+    <main class="publication" id="unsubRoot">
+        <header class="page-header breakout">
+            <h1 class="page-title rv">إلغاء الاشتراك</h1>
+            <p class="section-label rv">يسري فوراً، ولا يُطلب منك تسجيل دخول.</p>
+        </header>
+
+        <section class="articles-section breakout" aria-label="خيارات الاشتراك">
+            <div class="articles-grid">
+                <p class="sub-note" id="unsubNote" role="status" aria-live="polite"></p>
+                <div id="unsubActions" class="article-footer-more">
+                    <button class="btn btn-secondary" type="button" data-unsub="dhura">إلغاء تحديثات ذُرى وحدها</button>
+                    <button class="btn btn-secondary" type="button" data-unsub="ban">إلغاء تحديثات بان وحدها</button>
+                    <button class="btn btn-primary" type="button" data-unsub="all">إلغاء كل التحديثات</button>
+                </div>
+                <a class="btn btn-secondary article-footer-back" href="/">العودة إلى الموقع</a>
+            </div>
+        </section>
+    </main>
+
+${C.FOOTER}
+${subscribeConfig(ctx)}
+${C.scripts(['js/i18n.js', 'main.js', 'js/unsubscribe.js'], site.cacheBuster)}
+</body>
+</html>
+`;
+}
+
+/** الإعداد العامّ — المفتاح anon منشور عمداً، راجع data/site.json ← _subscribe */
+function subscribeConfig(ctx) {
+    const cfg = ctx.site.subscribe;
+    if (!cfg || !cfg.enabled) return '';
+    return `    <script>window.SUBSCRIBE_CONFIG=${JSON.stringify({ url: cfg.url, key: cfg.anon_key })};</script>`;
 }
 
 /* ── الموضوعات ──────────────────────────────────────────────────────────── */
@@ -2152,6 +2280,9 @@ async function main() {
     ctx.topics.forEach((topic) => write(`topics/${topic.slug}/index.html`, topicPage(topic, ctx)));
     ctx.pillars.filter((pl) => pl.items.length)
         .forEach((pl) => write(`topics/${pl.slug}/index.html`, topicPage(pl, ctx)));
+    if (site.subscribe && site.subscribe.enabled) {
+        write('unsubscribe/index.html', unsubscribePage(ctx));
+    }
 
     // ── جسور: المسارات القديمة والأسماء المهجورة والروابط القصيرة ────────
     write('articles.html', redirectStub({

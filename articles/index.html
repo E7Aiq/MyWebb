@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r31"></script>
+    <script src="/js/view-transitions.js?v=r32"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,10 +21,11 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r31">
-    <link rel="stylesheet" href="/css/animations.css?v=r31">
-    <link rel="stylesheet" href="/css/article.css?v=r31">
-    <link rel="stylesheet" href="/css/responsive.css?v=r31">
+    <link rel="stylesheet" href="/css/style.css?v=r32">
+    <link rel="stylesheet" href="/css/animations.css?v=r32">
+    <link rel="stylesheet" href="/css/article.css?v=r32">
+    <link rel="stylesheet" href="/css/subscribe.css?v=r32">
+    <link rel="stylesheet" href="/css/responsive.css?v=r32">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -200,6 +201,43 @@
             </div>
         </a>
             </div>
+
+            <section class="sub-card sub-ban brand-ban rv"
+                     data-list="ban" aria-labelledby="subTitle-ban">
+                <p class="sub-kicker" data-en="Email updates">تحديثات بالبريد</p>
+                <h2 class="sub-title" id="subTitle-ban"
+                    data-en="New Ban work, straight to you">جديد بان يصلك أوّلاً</h2>
+                <p class="sub-lede" data-en="A new piece goes up, you get one email. Nothing else, and you can leave whenever you like.">يُنشر مقال جديد، فيصلك بريد واحد. لا شيء غير ذلك، ويمكنك الخروج متى شئت.</p>
+
+                <button class="btn btn-primary sub-open" type="button"
+                        aria-expanded="false" aria-controls="subPanel-ban"
+                        data-en="Subscribe">اشترك</button>
+
+                <div class="sub-panel" id="subPanel-ban">
+                    <div>
+                        <form class="sub-form" novalidate>
+                            <div class="sub-field">
+                                <label class="visually-hidden" for="subEmail-ban"
+                                       data-en="Your email address">بريدك الإلكتروني</label>
+                                <input type="email" id="subEmail-ban" name="email"
+                                       autocomplete="email" inputmode="email" dir="ltr"
+                                       placeholder="name@example.com" required>
+                            </div>
+                            <button class="btn btn-primary sub-submit" type="submit"
+                                    data-en="Subscribe to Ban">فعّل اشتراك بان</button>
+                        </form>
+
+                        <label class="switch">
+                            <input type="checkbox" class="switch-input" id="subAlso-ban">
+                            <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                            <span class="switch-label"
+                                  data-en="Send me new Dhura work too">وصّلني بجديد ذُرى أيضاً</span>
+                        </label>
+
+                        <p class="sub-note" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
         </section>
     </main>
 
@@ -216,12 +254,13 @@
             <p data-en="© 2026 Mohammed Alzobaidi. All rights reserved.">&copy; ٢٠٢٦ محمد الزبيدي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-
+    <script>window.SUBSCRIBE_CONFIG={"url":"https://hswidotyrnlvkkeddszn.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2lkb3R5cm5sdmtrZWRkc3puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3Njg2NDQsImV4cCI6MjA5NjM0NDY0NH0.H_xibI87OI0Vj_ae_Y_TwPuljQYH0NEQSFWkTM0BL1M"};</script>
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r31"></script>
-    <script src="/js/covers.js?v=r31"></script>
-    <script src="/main.js?v=r31"></script>
-    <script src="/animations.js?v=r31"></script>
-    <script src="/js/articles-list.js?v=r31"></script>
+    <script src="/js/i18n.js?v=r32"></script>
+    <script src="/js/covers.js?v=r32"></script>
+    <script src="/main.js?v=r32"></script>
+    <script src="/animations.js?v=r32"></script>
+    <script src="/js/articles-list.js?v=r32"></script>
+    <script src="/js/subscribe.js?v=r32"></script>
 </body>
 </html>
