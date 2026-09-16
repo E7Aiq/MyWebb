@@ -15,6 +15,8 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  margin-block-start: var(--s-12);
+  scroll-margin-block-start: 6rem;
   border-radius: var(--r-lg);
   min-block-size: clamp(21rem, 40vw, 27rem);
   display: grid;

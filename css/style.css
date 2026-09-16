@@ -701,6 +701,41 @@ time, .article-read-time, .article-card-date, .project-card-date,
 
 .nav-links{ display: flex; align-items: center; gap: var(--s-6); }
 
+.masthead-subscribe{
+  position: relative;
+  align-self: flex-end;
+  margin-block: var(--s-1) var(--s-5);
+  padding: 0.35rem 1.15rem;
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+  isolation: isolate;
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.masthead-subscribe .swash{
+  position: relative;
+  display: inline-block;
+  margin-inline-start: 0.15em;
+  font-family: var(--font-display);
+  font-size: 1.65em;
+  line-height: 1;
+  font-weight: 700;
+  z-index: 1;
+}
+.masthead-subscribe::before{
+  content: "";
+  position: absolute;
+  inset: 0.05rem 0.2rem;
+  z-index: -1;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  transform: rotate(-8deg);
+  opacity: 0.7;
+}
+.masthead-subscribe:hover{ color: var(--text); transform: translateX(-0.25rem); }
+
 .nav-link{
   position: relative;
   display: inline-flex;

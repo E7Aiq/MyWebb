@@ -121,7 +121,7 @@ const NAV_ITEMS = {
 
 /**
  * @param {'articles'|'projects'|null} section  القسم النشط
- * @param {{href:string, src:string, alt:string, w:number, h:number}} emblem
+ * @param {{href:string, src:string, alt:string, w:number, h:number, subscriptions?:boolean}} emblem
  */
 function navbar(section, emblem) {
     const item = (k) => NAV_ITEMS[k].replace('{active}', section === k ? ' active' : '');

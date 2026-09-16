@@ -987,6 +987,8 @@ ${C.breadcrumb(trail)}
 
         <!-- رأس الصفحة: ماستهيد مدوّنة «بان» — الشعار، الاسم، تعريفه، ثم المقدّمة -->
         <header class="page-header breakout ban-masthead">
+            <a class="masthead-subscribe brand-ban rv" href="#subscribe-ban"
+                    data-en="Subscribe to Ban">اشترك في <span class="swash">بان</span></a>
             <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
             <figure class="ban-emblem rv">
                 <img src="/assets/logos/ban.webp"
@@ -1075,6 +1077,8 @@ ${C.breadcrumb(trail)}
 
         <!-- ماستهيد «ذُرى» — العنوان، الشعار المفرّغ، الوصف، التعريف، ثم المقدّمة -->
         <header class="page-header breakout page-masthead">
+            <a class="masthead-subscribe brand-dhura rv" href="#subscribe-dhura"
+                    data-en="Subscribe to Dhura">اشترك في <span class="swash">ذُرى</span></a>
             <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
             <figure class="masthead-emblem rv">
                 <img src="/assets/logos/dhura.webp"
@@ -1143,7 +1147,7 @@ function subscribeCard(list, ctx) {
     const brand   = isDhura ? 'brand-dhura' : 'brand-ban';
 
     return `
-            <section class="sub-card sub-${list} ${brand} rv"
+            <section class="sub-card sub-${list} ${brand} rv" id="subscribe-${list}"
                      data-list="${list}" aria-labelledby="subTitle-${list}">
                 <p class="sub-kicker" data-en="Email updates">تحديثات بالبريد</p>
                 <h2 class="sub-title" id="subTitle-${list}"
