@@ -102,6 +102,8 @@ function seoMeta(o) {
     if (o.publishedTime) L.push(`    <meta property="article:published_time" content="${escapeAttr(o.publishedTime)}">`);
     if (o.modifiedTime) L.push(`    <meta property="article:modified_time" content="${escapeAttr(o.modifiedTime)}">`);
     (o.articleTags || []).forEach((t) => L.push(`    <meta property="article:tag" content="${escapeAttr(t)}">`));
+    // صفحات الأدوات (إلغاء الاشتراك مثلاً) لا معنى لظهورها في نتائج البحث
+    if (o.robots) L.push(`    <meta name="robots" content="${escapeAttr(o.robots)}">`);
     L.push('    <meta name="twitter:card" content="summary_large_image">');
     L.push(`    <meta name="twitter:title" content="${escapeAttr(og.title || o.title)}">`);
     L.push(`    <meta name="twitter:description" content="${escapeAttr(og.description || o.description)}">`);
