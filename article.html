@@ -10,7 +10,7 @@
     /* الروابط المنشورة قبل الانتقال إلى المسارات النظيفة تصل هنا. الخريطة
        مولَّدة في البناء، فلا طلب شبكة ولا انتظار. */
     (function () {
-        var MAP = {"3dd59148905a80489558db144965ba09":"/articles/%D8%AA%D8%AC%D8%B1%D8%A8%D8%A9/","e0b1daa47a964f308a4310c2f6494ba2":"/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/","d7a7837479d646cb8e529f7df48ca801":"/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/"};
+        var MAP = {"e0b1daa47a964f308a4310c2f6494ba2":"/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/","d7a7837479d646cb8e529f7df48ca801":"/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/"};
         var id = new URLSearchParams(location.search).get('id');
         var to = (id && MAP[id]) || "/articles/";
         location.replace(to + location.hash);
@@ -22,7 +22,6 @@
     <h1>مدوّنة بان</h1>
     <p>انتقل هذا القسم إلى مسارات جديدة. اختر من القائمة:</p>
     <ul>
-        <li><a href="/articles/%D8%AA%D8%AC%D8%B1%D8%A8%D8%A9/">تجربة</a></li>
         <li><a href="/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/">الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!</a></li>
         <li><a href="/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/">الهُوية بين وطأة الاعلام وضعف الشخصية</a></li>
     </ul>
