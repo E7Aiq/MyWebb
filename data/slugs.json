@@ -33,6 +33,12 @@
     "title": "إستخلاص بيانات مختلف المنشآت من خرائط قوقل",
     "kind": "project"
   },
+  "3dd59148905a80489558db144965ba09": {
+    "slug": "تجربة",
+    "aliases": [],
+    "title": "تجربة",
+    "kind": "article"
+  },
   "d7a7837479d646cb8e529f7df48ca801": {
     "slug": "الهوية-بين-وطأة-الاعلام-وضعف-الشخصية",
     "aliases": [],
@@ -151,6 +157,12 @@
     "slug": "web-scraping",
     "aliases": [],
     "title": "Web Scraping",
+    "kind": "topic"
+  },
+  "topic:عام": {
+    "slug": "عام",
+    "aliases": [],
+    "title": "عام",
     "kind": "topic"
   }
 }
