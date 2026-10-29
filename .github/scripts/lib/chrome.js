@@ -70,7 +70,7 @@ function head(o) {
     lines.push('    </script>');
     lines.push('');
     lines.push('    <link rel="icon" href="/favicon.svg" type="image/svg+xml">');
-    lines.push('    <link rel="apple-touch-icon" href="/favicon.svg">');
+    lines.push('    <link rel="apple-touch-icon" href="/apple-touch-icon.png">');
     lines.push(`    <link rel="canonical" href="${escapeAttr(o.canonical)}">`);
     lines.push('    <link rel="alternate" type="application/atom+xml" title="بان — مقالات محمد الزبيدي" href="/feed.xml">');
     lines.push('');
@@ -121,15 +121,20 @@ const NAV_ITEMS = {
 
 /**
  * @param {'articles'|'projects'|null} section  القسم النشط
- * @param {{href:string, src:string, alt:string, w:number, h:number, subscriptions?:boolean}} emblem
+ * @param {{href:string, src:string, alt:string, w:number, h:number}
+ *        | {href:string, word:string, brand:string, label:string, enLabel:string}} emblem
+ *        word: اسم القسم بخطّه المرسل بدل صورة الشعار (صفحات ذُرى وبان)
  */
 function navbar(section, emblem) {
     const item = (k) => NAV_ITEMS[k].replace('{active}', section === k ? ' active' : '');
+    const logo = emblem.word
+        ? `<a href="${escapeAttr(emblem.href)}" class="logo logo-word ${escapeAttr(emblem.brand)}" aria-label="${escapeAttr(emblem.label)}" data-en-label="${escapeAttr(emblem.enLabel)}"><span class="swash">${escapeHtml(emblem.word)}</span></a>`
+        : `<a href="${escapeAttr(emblem.href)}" class="logo logo-emblem">
+                <img src="${escapeAttr(emblem.src)}" alt="${escapeAttr(emblem.alt)}" width="${emblem.w}" height="${emblem.h}" decoding="async">
+            </a>`;
     return `    <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="${escapeAttr(emblem.href)}" class="logo logo-emblem">
-                <img src="${escapeAttr(emblem.src)}" alt="${escapeAttr(emblem.alt)}" width="${emblem.w}" height="${emblem.h}" decoding="async">
-            </a>
+            ${logo}
             <div class="nav-actions">
                 <ul class="nav-links" id="navLinks">
                     ${item('home')}

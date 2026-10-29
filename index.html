@@ -16,7 +16,7 @@
          يدوياً. لرفع الباعث: ارفع cacheBuster في data/site.json وحده. ── -->
     <!-- seo:assets:begin -->
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r32"></script>
+    <script src="/js/view-transitions.js?v=r33"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,12 +24,12 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r32">
-    <link rel="stylesheet" href="/css/animations.css?v=r32">
+    <link rel="stylesheet" href="/css/style.css?v=r33">
+    <link rel="stylesheet" href="/css/animations.css?v=r33">
     <!-- بطاقات المختارات: المشروع في project.css والمقال في article.css -->
-    <link rel="stylesheet" href="/css/project.css?v=r32">
-    <link rel="stylesheet" href="/css/article.css?v=r32">
-    <link rel="stylesheet" href="/css/responsive.css?v=r32">
+    <link rel="stylesheet" href="/css/project.css?v=r33">
+    <link rel="stylesheet" href="/css/article.css?v=r33">
+    <link rel="stylesheet" href="/css/responsive.css?v=r33">
     <!-- seo:assets:end -->
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
@@ -42,7 +42,7 @@
     }
     </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <!-- ── منطقة مُدارة: العنوان والوصف والرابط المعياري وبطاقة المشاركة
          والبيانات المنظّمة. مصدرها data/site.json ويكتبها
          .github/scripts/build-site.js — لا تُحرَّر يدوياً، فأي تحرير
@@ -165,7 +165,13 @@
 
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="/" class="logo" data-en="Mohammed Alzobaidi">محمد <span class="swash">الزبيدي</span></a>
+            <!-- data-en على الاسم لا على الرابط: طبقة i18n تكتب textContent
+                 فتمحو الشعار لو حمله الرابط نفسه. -->
+            <a href="/" class="logo">
+                <img class="logo-mark" src="assets/logos/mark-20.webp" alt="" aria-hidden="true"
+                     width="132" height="107" decoding="async">
+                <span data-en="Mohammed Alzobaidi">محمد <span class="swash">الزبيدي</span></span>
+            </a>
             <div class="nav-actions">
                 <ul class="nav-links" id="navLinks">
                     <li><a href="/" class="nav-link active" data-en="Home">الرئيسية</a></li>
@@ -193,6 +199,8 @@
             <div class="container hero-inner">
                 <div class="hero-text">
                     <h1 class="hero-title">
+                        <img class="hero-mark" src="assets/logos/mark.webp" alt="" aria-hidden="true"
+                             width="300" height="244" decoding="async">
                         <!-- الاسم وحده. كان تحته سطر لاتيني ثابت «Mohammed
                              Alzobaidi» يظهر دائماً؛ صار الاسم يتبع لغة
                              الواجهة فلا تتكرّر الهوية مرّتين في الشاشة.
@@ -208,13 +216,9 @@
                              الخلفية النظيفة. التعبئة الصلبة كانت تُثقل الشعار
                              القرميدي وتفكّ التوأمة بينهما. -->
                         <a href="/projects/" class="btn btn-outline brand-dhura" aria-label="ذُرى — مشاريعي">
-                            <img class="btn-emblem" src="assets/logos/dhura-20.webp" alt="" aria-hidden="true"
-                                 width="50" height="60" decoding="async">
                             <span class="swash">ذُرى</span>
                         </a>
                         <a href="/articles/" class="btn btn-outline brand-ban" aria-label="بان — مدوّنتي">
-                            <img class="btn-emblem" src="assets/logos/ban-20.webp" alt="" aria-hidden="true"
-                                 width="56" height="60" decoding="async">
                             <span class="swash">بان</span>
                         </a>
                         <a href="#contact" class="btn btn-secondary" data-en="Get in touch">تواصل معي</a>
@@ -814,12 +818,12 @@
     </footer>
     <!-- seo:scripts:begin -->
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r32"></script>
-    <script src="/js/covers.js?v=r32"></script>
-    <script src="/main.js?v=r32"></script>
-    <script src="/animations.js?v=r32"></script>
-    <script src="/projects.js?v=r32"></script>
-    <script src="/js/articles-list.js?v=r32"></script>
+    <script src="/js/i18n.js?v=r33"></script>
+    <script src="/js/covers.js?v=r33"></script>
+    <script src="/main.js?v=r33"></script>
+    <script src="/animations.js?v=r33"></script>
+    <script src="/projects.js?v=r33"></script>
+    <script src="/js/articles-list.js?v=r33"></script>
     <!-- seo:scripts:end -->
 </body>
 </html>

@@ -870,8 +870,8 @@ function detailPage(item, ordered, index, ctx) {
     });
 
     const emblem = isArticle
-        ? { href: '/articles/', src: '/assets/logos/ban.webp', alt: 'بان', w: 406, h: 440 }
-        : { href: '/projects/', src: '/assets/logos/dhura.webp', alt: 'ذُرى', w: 349, h: 440 };
+        ? { href: '/articles/', word: 'بان', brand: 'brand-ban', label: 'بان — المقالات', enLabel: 'Ban — Writing' }
+        : { href: '/projects/', word: 'ذُرى', brand: 'brand-dhura', label: 'ذُرى — المشاريع', enLabel: 'Dhura — Projects' };
 
     return `${head}
 <body>
@@ -979,7 +979,7 @@ function articlesIndexPage(ctx) {
 <body>
     <a class="skip-link" data-en="Skip to articles" href="#articles-grid">تخطَّ إلى المقالات</a>
 
-${C.navbar('articles', { href: '/', src: '/assets/logos/ban.webp', alt: 'بان', w: 406, h: 440 })}
+${C.navbar('articles', { href: '/articles/', word: 'بان', brand: 'brand-ban', label: 'بان — المقالات', enLabel: 'Ban — Writing' })}
 
     <!-- Main Content -->
     <main class="publication">
@@ -1069,7 +1069,7 @@ function projectsIndexPage(ctx) {
 <body>
     <a class="skip-link" data-en="Skip to projects" href="#projectsGrid">تخطَّ إلى المشاريع</a>
 
-${C.navbar('projects', { href: '/', src: '/assets/logos/dhura.webp', alt: 'ذُرى', w: 349, h: 440 })}
+${C.navbar('projects', { href: '/projects/', word: 'ذُرى', brand: 'brand-dhura', label: 'ذُرى — المشاريع', enLabel: 'Dhura — Projects' })}
 
     <!-- Main Content -->
     <main class="publication dhura">
@@ -1214,7 +1214,7 @@ function unsubscribePage(ctx) {
     return `${head}
 <body>
     <a class="skip-link" data-en="Skip to content" href="#unsubRoot">تخطَّ إلى المحتوى</a>
-${C.navbar(null, { href: '/', src: '/favicon.svg', alt: site.name_ar, w: 32, h: 32 })}
+${C.navbar(null, { href: '/', src: '/assets/logos/mark-20.webp', alt: site.name_ar, w: 132, h: 107 })}
 
     <main class="publication" id="unsubRoot">
         <header class="page-header breakout">

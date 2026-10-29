@@ -679,21 +679,38 @@ time, .article-read-time, .article-card-date, .project-card-date,
   /* هدف لمس ٤٤px وإن كان النصّ ١٨px — كان ارتفاع منطقة النقر ٢٧px */
   display: inline-flex;
   align-items: center;
-  /* «محمد» و«الزبيدي» عنصرا فلكس منفصلان (الأخير في .swash)، وفلكس يُسقط
-     المسافة النصّية بينهما — فالفجوة تُعاد صراحةً بمقدار مسافة كلمة. */
-  gap: 0.28em;
+  /* الشعار عنصر فلكس والاسم كلّه عنصر واحد بعده (في span يحمل data-en)،
+     فالمسافة بين «محمد» و«الزبيدي» مسافة كلمة عادية، وهذه الفجوة للشعار. */
+  gap: 0.5em;
   min-block-size: 2.75rem;
   font-family: var(--font-sans);
   font-size: var(--t-body);
   font-weight: 700;
   color: var(--text);
   text-decoration: none;
+  white-space: nowrap;   /* الاسم لا ينكسر تحت الشعار في الشاشات الضيّقة */
   /* لا letter-spacing على العربية — يفصل الحروف المتصلة ويكسر الكلمة. */
 }
 
 /* شعار القسم صورةً في القائمة (المشاريع «ذُرى» / المقالات «بان») بدل الاسم.
    يبقى هدف اللمس 44px (min-block-size أعلاه)، والصورة 36px داخله. */
 .logo-emblem img{ block-size: 2.25rem; inline-size: auto; display: block; }
+
+/* صفحتا ذُرى وبان: اسم القسم بخطّ العرض المرسل مكان الشعار، بلون القسم،
+   ويعود إلى رأس القسم نفسه لا إلى الرئيسية. */
+.logo-word{
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--accent-text);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.logo-word:hover{ color: var(--solid-hover); }
+
+/* شعار المدار بجانب الاسم في الرئيسية. أعرض من ارتفاعه (≈1.23:1) وخطوطه
+   رفيعة، فيُعطى ارتفاعاً يقارب ارتفاع الحروف الكبيرة مع الصواعد لا أقلّ —
+   دونه تذوب المدارات الخارجية. */
+.logo-mark{ block-size: 1.625rem; inline-size: auto; display: block; flex: none; }
 
 /* الروابط والمبدّل وزرّ القائمة في مجموعة واحدة عند طرف الشريط، فلا
    يبعثرها space-between على عرض النافبار. */
@@ -857,9 +874,6 @@ time, .article-read-time, .article-card-date, .project-card-date,
 @supports not (color: color-mix(in oklab, red, blue)){
   :root{ --bg-glass: rgba(249,248,246,.72); }
 }
-
-/* رمز القسم داخل الزرّ (شعار مفرّغ صغير يسبق الاسم) */
-.btn-emblem{ block-size: 1.25rem; inline-size: auto; display: block; }
 
 /* ما الذي سيُنزَّل؟ النوع والحجم قبل النقر لا بعده */
 .btn-meta{
@@ -1030,14 +1044,53 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   align-items: center;
 }
 
-.hero-title{ margin-block-end: var(--s-6); }
+.hero-title{
+  margin-block-end: var(--s-6);
+  /* الشعار قبل الاسم على سطر واحد، يتوسّطان عمودياً */
+  display: flex;
+  align-items: center;
+  /* الاسم مع الشعار ≈ ‎7.3 أضعاف حجم الخط عرضاً. دون ~360px لا يتّسع العمود
+     لذلك عند الحدّ الأدنى من --t-hero فينكسر الاسم سطرين ويبقى الشعار
+     معلّقاً بينهما — فيُصغَّر الحجم بقدر العمود بدل الكسر. */
+  --name-size: var(--t-hero);
+  --name-size: min(var(--t-hero), 100cqi / 7.3);
+  gap: calc(var(--name-size) * 0.24);
+}
+
+/* يُقاس بخط الاسم نفسه فيتبعه في كل عرض بلا نقاط كسر خاصة به.
+   ‎0.78 من حجم الخط ≈ ارتفاع جسم الحروف العربية مع صواعدها، فيقف الشعار
+   نظيراً للاسم لا شارةً صغيرة بجانبه ولا كتلةً تطغى عليه. */
+.hero-mark{
+  flex: none;
+  block-size: calc(var(--name-size) * 0.78);
+  inline-size: auto;
+  /* مركز صندوق الاسم أعلى من مركز حروفه البصري (ذيل الياء والزاي ينزل
+     تحت السطر)، فيُنزَل الشعار قليلاً ليقابل منتصفُه منتصفَ الكلمة لا
+     منتصفَ الصندوق. */
+  translate: 0 calc(var(--name-size) * 0.15);
+}
+
+/* «Mohammed Alzobaidi» أعرض من الاسم العربي بنحو ٧٠٪، فتصغيره ليتّسع سطراً
+   واحداً في الجوال يُنزله دون حجم العنوان. يُترك ينكسر سطرين، ويُقاس الحجم
+   بأطول كلمة مع الشعار (≈ ‎6.9 أضعاف الخط) لا بالاسم كلّه. ويُحاذى الشعار
+   إلى السطر الأول لا إلى منتصف السطرين:
+   (ارتفاع السطر 1.15 − ارتفاع الشعار 0.78) ÷ 2 = 0.185. */
+.hero-title:lang(en){
+  --name-size: var(--t-hero);
+  --name-size: min(var(--t-hero), 100cqi / 6.9);
+  align-items: flex-start;
+}
+.hero-title:lang(en) .hero-mark{ margin-block: calc(var(--name-size) * 0.185) 0; }
+.name-ar:lang(en){ white-space: normal; }
+.logo:lang(en){ white-space: normal; }
 
 .name-ar{
   display: block;
   font-family: var(--font-display);
-  font-size: var(--t-hero);
+  font-size: var(--name-size, var(--t-hero));
   font-weight: 700;
   line-height: 1.15;
+  white-space: nowrap;
   padding-block-end: 0.08em;
 }
 
@@ -1414,7 +1467,7 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 .contact{}
 .skills{}
 .selections{}
-.hero-text{}
+.hero-text{ container-type: inline-size; }   /* يقيس به .hero-title حجم الاسم */
 .section-body{}            /* عمود المحتوى في .section-grid */
 .skill-card{}              /* محجوزة، بلا نسخة في أي صفحة حالياً */
 .hero-canvas{ display: none; }
