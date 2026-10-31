@@ -1164,6 +1164,41 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 .poetry-hemistich{ text-wrap: balance; }
 .about-content .btn{ margin-block-start: var(--s-8); }
 
+/* الحركة بلا إطار ولا ظل: أرضيتها من لون الصفحة فتذوب فيها. عرضها عرضُ عمود
+   صورة الهيرو نفسه عند أقصى عرض للحاوية (‎1fr من ‎1.6fr 1fr بعد طرح الفجوة:
+   ‎(75rem − 4rem) ÷ 2.6 ≈ 27.3rem = 437px)، ولا يتجاوز عرض الشاشة في الجوال. */
+.about-reel{
+  inline-size: min(100%, 27.3rem);
+  margin-inline: auto;
+}
+/* أرضية الملف أغمق من الصفحة بدرجة واحدة فتُرى حافّته مستطيلاً باهتاً،
+   فتتلاشى الأطراف الأربعة قناعاً بدل تعديل ألوان الملف نفسه. */
+.about-reel img{
+  inline-size: 100%;
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent),
+    linear-gradient(transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent),
+    linear-gradient(transparent, #000 6%, #000 94%, transparent);
+  mask-composite: intersect;
+}
+
+/* من 80rem يتّسع العمود الثاني للنبذة والحركة معاً (دونها تتداخلان)، فتشتركان
+   في صفّه: النبذة عند البدء والحركة عند النهاية، أي تحت عمود صورة الهيرو
+   ومركزها على مركزها، ملتصقةً مع عنوان القسم. */
+@media (min-width: 80rem){
+  .about-content,
+  .about-reel{ grid-column: 2; grid-row: 1; }
+  .about-reel{
+    justify-self: end;
+    margin-inline: 0;
+    position: sticky;
+    inset-block-start: calc(var(--nav-h) + var(--s-8));
+  }
+}
+
 /* ── رحلة البيانات: تسلسل واحد على خطّ واحد ────────────────────────────
    الرقم صغير مندمج طباعياً — 22px، أي تحت عتبة Display، فدوره Sans.
    التسلسل نفسه هو ما يُرى لا الأرقام.
