@@ -239,5 +239,29 @@
         });
     });
 
+    /* ── فيديو «عني» ───────────────────────────────────────────────────────
+       مع تقليل الحركة: يعود إلى صورته الثابتة (load يُظهر poster) ولا يعمل.
+       وخارج الشاشة يتوقّف، فلا يفكّ إطارات لا يراها أحد أثناء التمرير. */
+    const reel = document.querySelector('.about-reel video');
+    if (reel) {
+        const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let onScreen = true;
+        const sync = () => {
+            if (motion.matches) {
+                reel.removeAttribute('autoplay');
+                if (!reel.paused || reel.currentTime > 0) { reel.pause(); reel.load(); }
+            } else if (onScreen) {
+                reel.play().catch(() => { /* منع التشغيل التلقائي: تبقى الصورة الثابتة */ });
+            } else {
+                reel.pause();
+            }
+        };
+        motion.addEventListener('change', sync);
+        new IntersectionObserver(([entry]) => {
+            onScreen = entry.isIntersecting;
+            sync();
+        }, { rootMargin: '200px 0px' }).observe(reel);
+    }
+
     document.addEventListener('DOMContentLoaded', setActiveNavLink);
 })();
