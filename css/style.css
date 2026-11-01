@@ -1170,23 +1170,26 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 .about-reel{ margin: 0; mix-blend-mode: darken; }
 .about-reel video{ display: block; inline-size: 100%; block-size: auto; }
 
-/* الصورة الثابتة فوق الفيديو، ولا تختفي إلا حين يعمل فعلاً (.is-playing من
-   main.js). فمن يمنع متصفّحه التشغيل التلقائي — Safari في توفير الطاقة يعرض
-   زرّ تشغيل وطبقة رمادية — يرى الصورة نظيفةً ولا يرى عناصر المشغّل أبداً.
-   لا تُرفع إلا مع .js: بلا سكربت لا يصل الصنف فتحجب الفيديو إلى الأبد. */
+/* الصورة الثابتة فوق الفيديو حتى يعمل فعلاً (.is-playing من main.js) ثم تتلاشى،
+   وتعود فوراً إن توقّف. brightness يرفع أرضيتها فوق لون الصفحة مثل أرضية
+   الفيديو، فيغلب لون الصفحة مع darken؛ وبدونه تظهر في الآيفون مربّعاً أغمق
+   بدرجة واحدة. */
 .about-reel{
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   pointer-events: none;
 }
 .about-reel > *{ grid-area: 1 / 1; }
-.about-reel img{ inline-size: 100%; }
-.js .about-reel img{
+.about-reel img{
   position: relative;
   z-index: 1;
+  inline-size: 100%;
+  filter: brightness(1.02);
+}
+.about-reel.is-playing img{
+  opacity: 0;
   transition: opacity var(--dur-mid) var(--ease-out);
 }
-.about-reel.is-playing img{ opacity: 0; }
 
 @media (max-width: 59.99rem){
   .about-reel{ max-inline-size: 36rem; }

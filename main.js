@@ -240,35 +240,61 @@
     });
 
     /* ── فيديو «عني» ───────────────────────────────────────────────────────
-       الصورة الثابتة تغطّيه حتى يعمل فعلاً، فإن مُنع التشغيل بقيت هي.
-       مع تقليل الحركة: لا يعمل. وخارج الشاشة يتوقّف، فلا يفكّ إطارات لا يراها
-       أحد أثناء التمرير. */
-    const reel = document.querySelector('.about-reel video');
-    if (reel) {
-        const frame = reel.closest('.about-reel');
-        reel.addEventListener('playing', () => frame.classList.add('is-playing'));
-        reel.addEventListener('pause', () => frame.classList.remove('is-playing'));
-
+       لا يدخل الصفحة إلا وهو يعمل فعلاً، ويخرج منها إن توقّف؛ وبين ذلك تبقى
+       الصورة الثابتة. فـSafari يرسم زرّ تشغيل فوق الفيديو حين يمنع التشغيل
+       التلقائي (توفير الطاقة وحرارة الجهاز)، وما ليس في الصفحة لا يرسم شيئاً،
+       ولذلك لا تُستعمل سمة autoplay ولا يُكتفى بتغطيته.
+       ويتوقّف خارج الشاشة وفي التبويب المخفي، ولا يعمل مع تقليل الحركة. */
+    const reelFrame = document.querySelector('.about-reel[data-video]');
+    if (reelFrame) {
         const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-        let onScreen = true;
+        let reel = null;
+        let onScreen = false;
+
+        const reveal = () => {
+            if (!reel.paused) reelFrame.classList.add('is-playing');
+        };
+        const hide = () => {
+            reelFrame.classList.remove('is-playing');
+            reel.remove();
+        };
+        const createReel = () => {
+            const video = document.createElement('video');
+            // Safari يشترط السمة والخاصية معاً ليسمح بالتشغيل بلا نقرة.
+            video.setAttribute('muted', '');
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.disablePictureInPicture = true;
+            video.disableRemotePlayback = true;
+            video.setAttribute('aria-hidden', 'true');
+            video.addEventListener('playing', () => {
+                if (!video.isConnected) reelFrame.append(video);
+                // تتلاشى الصورة بعد ظهور أول إطار، لا قبله.
+                if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(reveal);
+                else requestAnimationFrame(reveal);
+            });
+            video.addEventListener('pause', hide);
+            video.addEventListener('error', hide);
+            video.src = reelFrame.dataset.video;
+            return video;
+        };
         const sync = () => {
-            if (motion.matches) {
-                reel.removeAttribute('autoplay');
-                reel.pause();
-                // load يلغي حدث pause المنتظر، فيُزال الصنف صراحةً.
-                frame.classList.remove('is-playing');
-                if (reel.currentTime > 0) reel.load();
-            } else if (onScreen) {
-                reel.play().catch(() => { /* منع التشغيل التلقائي: تبقى الصورة الثابتة */ });
-            } else {
+            if (onScreen && !document.hidden && !motion.matches) {
+                if (!reel) reel = createReel();
+                reel.play().catch(() => { /* مُنع التشغيل: تبقى الصورة الثابتة */ });
+            } else if (reel) {
                 reel.pause();
             }
         };
+
         motion.addEventListener('change', sync);
+        document.addEventListener('visibilitychange', sync);
+        window.addEventListener('pageshow', sync);
         new IntersectionObserver(([entry]) => {
             onScreen = entry.isIntersecting;
             sync();
-        }, { rootMargin: '200px 0px' }).observe(reel);
+        }, { rootMargin: '200px 0px' }).observe(reelFrame);
     }
 
     document.addEventListener('DOMContentLoaded', setActiveNavLink);
