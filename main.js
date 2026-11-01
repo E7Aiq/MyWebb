@@ -240,16 +240,24 @@
     });
 
     /* ── فيديو «عني» ───────────────────────────────────────────────────────
-       مع تقليل الحركة: يعود إلى صورته الثابتة (load يُظهر poster) ولا يعمل.
-       وخارج الشاشة يتوقّف، فلا يفكّ إطارات لا يراها أحد أثناء التمرير. */
+       الصورة الثابتة تغطّيه حتى يعمل فعلاً، فإن مُنع التشغيل بقيت هي.
+       مع تقليل الحركة: لا يعمل. وخارج الشاشة يتوقّف، فلا يفكّ إطارات لا يراها
+       أحد أثناء التمرير. */
     const reel = document.querySelector('.about-reel video');
     if (reel) {
+        const frame = reel.closest('.about-reel');
+        reel.addEventListener('playing', () => frame.classList.add('is-playing'));
+        reel.addEventListener('pause', () => frame.classList.remove('is-playing'));
+
         const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
         let onScreen = true;
         const sync = () => {
             if (motion.matches) {
                 reel.removeAttribute('autoplay');
-                if (!reel.paused || reel.currentTime > 0) { reel.pause(); reel.load(); }
+                reel.pause();
+                // load يلغي حدث pause المنتظر، فيُزال الصنف صراحةً.
+                frame.classList.remove('is-playing');
+                if (reel.currentTime > 0) reel.load();
             } else if (onScreen) {
                 reel.play().catch(() => { /* منع التشغيل التلقائي: تبقى الصورة الثابتة */ });
             } else {
