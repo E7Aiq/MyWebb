@@ -276,6 +276,8 @@
             });
             video.addEventListener('pause', hide);
             video.addEventListener('error', hide);
+            // لا يُنزَّل الملف إلا إذا قُبل التشغيل، فلا يُهدر حين يُمنع.
+            video.preload = 'none';
             video.src = reelFrame.dataset.video;
             return video;
         };
