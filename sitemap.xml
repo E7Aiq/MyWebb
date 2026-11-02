@@ -56,12 +56,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://alzobaidi.me/projects/organizing-chaos-and-measuring-discrepancies-an-integrated/</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://alzobaidi.me/projects/beyond-the-numbers-a-strategic-bi-deep-dive/</loc>
     <lastmod>2026-08-31</lastmod>
     <changefreq>monthly</changefreq>
@@ -72,12 +66,6 @@
     <lastmod>2026-08-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://alzobaidi.me/topics/data-integration/</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://alzobaidi.me/topics/ai-solution/</loc>
@@ -104,7 +92,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://alzobaidi.me/topics/data-quality/</loc>
+    <loc>https://alzobaidi.me/topics/data-integration/</loc>
     <lastmod>2026-08-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -116,19 +104,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://alzobaidi.me/topics/etl/</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://alzobaidi.me/topics/power-bi/</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://alzobaidi.me/topics/python/</loc>
     <lastmod>2026-08-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
