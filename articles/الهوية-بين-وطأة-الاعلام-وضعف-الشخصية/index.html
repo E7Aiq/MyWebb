@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r38"></script>
+    <script src="/js/view-transitions.js?v=r39"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,10 +21,10 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r38">
-    <link rel="stylesheet" href="/css/animations.css?v=r38">
-    <link rel="stylesheet" href="/css/article.css?v=r38">
-    <link rel="stylesheet" href="/css/responsive.css?v=r38">
+    <link rel="stylesheet" href="/css/style.css?v=r39">
+    <link rel="stylesheet" href="/css/animations.css?v=r39">
+    <link rel="stylesheet" href="/css/article.css?v=r39">
+    <link rel="stylesheet" href="/css/responsive.css?v=r39">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -115,7 +115,7 @@
 }
     </script>
 </head>
-<body>
+<body class="ban">
     <a class="skip-link" data-en="Skip to article" href="#article-body">تخطَّ إلى المقال</a>
 
     <nav class="navbar" id="navbar">
@@ -158,21 +158,23 @@
              كما كتبه صاحبه. -->
         <article class="article breakout" dir="rtl" lang="ar" id="articleShell" data-id="d7a7837479d646cb8e529f7df48ca801" data-static="1">
 
+            <!-- الترويسة أولاً بعرض الغلاف: العنوان بخطّ العرض ثم الميتا، والغلاف
+                 لوحةٌ تحتها، ثم المتن في عمود القراءة. -->
+            <header class="article-header u-wide">
+                <h1 id="article-title" class="article-title">الهُوية بين وطأة الاعلام وضعف الشخصية</h1>
+                <div class="article-meta">
+                <span id="article-date" class="article-date"><time datetime="2023-09-09">٩ سبتمبر ٢٠٢٣</time></span>
+                <span id="article-category" class="article-category"></span>
+                <span id="article-read-time" class="article-read-time">دقيقتان قراءة</span>
+                </div>
+
+            </header>
+
             <div class="article-cover-wrapper u-wide">
                 <img id="article-cover" class="article-cover" src="/assets/images/articles/d7a7837479d646cb8e529f7df48ca801-cover.webp" alt="" width="1600" height="900">
             </div>
 
-            <header class="article-header">
-                <h1 id="article-title" class="article-title">الهُوية بين وطأة الاعلام وضعف الشخصية</h1>
-            </header>
-
             <div class="article-rule" aria-hidden="true"></div>
-
-            <div class="article-meta">
-                <span id="article-date" class="article-date"><time datetime="2023-09-09">٩ سبتمبر ٢٠٢٣</time></span>
-                <span id="article-category" class="article-category"></span>
-                <span id="article-read-time" class="article-read-time">دقيقتان قراءة</span>
-            </div>
 
             <div id="article-body" class="article-body">
 <p>نبدأ بما بدأنا به جميعاً؛ لحظة الولادة. لحظة قطع الحبل السري لحظة فارقة في حياة كل إنسان، ومن هنا نطرح سؤالاً فلسفياً إجابته واضحة لا تحتاج تعقيداً: من أنت في لحظاتك الأولى حين فتحت عينيك على هذا العالم؟ هل أنت ذلك الإنسان الصلب الذي عركته الحياة؟ أم ذلك الحكيم الذي صقلته التجارب؟ أم ذلك المتعلم الذي أثقلته الشهادات؟</p>
@@ -210,10 +212,11 @@
 
     </main>
 
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
+    <!-- التذييل خاتمة الصفحة على الحبر الليلي: التوقيع، ثم المداخل، ثم الحقوق.
+         كان سطر حقوق بشعرة فوقه، فيُترك آخر ما يراه القارئ بلا وجهة. -->
+    <footer class="footer on-ink">
         <div class="container footer-grid">
+            <a href="/" class="footer-brand" data-en="Mohammed Alzobaidi">محمد الزبيدي</a>
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
                 <a href="/" data-en="Home">الرئيسية</a>
                 <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
@@ -227,11 +230,11 @@
     <script type="application/json" id="pageData">{"kind":"article","id":"d7a7837479d646cb8e529f7df48ca801","title":"الهُوية بين وطأة الاعلام وضعف الشخصية","date":"2023-09-09","readTime":2,"url":"https://alzobaidi.me/articles/%D8%A7%D9%84%D9%87%D9%88%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%88%D8%B7%D8%A3%D8%A9-%D8%A7%D9%84%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D9%88%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9/"}</script>
 
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r38"></script>
-    <script src="/js/covers.js?v=r38"></script>
-    <script src="/main.js?v=r38"></script>
-    <script src="/animations.js?v=r38"></script>
-    <script src="/js/article.js?v=r38"></script>
-    <script src="/effects.js?v=r38"></script>
+    <script src="/js/i18n.js?v=r39"></script>
+    <script src="/js/covers.js?v=r39"></script>
+    <script src="/main.js?v=r39"></script>
+    <script src="/animations.js?v=r39"></script>
+    <script src="/js/article.js?v=r39"></script>
+    <script src="/effects.js?v=r39"></script>
 </body>
 </html>

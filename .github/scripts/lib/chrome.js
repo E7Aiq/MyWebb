@@ -158,10 +158,11 @@ function navbar(section, emblem) {
 }
 
 /* ── التذييل ────────────────────────────────────────────────────────────── */
-const FOOTER = `    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
+const FOOTER = `    <!-- التذييل خاتمة الصفحة على الحبر الليلي: التوقيع، ثم المداخل، ثم الحقوق.
+         كان سطر حقوق بشعرة فوقه، فيُترك آخر ما يراه القارئ بلا وجهة. -->
+    <footer class="footer on-ink">
         <div class="container footer-grid">
+            <a href="/" class="footer-brand" data-en="Mohammed Alzobaidi">محمد الزبيدي</a>
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
                 <a href="/" data-en="Home">الرئيسية</a>
                 <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>

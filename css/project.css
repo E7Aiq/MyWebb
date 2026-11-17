@@ -45,10 +45,8 @@
   color: var(--text-faint);
 }
 
-.project-detail-preview-wrapper{
-  margin-block-start: var(--s-6);
-  margin-block-end: var(--s-12);
-}
+/* زرّ المعاينة في الترويسة تحت الميتا — الفعل الأول بعد معرفة ما هو المشروع */
+.project-detail-preview-wrapper{ margin-block-start: var(--s-6); }
 .project-preview-btn svg{ flex-shrink: 0; }
 
 
@@ -95,8 +93,7 @@
 /* المشاريع أعرض من المقالات: لكل مشروع غلاف ووصف وتصنيفات وزرّان، وهي
    بطاقات تُتصفَّح لا سطور تُقرأ — فلا تخضع لعرض عمود القراءة. */
 .projects-section{
-  --measure: 58rem;
-  padding-block: var(--s-12) var(--s-24);
+  padding-block: 0 var(--s-24);
 }
 
 /* ── شريط الفلاتر: مضمار ثابت في مكانه ────────────────────────────────────
@@ -147,8 +144,43 @@
   /* auto-fill لا auto-fit: مع auto-fit تنطوي المسارات الفارغة، فبطاقة
      واحدة بعد الترشيح تتمدّد لتملأ عرض الشبكة كلّه وغلافها معها.
      auto-fill يُبقي المسار الفارغ فتحتفظ البطاقة بمقاسها. */
-  grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr));
-  gap: var(--s-16) var(--s-8);
+  grid-template-columns: repeat(auto-fill, minmax(min(26rem, 100%), 1fr));
+  gap: var(--s-16) var(--s-12);
+}
+
+/* ── الصدارة: أحدث مشروع غلافُ الفهرس ─────────────────────────────────────
+   البطاقة الأولى تمتدّ عرض الشبكة: الغلاف في عمود والنصّ يقابله، والعنوان
+   بخطّ العرض. ما بعدها شبكة بعمودين. حين يُرشَّح فيُخفى الأول لا تُنتخب
+   صدارة بديلة — الترشيح بحثٌ في الفهرس لا ترتيبٌ جديد له. */
+@media (min-width: 60rem){
+  .projects-section .project-card:first-child{
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--s-12);
+    align-items: center;
+    padding-block-end: var(--s-16);
+    border-block-end: 1px solid var(--border-subtle);
+    border-radius: 0;   /* الشعرة السفلى مستقيمة — نصف قطر البطاقة كان يلويها عند طرفيها */
+  }
+  .projects-section .project-card:first-child.hidden{ display: none; }
+  .projects-section .project-card:first-child .project-card-image-wrapper{ margin-block-end: 0; }
+  .projects-section .project-card:first-child .project-card-title{
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    line-height: var(--lh-head);
+  }
+  .projects-section .project-card:first-child .project-card-summary{
+    font-size: var(--t-body);
+    line-height: var(--lh-body);
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    margin-block-start: var(--s-4);
+  }
+  .projects-section .project-card:first-child .project-card-actions{
+    margin-block-start: var(--s-6);
+    padding-block-start: 0;
+  }
 }
 
 /* الرابط الممدود: <a> واحد حقيقي («اقرأ المزيد») يمدّ منطقة نقره فوق
@@ -325,30 +357,8 @@
   }
 }
 
-/* الماستهيد: نفس بنية «بان» — عنوان كبير، شعار مفرّغ، سطر واصف باللكنة،
-   تعريف لغويّ، ثم مقدّمة. اللكنة تتبع رموز .dhura أعلاه. */
-.page-masthead{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--s-3);
-  padding-block: var(--s-24) var(--s-12);
-  padding-inline: var(--gutter);
-}
-.masthead-title{
-  margin: 0;
-  font-size: clamp(2.75rem, 8.5vw, 5.5rem);
-  line-height: 1.14;
-  text-wrap: balance;
-}
-/* شعار مفرّغ الخلفية يسبح على الورق بظلّ ناعم مصبوغ نحو الحبر */
-.masthead-emblem{
-  block-size: clamp(7.5rem, 17vw, 11.5rem);
-  margin: 0 0 var(--s-2);
-  filter: drop-shadow(0 8px 16px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22));
-}
-.masthead-emblem img{ block-size: 100%; inline-size: auto; display: block; }
+/* الماستهيد: البنية المشتركة مع «بان» في style.css (‎.masthead‎) — عمود
+   نصّ يقابله الشعار في مداره. هنا ما يخصّ ذُرى من طباعة ولون فقط. */
 .masthead-kicker{
   margin: 0;
   font-family: var(--font-sans);
@@ -356,8 +366,14 @@
   font-weight: 500;
   color: var(--accent-text);
 }
+/* شعار مفرّغ الخلفية يسبح في هالته بظلّ ناعم مصبوغ نحو الحبر */
+.masthead-emblem{
+  filter: drop-shadow(0 10px 18px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22));
+}
+.masthead-emblem img{ display: block; }
 .masthead-lead{
   margin: var(--s-2) 0 0;
+  max-inline-size: 34rem;
   font-family: var(--font-text);
   font-size: var(--t-lede);
   line-height: var(--lh-lede);
@@ -365,8 +381,8 @@
 }
 .masthead-lead-label{ color: var(--accent-text); }
 .masthead-intro{
-  max-inline-size: 44rem;
-  margin-block-start: var(--s-6);
+  max-inline-size: 34rem;
+  margin-block-start: var(--s-4);
 }
 .masthead-intro p{
   font-family: var(--font-text);
@@ -386,10 +402,6 @@
 
 @media (max-width: 48rem){
   .project-detail-cover{ block-size: clamp(10rem, 30vh, 15rem); }
-
-  /* ماستهيد «ذُرى» على الجوال: شعار أصغر وحاشية علوية أقلّ */
-  .page-masthead{ padding-block: var(--s-16) var(--s-8); }
-  .masthead-emblem{ block-size: clamp(6.5rem, 30vw, 9rem); }
 
   .project-card-actions{ flex-direction: column; }
   .project-card-btn{ inline-size: 100%; min-block-size: 2.75rem; }

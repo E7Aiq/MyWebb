@@ -16,7 +16,7 @@
          يدوياً. لرفع الباعث: ارفع cacheBuster في data/site.json وحده. ── -->
     <!-- seo:assets:begin -->
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r38"></script>
+    <script src="/js/view-transitions.js?v=r39"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,12 +24,12 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r38">
-    <link rel="stylesheet" href="/css/animations.css?v=r38">
+    <link rel="stylesheet" href="/css/style.css?v=r39">
+    <link rel="stylesheet" href="/css/animations.css?v=r39">
     <!-- بطاقات المختارات: المشروع في project.css والمقال في article.css -->
-    <link rel="stylesheet" href="/css/project.css?v=r38">
-    <link rel="stylesheet" href="/css/article.css?v=r38">
-    <link rel="stylesheet" href="/css/responsive.css?v=r38">
+    <link rel="stylesheet" href="/css/project.css?v=r39">
+    <link rel="stylesheet" href="/css/article.css?v=r39">
+    <link rel="stylesheet" href="/css/responsive.css?v=r39">
     <!-- seo:assets:end -->
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
@@ -194,7 +194,7 @@
     </nav>
 
     <main>
-        <!-- ── الهيرو: الاسم أطروحة، لا قالب ───────────────────────────── -->
+        <!-- ── الهيرو: الاسم أطروحة، والصورة نافذة يدور حولها المدار ────────── -->
         <section class="hero" id="hero">
             <div class="container hero-inner">
                 <div class="hero-text">
@@ -204,60 +204,88 @@
                         <!-- الاسم وحده. كان تحته سطر لاتيني ثابت «Mohammed
                              Alzobaidi» يظهر دائماً؛ صار الاسم يتبع لغة
                              الواجهة فلا تتكرّر الهوية مرّتين في الشاشة.
-                             salt مرّة واحدة في الموقع كلّه، على كلمة واحدة،
+                             salt مرّة واحدة في الجملة، على كلمة واحدة،
                              ولا تُطبَّق على كلمتين متجاورتين. -->
                         <span class="name-ar" data-en="Mohammed Alzobaidi">محمد <span class="swash">الزبيدي</span></span>
                     </h1>
                     <p class="hero-role" data-en="Data &amp; AI Solutions Developer">مطوّر حلول البيانات والذكاء الاصطناعي</p>
                     <p class="hero-tagline" data-en="A number without context is noise; a question without a plan is ink on paper.">رقمٌ بلا سياق، ضجيج. وسؤالٌ بلا تخطيط، حبرٌ على ورق</p>
 
+                    <!-- «ذُرى» و«بان» بابان شقيقان: لكلٍّ شعاره واسمه وكلمة تشرح
+                         وجهته، بلون قسمه. والتواصل فعلٌ لا وجهة، فهو الزرّ الصلب. -->
                     <div class="hero-cta">
-                        <!-- «ذُرى» و«بان» شقيقان: نفس المعالجة الهادئة ونفس
-                             الخلفية النظيفة. التعبئة الصلبة كانت تُثقل الشعار
-                             القرميدي وتفكّ التوأمة بينهما. -->
-                        <a href="/projects/" class="btn btn-outline brand-dhura" aria-label="ذُرى — مشاريعي">
-                            <span class="swash">ذُرى</span>
+                        <a href="/projects/" class="hero-door brand-dhura" aria-label="ذُرى — مشاريعي" data-en-label="Dhura — My projects">
+                            <img src="assets/logos/dhura-20.webp" alt="" width="48" height="60" decoding="async">
+                            <span class="hero-door-word swash">ذُرى</span>
+                            <span class="hero-door-gloss" data-en="Projects">المشاريع</span>
+                            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
                         </a>
-                        <a href="/articles/" class="btn btn-outline brand-ban" aria-label="بان — مدوّنتي">
-                            <span class="swash">بان</span>
+                        <a href="/articles/" class="hero-door brand-ban" aria-label="بان — مدوّنتي" data-en-label="Ban — My writing">
+                            <img src="assets/logos/ban-20.webp" alt="" width="56" height="60" decoding="async">
+                            <span class="hero-door-word swash">بان</span>
+                            <span class="hero-door-gloss" data-en="Writing">المقالات</span>
+                            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
                         </a>
-                        <a href="#contact" class="btn btn-secondary" data-en="Get in touch">تواصل معي</a>
+                        <a href="#contact" class="btn btn-primary hero-contact" data-en="Get in touch">تواصل معي</a>
                     </div>
                 </div>
 
+                <!-- المدار من لقطة «عني»: نقطة ذُرى ونقطة بان حول من يتوسّطهما.
+                     نسختان من الإهليلج نفسه: الخلفية كاملة تمرّ وراء الرأس،
+                     والأمامية مقصوصة على نصفه القريب فتعود أمام الكتفين. -->
                 <div class="hero-image">
-                    <!-- الصورة الأهمّ في الموقع لا تتوقّف على صيغة واحدة:
-                         WebP لمن يدعمها، وJPEG لمن لا يدعمها (Safari دون 14،
-                         وبعض عارضات المعاينة). الملف الاحتياطي موجود أصلاً
-                         لأن og:image يستعمله، فلا وزن إضافي. -->
-                    <picture>
-                        <source srcset="assets/images/profile.webp" type="image/webp">
-                        <img src="assets/images/profile.jpg" alt="محمد الزبيدي" class="profile-img"
-                             width="640" height="857" fetchpriority="high">
-                    </picture>
+                    <svg class="hero-orbit hero-orbit--back" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+                        <ellipse class="orbit-path" cx="300" cy="300" rx="285" ry="170" transform="rotate(-28 300 300)"></ellipse>
+                        <circle class="orbit-dot brand-ban" cx="509" cy="123" r="8"></circle>
+                    </svg>
+                    <div class="hero-portrait">
+                        <!-- الصورة الأهمّ في الموقع لا تتوقّف على صيغة واحدة:
+                             WebP لمن يدعمها، وJPEG لمن لا يدعمها (Safari دون 14،
+                             وبعض عارضات المعاينة). الملف الاحتياطي موجود أصلاً
+                             لأن og:image يستعمله، فلا وزن إضافي. -->
+                        <picture>
+                            <source srcset="assets/images/profile.webp" type="image/webp">
+                            <img src="assets/images/profile.jpg" alt="محمد الزبيدي" class="profile-img"
+                                 width="640" height="857" fetchpriority="high">
+                        </picture>
+                    </div>
+                    <svg class="hero-orbit hero-orbit--front" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+                        <defs>
+                            <clipPath id="orbitNear">
+                                <rect x="0" y="300" width="600" height="300" transform="rotate(-28 300 300)"></rect>
+                            </clipPath>
+                        </defs>
+                        <ellipse class="orbit-path" cx="300" cy="300" rx="285" ry="170" transform="rotate(-28 300 300)"
+                                 clip-path="url(#orbitNear)"></ellipse>
+                        <circle class="orbit-dot brand-dhura" cx="77.5" cy="468" r="10"></circle>
+                    </svg>
                 </div>
             </div>
         </section>
 
-        <!-- ── عني ─────────────────────────────────────────────────────── -->
-        <!-- .section-grid: العنوان في هامش البدء ملتصقاً أثناء التمرير،
-             والمحتوى إلى جانبه. دون 76rem يعود عموداً واحداً. -->
+        <!-- ── ٠١ عني ──────────────────────────────────────────────────── -->
+        <!-- من 60rem: النبذة في عمود والفيديو يقابلها، ثم البيت شريطاً بعرض
+             الحاوية، ثم السيرة الذاتية. وفي الجوال عمود واحد بترتيب الترميز. -->
         <section class="about" id="about">
-            <div class="container section-grid">
-                <div class="section-head">
+            <div class="container about-grid">
+                <header class="section-head">
+                    <p class="section-kicker rv"><span class="section-num" aria-hidden="true" data-en="01">٠١</span><span data-en="Who I am">من أنا؟</span></p>
                     <h2 class="section-title rv" data-en="About">عني</h2>
-                    <p class="section-label rv" data-en="Who I am">من أنا؟</p>
-                </div>
+                </header>
                 <div class="about-content section-body rv">
                     <p class="about-bio" data-en="A Data &amp; AI solutions developer who starts from the impact of the problem before the value of the solution. I turn scattered data into a solid foundation, then build analytics, models, and intelligent apps on top of it — to support decisions, automate work, and improve the experience.">مطوّر حلول البيانات والذكاء الاصطناعي، أبدأ من أثر المشكلة قبل قيمة الحل. أعمل على تحويل البيانات المتفرقة إلى بنية صلبة، ثم أبني فوقها تحليلات ونماذج وتطبيقات ذكية تساعد على اتخاذ القرار، وأتمتة العمل، وتحسين التجربة.</p>
                     <p class="about-bio" data-en="I care about the smallest details, and I put the question before the answer; because a good solution doesn't start from advanced technology, but from understanding what is truly worth solving.">أهتم بأدق التفاصيل، وأقدّم أولوية السؤال على أولوية الإجابة؛ لأن الحل الجيد لا يبدأ من التقنية المتطورة، بل من فهم ما يستحق أن نعالجه أصلاً.</p>
-                    <p class="about-bio" data-en="Perhaps the best description of a good solutions developer is the poet's words:">ولعل أفضل ما يعبّر عن مطوّر الحلول الجيد قول الشاعر:</p>
-                    <!-- الشطران بلا شرطة بينهما: الفصل يقع بالفراغ لا بعلامة،
-                         كما يُنضَّد البيت في الطباعة العربية. -->
-                    <p class="poetry-line" lang="ar" dir="rtl">
-                        <span class="poetry-hemistich">له على الرأيِ تنقيبٌ ومطَّلعٌ</span>
-                        <span class="poetry-hemistich">وفي المقاصدِ تصويبٌ وتصعيد</span>
-                    </p>
+                    <p class="about-bio about-bio--lead-in" data-en="Perhaps the best description of a good solutions developer is the poet's words:">ولعل أفضل ما يعبّر عن مطوّر الحلول الجيد قول الشاعر:</p>
+                </div>
+                <!-- الشطران بلا شرطة بينهما: الفصل يقع بالفراغ لا بعلامة،
+                     كما يُنضَّد البيت في الطباعة العربية. -->
+                <p class="poetry-line rv" lang="ar" dir="rtl">
+                    <span class="poetry-hemistich">له على الرأيِ تنقيبٌ ومطَّلعٌ</span>
+                    <span class="poetry-hemistich">وفي المقاصدِ تصويبٌ وتصعيد</span>
+                </p>
+                <p class="about-cv rv">
                     <a href="/assets/Mohammed-Alzobaidi-CV.pdf" class="btn btn-outline"
                        download="Mohammed-Alzobaidi-CV.pdf">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -269,9 +297,9 @@
                         <span data-en="Download CV">تحميل السيرة الذاتية</span>
                         <span class="btn-meta" data-en="PDF · 137 KB">PDF · ١٣٧ ك.ب</span>
                     </a>
-                </div>
-                <!-- بعد المحتوى في الترميز: في الجوال ينزل تحت زر السيرة الذاتية،
-                     ومن 60rem يُوضَع في العمود الفارغ بجانب النبذة. -->
+                </p>
+                <!-- آخر القسم في الترميز: في الجوال ينزل تحت زر السيرة الذاتية،
+                     ومن 60rem يُوضَع في العمود المقابل للنبذة. -->
                 <!-- الفيديو يضيفه main.js حين يعمل فعلاً، فلا عناصر مشغّل هنا أبداً.
                      ‎#t=7.74 هو الإطار المطابق للصورة، فيبدأ منها بلا قفزة. -->
                 <figure class="about-reel" data-video="assets/motion/reel.mp4#t=7.74">
@@ -281,20 +309,21 @@
             </div>
         </section>
 
-        <!-- ── رحلة البيانات: تسلسل واحد على خطّ واحد (RTL: يمين → يسار) ── -->
-        <!-- بلا هامش جانبي: الهامش يظهر حيث يكون المحتوى عمود قراءة. أربع
-             مراحل على خطّ واحد تحتاج عرض الحاوية كاملاً، وحشرها في 896px
-             يعطي 200px للعمود أي ١٣ حرفاً في السطر. -->
+        <!-- ── ٠٢ رحلة بناء الحل: أعمدة صاعدة (RTL: يمين → يسار) ─────────── -->
+        <!-- الأثر يُقاس فيُرسم: لكل مرحلة عمود بلونها يعلو ما قبله، ونصّها
+             تحت خطّ الأساس. في الجوال يصير العمود مقياساً أفقياً. -->
         <section class="skills" id="skills">
             <div class="container">
-                <h2 class="section-title rv" data-en="The solution journey">رحلة بناء الحل</h2>
-                <p class="section-label rv" data-en="From problem to measurable impact">من المشكلة إلى أثر قابل للقياس</p>
+                <header class="section-head">
+                    <p class="section-kicker rv"><span class="section-num" aria-hidden="true" data-en="02">٠٢</span><span data-en="From problem to measurable impact">من المشكلة إلى أثر قابل للقياس</span></p>
+                    <h2 class="section-title rv" data-en="The solution journey">رحلة بناء الحل</h2>
+                </header>
 
                 <ol class="journey-grid stagger-parent" id="journeyGrid">
                     <li class="stage-card stagger-child" data-motif="question">
                         <!-- الكانفس محفوظ في العقد (§4) وإن لم يعد يُرسم عليه -->
                         <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
-                        <span class="stage-number" aria-hidden="true" data-en="01">٠١</span>
+                        <span class="stage-bar" aria-hidden="true"><span class="stage-number" data-en="01">٠١</span></span>
                         <h3 class="stage-title" data-en="I start with the problem">أبدأ بالمشكلة</h3>
                         <p class="stage-desc" data-en="Before choosing a tool or a model, I understand the context, identify the user, frame the right question, and agree on the target outcome and how success is measured.">قبل اختيار الأداة أو النموذج، أفهم السياق، وأحدّد المستخدم، وأصوغ السؤال الصحيح، وأتفق على النتيجة المطلوبة ومعيار نجاحها.</p>
                         <ul class="stage-tags">
@@ -306,7 +335,7 @@
 
                     <li class="stage-card stagger-child" data-motif="extract">
                         <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
-                        <span class="stage-number" aria-hidden="true" data-en="02">٠٢</span>
+                        <span class="stage-bar" aria-hidden="true"><span class="stage-number" data-en="02">٠٢</span></span>
                         <h3 class="stage-title" data-en="I build the data foundation">أبني أساس البيانات</h3>
                         <p class="stage-desc" data-en="I gather data from its different sources, unify it, clean it, then build reliable pipelines that make it ready for analysis and operation.">أجمع البيانات من مصادرها المختلفة، وأوحّدها، وأنظّفها، ثم أبني مسارات موثوقة تجعلها جاهزة للتحليل والتشغيل.</p>
                         <ul class="stage-tags">
@@ -318,7 +347,7 @@
 
                     <li class="stage-card stagger-child" data-motif="model">
                         <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
-                        <span class="stage-number" aria-hidden="true" data-en="03">٠٣</span>
+                        <span class="stage-bar" aria-hidden="true"><span class="stage-number" data-en="03">٠٣</span></span>
                         <h3 class="stage-title" data-en="I build the intelligent solution">أطوّر الحل الذكي</h3>
                         <p class="stage-desc" data-en="I turn data into usable logic — from analytics and predictive models to generative-AI solutions and apps that connect the model to real business context.">أحوّل البيانات إلى منطق قابل للاستخدام؛ من التحليلات والنماذج التنبؤية إلى حلول الذكاء الاصطناعي التوليدي والتطبيقات التي تربط النموذج بسياق العمل الحقيقي.</p>
                         <ul class="stage-tags">
@@ -330,7 +359,7 @@
 
                     <li class="stage-card stagger-child" data-motif="story">
                         <canvas class="stage-canvas" aria-hidden="true" hidden></canvas>
-                        <span class="stage-number" aria-hidden="true" data-en="04">٠٤</span>
+                        <span class="stage-bar" aria-hidden="true"><span class="stage-number" data-en="04">٠٤</span></span>
                         <h3 class="stage-title" data-en="I ship and measure impact">أطلق وأقيس الأثر</h3>
                         <p class="stage-desc" data-en="I turn the model into a working solution — an app, an automation, a decision dashboard, or a smart service. Then I monitor performance, measure impact, and improve the solution based on what the results reveal.">أحوّل النموذج إلى حل يعمل؛ تطبيق، أو أتمتة، أو لوحة قرار، أو خدمة ذكية. ثم أراقب الأداء، وأقيس الأثر، وأطوّر الحل بناءً على ما تكشفه النتائج.</p>
                         <ul class="stage-tags">
@@ -344,7 +373,7 @@
         </section>
 
 
-        <!-- ── الأدوات: شريط لا نهائي ──────────────────────────────────────
+        <!-- ── ٠٣ الأدوات: شريط لا نهائي على الحبر الليلي ───────────────────
              القائمة مكرّرة أربع مرّات بنفس الترتيب حرفياً، والحركة تزيح
              المضمار بـ translateX(-50%) أي بمقدار نسختين. فتحلّ النسختان
              الأخيرتان محلّ الأوليين تماماً عند إعادة التشغيل، ولا يُرى قطع.
@@ -356,10 +385,12 @@
 
              النسخ الثلاث الأخيرة aria-hidden فلا يقرأ قارئ الشاشة الأدوات
              إلا مرّة واحدة. -->
-        <section class="stack" id="stack" aria-labelledby="stackTitle">
+        <section class="stack on-ink" id="stack" aria-labelledby="stackTitle">
             <div class="container">
-                <h2 class="section-title rv" id="stackTitle" data-en="Tools I'm fluent in">ما أجيده من أدوات</h2>
-                <p class="section-label rv" data-en="What I reach for to turn an idea into a solution">ما أمدّ يدي إليه لأحوّل الفكرة إلى حل</p>
+                <header class="section-head">
+                    <p class="section-kicker rv"><span class="section-num" aria-hidden="true" data-en="03">٠٣</span><span data-en="What I reach for to turn an idea into a solution">ما أمدّ يدي إليه لأحوّل الفكرة إلى حل</span></p>
+                    <h2 class="section-title rv" id="stackTitle" data-en="Tools I'm fluent in">ما أجيده من أدوات</h2>
+                </header>
             </div>
 
             <!-- لا مُوقِف للشريط بقرار صاحب الموقع: أُزيل الإيقاف عند التحويم
@@ -679,13 +710,26 @@
             </div>
         </section>
 
-        <!-- ── مختارات: أحدث مشروع + أحدث مقال (projects.js / articles-list.js) ── -->
+        <!-- ── ٠٤ مختارات: أحدث مشروع + أحدث مقال (projects.js / articles-list.js) ── -->
+        <!-- لكل قسم عمودٌ برأس بلونه: شعاره واسمه وطريقٌ إليه كلّه، وتحته
+             أحدث ما فيه. ‎.brand-*‎ على العمود تلوّن كل ما بداخله. -->
         <section class="selections" id="work">
             <div class="container">
-                <h2 class="section-title rv" data-en="Selections">مختارات</h2>
-                <p class="section-label rv" data-en="What I built, and what I wrote">ما بنيته، وما كتبته</p>
+                <header class="section-head">
+                    <p class="section-kicker rv"><span class="section-num" aria-hidden="true" data-en="04">٠٤</span><span data-en="What I built, and what I wrote">ما بنيته، وما كتبته</span></p>
+                    <h2 class="section-title rv" data-en="Selections">مختارات</h2>
+                </header>
                 <div class="selections-grid">
-                    <div class="selection-col rv">
+                    <div class="selection-col brand-dhura rv">
+                        <div class="selection-head">
+                            <img src="assets/logos/dhura-20.webp" alt="" width="48" height="60" loading="lazy" decoding="async">
+                            <p class="selection-name"><span class="selection-word swash">ذُرى</span><span class="selection-gloss" data-en="Projects">المشاريع</span></p>
+                            <a href="/projects/" class="selection-more">
+                                <span data-en="My projects">مشاريعي</span>
+                                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
+                            </a>
+                        </div>
                         <div class="projects-grid" id="featuredProjectsGrid" data-prerendered="1">
                             <!-- seo:featured-projects:begin -->
         <article class="project-card rv" data-id="3cd59148905a807ba484ef707ed9c6f2" data-categories="[&quot;Ai Solution&quot;,&quot;Context Window&quot;,&quot;Vibe Engineering&quot;]">
@@ -711,11 +755,17 @@
         </article>
                             <!-- seo:featured-projects:end -->
                         </div>
-                        <p class="section-more">
-                            <a href="/projects/" class="btn btn-secondary" data-en="My projects">مشاريعي</a>
-                        </p>
                     </div>
-                    <div class="selection-col rv">
+                    <div class="selection-col brand-ban rv">
+                        <div class="selection-head">
+                            <img src="assets/logos/ban-20.webp" alt="" width="56" height="60" loading="lazy" decoding="async">
+                            <p class="selection-name"><span class="selection-word swash">بان</span><span class="selection-gloss" data-en="Writing">المقالات</span></p>
+                            <a href="/articles/" class="selection-more">
+                                <span data-en="My articles">مقالاتي</span>
+                                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
+                            </a>
+                        </div>
                         <div class="articles-grid" id="featuredArticlesGrid" data-prerendered="1">
                             <!-- seo:featured-articles:begin -->
         <a class="article-card rv" data-id="3dd59148905a80489558db144965ba09" href="/articles/%D8%AA%D8%AC%D8%B1%D8%A8%D8%A9/">
@@ -739,57 +789,70 @@
         </a>
                             <!-- seo:featured-articles:end -->
                         </div>
-                        <p class="section-more">
-                            <a href="/articles/" class="btn btn-secondary" data-en="My articles">مقالاتي</a>
-                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ── تواصل ───────────────────────────────────────────────────── -->
-        <section class="contact" id="contact">
-            <div class="container section-grid">
-                <div class="section-head">
+        <!-- ── ٠٥ تواصل: الختام الليلي ─────────────────────────────────────── -->
+        <section class="contact on-ink" id="contact">
+            <div class="container">
+                <header class="section-head">
+                    <p class="section-kicker rv"><span class="section-num" aria-hidden="true" data-en="05">٠٥</span><span data-en="The shortest path from idea to getting started">أقصر طريق من الفكرة إلى بداية العمل</span></p>
                     <h2 class="section-title rv" data-en="Get in touch">تواصل <span class="swash">معي</span></h2>
-                    <p class="section-label rv" data-en="The shortest path from idea to getting started">أقصر طريق من الفكرة إلى بداية العمل</p>
-                </div>
+                </header>
                 <div class="contact-content section-body rv">
                     <p class="contact-intro" data-en="Do you have a challenge that data could solve, an idea for a smart product, or a role where we build something with real impact? I'd be glad to hear from you.">هل لديك تحدٍّ يمكن أن تحلّه البيانات، أو فكرة لمنتج ذكي، أو فرصة عمل نبني فيها شيئاً ذا أثر؟ يسعدني أن أسمع منك.</p>
 
                     <div class="contact-methods">
                         <a href="mailto:Mohammed@Alzobaidi.me" class="contact-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <rect x="2" y="4" width="20" height="16" rx="3"></rect>
-                                <path d="m3 7 9 6 9-6"></path>
-                            </svg>
+                            <span class="contact-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                                    <path d="m3 7 9 6 9-6"></path>
+                                </svg>
+                            </span>
                             <span>Mohammed@Alzobaidi.me</span>
+                            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
                         </a>
 
                         <a href="tel:+966583324981" class="contact-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M5 3h3l2 5-2.5 1.5a13 13 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3 5.2 2 2 0 0 1 5 3z"></path>
-                            </svg>
+                            <span class="contact-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M5 3h3l2 5-2.5 1.5a13 13 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3 5.2 2 2 0 0 1 5 3z"></path>
+                                </svg>
+                            </span>
                             <span dir="ltr">+966 58 332 4981</span>
+                            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
                         </a>
 
                         <a href="https://www.linkedin.com/in/mohammed-alzobaidi-b6965b27b/" class="contact-item"
                            target="_blank" rel="noopener">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-                                <path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4"></path>
-                            </svg>
+                            <span class="contact-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="4"></rect>
+                                    <path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4"></path>
+                                </svg>
+                            </span>
                             <span>LinkedIn</span>
+                            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
                         </a>
 
                         <a href="https://x.com/alzobaidi_me" class="contact-item" target="_blank" rel="noopener">
-                            <svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true">
-                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                            </svg>
+                            <span class="contact-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" style="fill:currentColor" aria-hidden="true">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                </svg>
+                            </span>
                             <span>X</span>
+                            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg>
                         </a>
                     </div>
 
@@ -811,10 +874,11 @@
         </section>
     </main>
 
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
+    <!-- التذييل خاتمة الصفحة على الحبر الليلي: التوقيع، ثم المداخل، ثم الحقوق.
+         هنا يتّصل بقسم التواصل الداكن فوقه (‎.footer--joined). -->
+    <footer class="footer footer--joined on-ink">
         <div class="container footer-grid">
+            <a href="/" class="footer-brand" data-en="Mohammed Alzobaidi">محمد الزبيدي</a>
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
                 <a href="/" data-en="Home">الرئيسية</a>
                 <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
@@ -826,12 +890,12 @@
     </footer>
     <!-- seo:scripts:begin -->
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r38"></script>
-    <script src="/js/covers.js?v=r38"></script>
-    <script src="/main.js?v=r38"></script>
-    <script src="/animations.js?v=r38"></script>
-    <script src="/projects.js?v=r38"></script>
-    <script src="/js/articles-list.js?v=r38"></script>
+    <script src="/js/i18n.js?v=r39"></script>
+    <script src="/js/covers.js?v=r39"></script>
+    <script src="/main.js?v=r39"></script>
+    <script src="/animations.js?v=r39"></script>
+    <script src="/projects.js?v=r39"></script>
+    <script src="/js/articles-list.js?v=r39"></script>
     <!-- seo:scripts:end -->
 </body>
 </html>

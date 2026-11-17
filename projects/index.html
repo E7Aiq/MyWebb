@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r38"></script>
+    <script src="/js/view-transitions.js?v=r39"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,11 +21,11 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r38">
-    <link rel="stylesheet" href="/css/animations.css?v=r38">
-    <link rel="stylesheet" href="/css/project.css?v=r38">
-    <link rel="stylesheet" href="/css/subscribe.css?v=r38">
-    <link rel="stylesheet" href="/css/responsive.css?v=r38">
+    <link rel="stylesheet" href="/css/style.css?v=r39">
+    <link rel="stylesheet" href="/css/animations.css?v=r39">
+    <link rel="stylesheet" href="/css/project.css?v=r39">
+    <link rel="stylesheet" href="/css/subscribe.css?v=r39">
+    <link rel="stylesheet" href="/css/responsive.css?v=r39">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -156,7 +156,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="publication dhura">
+    <main class="publication publication--index dhura">
         <nav class="breadcrumb breakout" aria-label="مسار التنقّل" data-en-label="Breadcrumb">
             <ol class="breadcrumb-list">
             <li class="breadcrumb-item"><a href="/" data-en="Home">الرئيسية</a></li>
@@ -164,23 +164,30 @@
             </ol>
         </nav>
 
-        <!-- ماستهيد «ذُرى» — العنوان، الشعار المفرّغ، الوصف، التعريف، ثم المقدّمة -->
-        <header class="page-header breakout page-masthead">
-            <a class="masthead-subscribe brand-dhura rv" href="#subscribe-dhura"
-                    data-en="Subscribe to Dhura">اشترك في <span class="swash">ذُرى</span></a>
-            <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
-            <figure class="masthead-emblem rv">
-                <img src="/assets/logos/dhura.webp"
-                     alt="مجلّد برتقالي تتصاعد منه كواكب ونجوم — شعار مشاريع ذُرى"
-                     width="349" height="440" fetchpriority="high" decoding="async">
-            </figure>
-            <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
-            <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
-                <span class="masthead-lead-label">ذُرى جمع ذروة؛</span> وهي المساحة التي أوثّق فيها أفضل ما وصلت إليه من مشاريع وتجارب في البيانات والذكاء الاصطناعي.
-            </p>
-            <div class="masthead-intro rv">
-                <p data-en="Every project here is an independent summit; it began with a question worth exploring, and took shape through research, experimentation, decisions, and overcoming challenges — until it reached a clear, usable solution.">كل مشروع هنا هو <strong>ذروة مستقلة</strong>؛ بدأ بسؤال يستحق الاستكشاف، وتشكّل عبر البحث والتجربة واتخاذ القرارات وتجاوز التحديات، حتى وصل إلى حلّ واضح وقابل للاستخدام.</p>
-                <p data-en="I don’t show only the final result, but what led to it: the problem, the approach, the decisions, and what I learned along the way.">لا أعرض النتيجة النهائية فحسب، بل ما قاد إليها: <strong>المشكلة، والمنهج، والقرارات، وما تعلّمته على الطريق.</strong></p>
+        <!-- غلاف «ذُرى» — البنية نفسها التي لـ«بان»: النصّ بترتيب قراءته،
+             والشعار في مداره يقابله، وختم الاشتراك على حافّة المدار. -->
+        <header class="page-header breakout masthead page-masthead">
+            <div class="masthead-inner">
+                <div class="masthead-text">
+                    <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
+                    <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
+                    <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
+                        <span class="masthead-lead-label">ذُرى جمع ذروة؛</span> وهي المساحة التي أوثّق فيها أفضل ما وصلت إليه من مشاريع وتجارب في البيانات والذكاء الاصطناعي.
+                    </p>
+                    <div class="masthead-intro rv">
+                        <p data-en="Every project here is an independent summit; it began with a question worth exploring, and took shape through research, experimentation, decisions, and overcoming challenges — until it reached a clear, usable solution.">كل مشروع هنا هو <strong>ذروة مستقلة</strong>؛ بدأ بسؤال يستحق الاستكشاف، وتشكّل عبر البحث والتجربة واتخاذ القرارات وتجاوز التحديات، حتى وصل إلى حلّ واضح وقابل للاستخدام.</p>
+                        <p data-en="I don’t show only the final result, but what led to it: the problem, the approach, the decisions, and what I learned along the way.">لا أعرض النتيجة النهائية فحسب، بل ما قاد إليها: <strong>المشكلة، والمنهج، والقرارات، وما تعلّمته على الطريق.</strong></p>
+                    </div>
+                </div>
+                <div class="masthead-art">
+                    <figure class="masthead-emblem rv">
+                        <img src="/assets/logos/dhura.webp"
+                             alt="مجلّد برتقالي تتصاعد منه كواكب ونجوم — شعار مشاريع ذُرى"
+                             width="349" height="440" fetchpriority="high" decoding="async">
+                    </figure>
+                    <a class="masthead-subscribe brand-dhura rv" href="#subscribe-dhura"
+                            data-en="Subscribe to Dhura">اشترك في <span class="swash">ذُرى</span></a>
+                </div>
             </div>
         </header>
 
@@ -360,10 +367,11 @@
         </section>
     </main>
 
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
+    <!-- التذييل خاتمة الصفحة على الحبر الليلي: التوقيع، ثم المداخل، ثم الحقوق.
+         كان سطر حقوق بشعرة فوقه، فيُترك آخر ما يراه القارئ بلا وجهة. -->
+    <footer class="footer on-ink">
         <div class="container footer-grid">
+            <a href="/" class="footer-brand" data-en="Mohammed Alzobaidi">محمد الزبيدي</a>
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
                 <a href="/" data-en="Home">الرئيسية</a>
                 <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
@@ -375,11 +383,11 @@
     </footer>
     <script>window.SUBSCRIBE_CONFIG={"url":"https://hswidotyrnlvkkeddszn.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2lkb3R5cm5sdmtrZWRkc3puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3Njg2NDQsImV4cCI6MjA5NjM0NDY0NH0.H_xibI87OI0Vj_ae_Y_TwPuljQYH0NEQSFWkTM0BL1M"};</script>
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r38"></script>
-    <script src="/js/covers.js?v=r38"></script>
-    <script src="/main.js?v=r38"></script>
-    <script src="/animations.js?v=r38"></script>
-    <script src="/projects.js?v=r38"></script>
-    <script src="/js/subscribe.js?v=r38"></script>
+    <script src="/js/i18n.js?v=r39"></script>
+    <script src="/js/covers.js?v=r39"></script>
+    <script src="/main.js?v=r39"></script>
+    <script src="/animations.js?v=r39"></script>
+    <script src="/projects.js?v=r39"></script>
+    <script src="/js/subscribe.js?v=r39"></script>
 </body>
 </html>

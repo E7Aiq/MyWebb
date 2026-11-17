@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r38"></script>
+    <script src="/js/view-transitions.js?v=r39"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,11 +21,11 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r38">
-    <link rel="stylesheet" href="/css/animations.css?v=r38">
-    <link rel="stylesheet" href="/css/article.css?v=r38">
-    <link rel="stylesheet" href="/css/subscribe.css?v=r38">
-    <link rel="stylesheet" href="/css/responsive.css?v=r38">
+    <link rel="stylesheet" href="/css/style.css?v=r39">
+    <link rel="stylesheet" href="/css/animations.css?v=r39">
+    <link rel="stylesheet" href="/css/article.css?v=r39">
+    <link rel="stylesheet" href="/css/subscribe.css?v=r39">
+    <link rel="stylesheet" href="/css/responsive.css?v=r39">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -144,7 +144,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="publication">
+    <main class="publication publication--index ban">
         <nav class="breadcrumb breakout" aria-label="مسار التنقّل" data-en-label="Breadcrumb">
             <ol class="breadcrumb-list">
             <li class="breadcrumb-item"><a href="/" data-en="Home">الرئيسية</a></li>
@@ -152,23 +152,30 @@
             </ol>
         </nav>
 
-        <!-- رأس الصفحة: ماستهيد مدوّنة «بان» — الشعار، الاسم، تعريفه، ثم المقدّمة -->
-        <header class="page-header breakout ban-masthead">
-            <a class="masthead-subscribe brand-ban rv" href="#subscribe-ban"
-                    data-en="Subscribe to Ban">اشترك في <span class="swash">بان</span></a>
-            <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
-            <figure class="ban-emblem rv">
-                <img src="/assets/logos/ban.webp"
-                     alt="ريشة زرقاء على ورقة — شعار مدوّنة بان"
-                     width="406" height="440" fetchpriority="high" decoding="async">
-            </figure>
-            <p class="ban-kicker rv" data-en="Reflections &amp; essays">خاطرة ومقال</p>
-            <p class="ban-definition rv" data-en="Bān, in Arabic: to appear and become clear.">
-                <span class="ban-def-label">بان في اللغة:</span> ظهر واتّضح.
-            </p>
-            <div class="ban-intro rv">
-                <p data-en="Here I write about what stirs my curiosity and is worth pausing over — in technology and work, in reading and experience, and in ideas that knock on the mind and do not leave quickly.">أكتب هنا عمّا يثير فضولي ويستحق التوقّف عنده؛ في التقنية والعمل، وفي القراءة والتجارب، وفي الأفكار التي تطرق الذهن ولا تغادره سريعًا.</p>
-                <p data-en="A space for what I learn, what I see from a different angle, and what deserves to be understood deeply — to be written and published with care.">مساحة لما أتعلمه، وما أراه من زاوية مختلفة، وما يستحق أن يُفهم بعمق، ليُكتب ويُنشر بإحسان.</p>
+        <!-- رأس الصفحة: غلاف «بان» — النصّ بترتيب قراءته (الملصق، الاسم، تعريفه،
+             المقدّمة)، والشعار في مداره يقابله، وختم الاشتراك على حافّة المدار. -->
+        <header class="page-header breakout masthead ban-masthead">
+            <div class="masthead-inner">
+                <div class="masthead-text">
+                    <p class="ban-kicker rv" data-en="Reflections &amp; essays">خاطرة ومقال</p>
+                    <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
+                    <p class="ban-definition rv" data-en="Bān, in Arabic: to appear and become clear.">
+                        <span class="ban-def-label">بان في اللغة:</span> ظهر واتّضح.
+                    </p>
+                    <div class="ban-intro rv">
+                        <p data-en="Here I write about what stirs my curiosity and is worth pausing over — in technology and work, in reading and experience, and in ideas that knock on the mind and do not leave quickly.">أكتب هنا عمّا يثير فضولي ويستحق التوقّف عنده؛ في التقنية والعمل، وفي القراءة والتجارب، وفي الأفكار التي تطرق الذهن ولا تغادره سريعًا.</p>
+                        <p data-en="A space for what I learn, what I see from a different angle, and what deserves to be understood deeply — to be written and published with care.">مساحة لما أتعلمه، وما أراه من زاوية مختلفة، وما يستحق أن يُفهم بعمق، ليُكتب ويُنشر بإحسان.</p>
+                    </div>
+                </div>
+                <div class="masthead-art">
+                    <figure class="ban-emblem rv">
+                        <img src="/assets/logos/ban.webp"
+                             alt="ريشة زرقاء على ورقة — شعار مدوّنة بان"
+                             width="406" height="440" fetchpriority="high" decoding="async">
+                    </figure>
+                    <a class="masthead-subscribe brand-ban rv" href="#subscribe-ban"
+                            data-en="Subscribe to Ban">اشترك في <span class="swash">بان</span></a>
+                </div>
             </div>
         </header>
 
@@ -176,7 +183,7 @@
              تعيد بناءه عند تبديل اللغة وحده. -->
         <section class="articles-section breakout" aria-label="فهرس المقالات" data-en-label="Article index">
             <p class="visually-hidden" id="gridStatus" role="status" aria-live="polite"></p>
-            <div id="articles-grid" class="articles-grid" data-prerendered="1">
+            <div id="articles-grid" class="articles-grid articles-index" data-prerendered="1">
         <a class="article-lead rv" data-id="3dd59148905a80489558db144965ba09" href="/articles/%D8%AA%D8%AC%D8%B1%D8%A8%D8%A9/">
             <img class="article-lead-cover" src="/assets/images/articles/3dd59148905a80489558db144965ba09-cover.webp" alt=""
                  loading="eager" fetchpriority="high" decoding="async" width="1600" height="893">
@@ -266,10 +273,11 @@
         </section>
     </main>
 
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
+    <!-- التذييل خاتمة الصفحة على الحبر الليلي: التوقيع، ثم المداخل، ثم الحقوق.
+         كان سطر حقوق بشعرة فوقه، فيُترك آخر ما يراه القارئ بلا وجهة. -->
+    <footer class="footer on-ink">
         <div class="container footer-grid">
+            <a href="/" class="footer-brand" data-en="Mohammed Alzobaidi">محمد الزبيدي</a>
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
                 <a href="/" data-en="Home">الرئيسية</a>
                 <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
@@ -281,11 +289,11 @@
     </footer>
     <script>window.SUBSCRIBE_CONFIG={"url":"https://hswidotyrnlvkkeddszn.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2lkb3R5cm5sdmtrZWRkc3puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3Njg2NDQsImV4cCI6MjA5NjM0NDY0NH0.H_xibI87OI0Vj_ae_Y_TwPuljQYH0NEQSFWkTM0BL1M"};</script>
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r38"></script>
-    <script src="/js/covers.js?v=r38"></script>
-    <script src="/main.js?v=r38"></script>
-    <script src="/animations.js?v=r38"></script>
-    <script src="/js/articles-list.js?v=r38"></script>
-    <script src="/js/subscribe.js?v=r38"></script>
+    <script src="/js/i18n.js?v=r39"></script>
+    <script src="/js/covers.js?v=r39"></script>
+    <script src="/main.js?v=r39"></script>
+    <script src="/animations.js?v=r39"></script>
+    <script src="/js/articles-list.js?v=r39"></script>
+    <script src="/js/subscribe.js?v=r39"></script>
 </body>
 </html>

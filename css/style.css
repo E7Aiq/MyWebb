@@ -187,6 +187,28 @@
   --stage-4-tint: oklch(97.5% 0.016 155);  --stage-4-ink: oklch(45% 0.095 155);
   --green-11:oklch(45.0% 0.100 155);
 
+  /* أعمدة الرحلة: الدرجات نفسها أعلى صبغةً قليلاً (94%)، لأن العمود مساحةٌ
+     تُرى لا لمسةٌ تُحسّ. حبر الرقم عليها ≥5.8:1 في الأربع. */
+  --stage-1-bar: oklch(94% 0.030  33);
+  --stage-2-bar: oklch(94% 0.030 266);
+  --stage-3-bar: oklch(94% 0.030 202);
+  --stage-4-bar: oklch(94% 0.030 155);
+
+  /* ── الحبر الليلي: أرضية الشريطين الداكنين (الأدوات، والختام) ──────────
+     كحليّ عميق من محور الشعار نفسه (266) لا أسود محايد: الشعار مدارات
+     كحلية حول نقطة لازوردية، فالليل هنا ليلُه. النصّ عليه 17:1، والخافت
+     9.8:1، والباهت 6.3:1. */
+  --ink-1: oklch(19.5% 0.032 266);   /* الأرضية */
+  --ink-2: oklch(23.5% 0.036 266);   /* سطح مرفوع */
+  --ink-text-muted: oklch(80% 0.018 266);
+  --ink-text-faint: oklch(68% 0.022 266);
+  --ink-accent:     oklch(80% 0.090 266);
+  --ink-wash:       oklch(100% 0 0 / 0.07);   /* خلفية عنصر */
+  --ink-wash-2:     oklch(100% 0 0 / 0.12);   /* تحويمه */
+  --ink-line:       oklch(100% 0 0 / 0.13);   /* شعرة */
+  --ink-line-2:     oklch(100% 0 0 / 0.26);   /* حدّ ما يُنقر */
+  --ink-glow:       oklch(34% 0.090 266 / 0.55);   /* وهج لازوردي في ركن الشريط */
+
   /* الحبر الخام لصبغ الظلال — ظلّ رمادي محايد فوق سطح دافئ يبدو متّسخاً */
   --shadow-hue: 264;
   --shadow-chroma: 0.012;
@@ -203,6 +225,8 @@
   --bg-element-hover:  var(--n-4);
   --bg-element-active: var(--n-5);
   --bg-glass:          color-mix(in oklab, var(--n-1) 70%, transparent);
+  /* بلاطة الشعار ورقٌ في كل سياق — لا يُعاد ربطها في ‎.on-ink */
+  --bg-tile:           var(--n-1);
 
   --border-subtle:      var(--n-6);
   --border-interactive: var(--n-7);
@@ -257,8 +281,8 @@
 
   /* — فوق العتبة: Display — */
   --t-mega:  clamp(3.25rem, 9.5vw, 6.5rem);   /* افتتاحية الصفحة */
-  --t-hero:  clamp(2.75rem, 8vw,   5.5rem);   /* الاسم في الرئيسية */
-  --t-title: clamp(2.25rem, 5vw,   3.25rem);  /* عنوان قسم */
+  --t-hero:  clamp(2.75rem, 8vw,   6.25rem);  /* الاسم في الرئيسية */
+  --t-title: clamp(2.5rem,  5.5vw, 4rem);     /* عنوان قسم */
   --t-lead:  clamp(1.75rem, 3.6vw, 2.5rem);   /* عنوان عنصر في الفهرس */
   --t-h2:    1.75rem;                          /* 28px — العتبة تماماً */
   /* — تحت العتبة: Text أو Sans — */
@@ -408,7 +432,8 @@ p:lang(en), li:lang(en), .article-body:lang(en){ letter-spacing: 0; }
 /* بيت الشعر لا يظهر في النسخة الإنجليزية: بيت عربي موزون، ترجمته تُفقده
    وزنه ومعناه معاً، ونقله كما هو في صفحة إنجليزية يقطع القراءة. يُحذف،
    وتُختصر فقرة «عني» الإنجليزية فلا تنتهي بتمهيدٍ لشيء غائب. */
-[lang="en"] .poetry-line{ display: none; }
+[lang="en"] .poetry-line,
+[lang="en"] .about-bio--lead-in{ display: none; }
 
 /* ── مبدّل اللغة ────────────────────────────────────────────────────────
    يعرض اللغة التي سينتقل إليها لا التي هو فيها. عرض ثابت كي لا يقفز
@@ -454,9 +479,14 @@ body{
   line-height: var(--lh-ui);
   min-block-size: 100vh;
   min-block-size: 100svh;
+  /* عمود مرن: المحتوى يتمدّد فيستقرّ التذييل الليلي في قاع الشاشة حتى في
+     الصفحات القصيرة (٤٠٤، إلغاء الاشتراك)، بدل أن يطفو وتحته شريط ورق. */
+  display: flex;
+  flex-direction: column;
   /* ملاحظة: لا -webkit-font-smoothing: antialiased في أي مكان — يُنحّف
      الحروف فتضعف النقاط والتشكيل على الشاشات غير عالية الكثافة. */
 }
+body > main{ flex: 1 0 auto; }
 
 /* [hidden] يجب أن يغلب أي display من فئة — قاعدة وكيل المستخدم أضعف
    تخصيصاً من محدِّد الفئة، فكان .article-loading[hidden] يبقى ظاهراً. */
@@ -849,6 +879,13 @@ time, .article-read-time, .article-card-date, .project-card-date,
     --stage-2-tint:#F2F7FF; --stage-2-ink:#3C538A;
     --stage-3-tint:#EBFAFB; --stage-3-ink:#00646C;
     --stage-4-tint:#EFFAF2; --stage-4-ink:#1E643D;
+    --stage-1-bar:#FFE4DF; --stage-2-bar:#E2EBFF;
+    --stage-3-bar:#D5F2F4; --stage-4-bar:#DCF2E3;
+    --ink-1:#0E1423; --ink-2:#161E2F;
+    --ink-text-muted:#B8BECA; --ink-text-faint:#9298A6; --ink-accent:#A3BDF9;
+    --ink-wash:rgba(255,255,255,.07); --ink-wash-2:rgba(255,255,255,.12);
+    --ink-line:rgba(255,255,255,.13); --ink-line-2:rgba(255,255,255,.26);
+    --ink-glow:rgba(34,53,102,.55);
     --shadow-1:
       0 0 0 1px rgba(22,24,28,.06),
       0 1px 2px -1px rgba(22,24,28,.10),
@@ -924,6 +961,102 @@ time, .article-read-time, .article-card-date, .project-card-date,
   max-inline-size: var(--measure);
 }
 
+/* ── ماستهيد ذُرى وبان: غلاف القسم ────────────────────────────────────
+   كان عموداً متوسّطاً: عنوان، شعار، وصف، مقدّمة — كلّها في محور واحد،
+   فبدت الصفحتان نشرةً لا مطبوعة. صار غلافاً من عمودين: النصّ يُقرأ من
+   بداية السطر، والشعار يقابله في مداره — المدار نفسه الذي يدور حول
+   الصورة في الرئيسية، بلون القسم. وختم «اشترك» على حافّة المدار.
+
+   الترتيب في الترميز ترتيب القراءة (الملصق، العنوان، التعريف، المقدّمة)
+   والشعار بعدها؛ والجوال يقدّمه بصرياً وحده. */
+.publication--index{ --measure: 70rem; }
+
+.masthead{ padding-block: var(--s-8) var(--s-16); }
+
+.masthead-inner{
+  display: grid;
+  gap: var(--s-8);
+  align-items: center;
+}
+@media (min-width: 60rem){
+  .masthead{ padding-block: var(--s-12) var(--s-16); }
+  .masthead-inner{
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: var(--s-16);
+  }
+}
+
+.masthead-text{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  text-align: start;
+}
+.masthead-text .page-title{
+  margin: 0;
+  /* حركات «ذُرى» فوق السطر تعلو صندوقه؛ الحشو يُبعدها عن الملصق فوقها */
+  padding-block-start: 0.12em;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+/* الشعار في مداره: هالةٌ بلون القسم، وإهليلج منقّط مائل كإهليلج الرئيسية */
+.masthead-art{
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  inline-size: min(100%, 26rem);
+  aspect-ratio: 1;
+  isolation: isolate;
+}
+.masthead-art::before{
+  content: '';
+  position: absolute;
+  inset: 14%;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--accent-quiet);
+}
+.masthead-art::after{
+  content: '';
+  position: absolute;
+  inset: 4% -6%;
+  z-index: -1;
+  border-radius: 50%;
+  border: 2px dotted var(--accent-line);
+  transform: rotate(-24deg);
+}
+.masthead-art .masthead-emblem,
+.masthead-art .ban-emblem{
+  block-size: auto;
+  inline-size: 46%;
+  margin: 0;
+}
+.masthead-art .masthead-emblem img,
+.masthead-art .ban-emblem img{ inline-size: 100%; block-size: auto; }
+
+/* الختم على حافّة المدار العليا — كان معلّقاً في ركن الصفحة بعيداً عن كل شيء */
+.masthead-art .masthead-subscribe{
+  position: absolute;
+  inset-block-start: 4%;
+  inset-inline-end: 0;
+  margin: 0;
+  align-self: auto;
+}
+
+/* الجوال: الشعار يتقدّم صغيراً كي يبقى العنوان في الشاشة الأولى، والختم
+   يخرج عن المدار إلى جانبه بدل أن يغطّي الشعار */
+@media (max-width: 59.99rem){
+  .masthead-art{ order: -1; inline-size: min(100%, 13rem); }
+  .masthead-art .masthead-subscribe{
+    inset-block-start: -4%;
+    inset-inline-end: -38%;
+  }
+}
+
 /* عنوان قسم داخل الصفحة: مقياس أصغر من الافتتاحية، بلا خطّ فاصل.
    الفواصل الأربعة المتطابقة التي كانت هنا صارت ورق حائط لا تسلسلاً. */
 .section-title{
@@ -933,28 +1066,6 @@ time, .article-read-time, .article-card-date, .project-card-date,
   line-height: var(--lh-head);
   padding-block-end: 0.06em;
   margin-block-end: var(--s-8);
-}
-
-/* ── الهامش على الصفحة الرئيسية ──────────────────────────────────────────
-   العنوان ينتقل من فوق المحتوى إلى هامش البدء (يمين في RTL) ويلتصق أثناء
-   التمرير، فيبقى «أين أنت» مقروءاً طوال القسم. هذا هو العنصر التوقيعي
-   مطبَّقاً على الرئيسية: قبله كان عمود المحتوى 448px داخل 1280px بهامشين
-   ميّتين بعرض 496px لكلٍّ منهما — 69٪ من الصفحة بلا وظيفة.
-
-   دون 76rem تعود البنية إلى عمود واحد والعنوان فوق محتواه كالمعتاد. */
-.section-grid{ display: grid; gap: var(--s-8); }
-
-@media (min-width: 76rem){
-  .section-grid{
-    grid-template-columns: 15rem minmax(0, 1fr);
-    gap: 0 var(--s-16);
-    align-items: start;
-  }
-  .section-head{
-    position: sticky;
-    inset-block-start: calc(var(--nav-h) + var(--s-8));
-  }
-  .section-head .section-title{ margin-block-end: var(--s-4); }
 }
 
 /* ملصق القسم — سطر واحد يقول ما في القسم. العربي لا يقبل letter-spacing
@@ -970,32 +1081,108 @@ time, .article-read-time, .article-card-date, .project-card-date,
 }
 /* العنوان يقرّب من ملصقه حين يليه واحد، ويحمل المسافة الملصقُ بدلاً عنه */
 .section-title:has(+ .section-label){ margin-block-end: var(--s-2); }
-.section-head .section-label{ margin-block-end: 0; }
 
-/* ── الفوتر ─────────────────────────────────────────────────────────── */
+/* ── سياق الحبر الليلي ─────────────────────────────────────────────────
+   فئة واحدة تقلب الرموز الدلالية على عنصرها وحده، فيقرأ كل مكوّن داخله
+   (الأزرار، الروابط، الشعرات، حلقة التركيز) قيمَ الليل دون أن يُمسّ.
+   الزرّ الأساسي يصير ورقاً بحبر كحلي: اللازورد الصلب على الكحلي يذوب. */
+.on-ink{
+  --bg-canvas:         var(--ink-1);
+  --bg-surface:        var(--ink-2);
+  --bg-element:        var(--ink-wash);
+  --bg-element-hover:  var(--ink-wash-2);
+  --bg-element-active: var(--ink-line);
+
+  --border-subtle:      var(--ink-line);
+  --border-interactive: var(--ink-line-2);
+  --border-strong:      var(--ink-text-faint);
+
+  --text:          var(--n-1);
+  --text-muted:    var(--ink-text-muted);
+  --text-faint:    var(--ink-text-faint);
+  --text-on-solid: var(--a-12);
+
+  --solid:        var(--n-1);
+  --solid-hover:  var(--n-3);
+  --accent-text:  var(--ink-accent);
+  --accent-quiet: var(--ink-wash);
+  --accent-line:  var(--ink-line-2);
+  --focus:        var(--ink-accent);
+
+  background-color: var(--bg-canvas);
+  color: var(--text);
+}
+
+/* ── الفوتر: ختام كل صفحة على الحبر الليلي ─────────────────────────────
+   كان سطر حقوق بشعرة فوقه. صار خاتمةً: الاسم توقيعاً، ثم المداخل، ثم
+   الحقوق — والأرضية الداكنة تقول «هنا تنتهي الصفحة» بلا فاصل. */
 .footer{
   margin-block-start: var(--s-24);
-  padding-block: var(--s-8);
-  border-block-start: 1px solid var(--border-subtle);
-  color: var(--text-muted);
+  padding-block: var(--s-12);
+  padding-block-end: calc(var(--s-12) + env(safe-area-inset-bottom, 0px));
   font-size: var(--t-meta);
+  color: var(--text-muted);
 }
+/* في الرئيسية يتّصل بقسم التواصل الداكن، فلا ورق بينهما */
+.footer--joined{
+  margin-block-start: 0;
+  padding-block-start: var(--s-8);
+}
+.footer--joined .footer-grid{
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--border-subtle);
+}
+
 .footer-grid{
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-4) var(--s-8);
-  align-items: baseline;
-  justify-content: space-between;
+  display: grid;
+  gap: var(--s-6);
+  justify-items: start;
+}
+@media (min-width: 48.0625rem){
+  .footer-grid{
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--s-8);
+  }
+  .footer-nav{ justify-content: center; }
 }
 .footer-grid > p{ margin: 0; }
+
+/* التوقيع: نقطة لازوردية — مركز الشعار — قبل الاسم */
+.footer-brand{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-block-size: 2.75rem;
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.footer-brand::before{
+  content: '';
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: var(--r-pill);
+  background: var(--accent-text);
+  box-shadow: 0 0 0 4px var(--bg-element);
+}
+.footer-brand:hover{ color: var(--accent-text); }
+
 .footer-nav{
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s-2) var(--s-6);
+  gap: 0 var(--s-6);
 }
 .footer-nav a{
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
   color: var(--text-muted);
   text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 .footer-nav a:hover,
 .footer-nav a:focus-visible{ color: var(--text); }
@@ -1023,6 +1210,11 @@ textarea::placeholder{ color: var(--text-faint); }
 
 /* ============================================================================
    8. الصفحة الرئيسية
+
+   الهيكل فهرسُ مجلّة: لكل قسم افتتاحية مرقّمة (٠١…٠٥) تمتدّ منها شعرة إلى
+   طرف الصفحة، ثم العنوان بمقاس العرض. والإيقاع يتناوب بين الورق والحبر
+   الليلي — الهيرو وعني والرحلة على الورق، والأدوات شريط ليلي، والمختارات
+   ورق، ثم ختامٌ ليلي يتّصل بالتذييل.
    ============================================================================ */
 
 /* الإيقاع يُدفع من جهة واحدة فقط. حين كان padding-block على الجهتين كان
@@ -1031,21 +1223,77 @@ section{ padding-block: var(--rhythm) 0; }
 section:last-of-type{ padding-block-end: var(--rhythm); }
 @media (min-width: 60rem){ :root{ --rhythm: var(--s-24); } }
 
-.hero{ padding-block: var(--s-16) 0; }
-
-/* ── الهيرو: الاسم أطروحة ──────────────────────────────────────────────
-   الاسم العربي بخط العرض كبيراً هو الافتتاحية — لا جهاز زخرفي قبله.
-   العربي واللاتيني زوج طباعي مقصود: العربي يقود، واللاتيني نسخته الهادئة
-   تحته بخط الواجهة، فلا يتنافسان. */
-.hero-inner{
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: var(--s-16);
-  align-items: center;
+/* الشريط الداكن أرضيةٌ لها داخل: الإيقاع خارجه هامشاً وداخله حشواً */
+section.on-ink{
+  margin-block-start: var(--rhythm);
+  padding-block: var(--rhythm);
 }
 
+/* ── افتتاحية القسم ──────────────────────────────────────────────────────
+   سطر الفهرس: الرقم باللكنة، ثم الملصق، ثم شعرة تمتدّ إلى طرف الحاوية.
+   تحته العنوان بخطّ العرض. الرقم يرتّب الصفحة ترتيبَ مجلّة، والشعرة
+   تفتتح القسم دون أن تفصله عمّا قبله فصلاً ثانياً. */
+.section-head{ margin-block-end: var(--s-12); }
+.section-head .section-title{ margin-block-end: 0; }
+
+.section-kicker{
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-block-end: var(--s-4);
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  line-height: var(--lh-ui);
+  color: var(--text-muted);
+}
+.section-kicker::after{
+  content: '';
+  flex: 1 1 var(--s-8);
+  block-size: 1px;
+  background: var(--border-subtle);
+}
+.section-num{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  /* الصفر العربي نقطة، فيحتاج الرقم درجةً فوق الملصق كي يُقرأ «٠١» لا «·١» */
+  font-size: var(--t-ui);
+  font-weight: 700;
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.section-num::after{
+  content: '/';
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+
+/* ── الهيرو: الاسم أطروحة، والصورة نافذة يدور حولها المدار ─────────────── */
+.hero{
+  position: relative;
+  padding-block: var(--s-8) var(--s-4);
+  /* المدار أعرض من عموده عمداً — clip لا hidden كي لا يُنشأ سياق تمرير */
+  overflow: clip;
+}
+
+.hero-inner{
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: var(--s-12) var(--s-16);
+  align-items: center;
+}
+@media (min-width: 60rem){
+  .hero{ padding-block: var(--s-12) var(--s-8); }
+  /* الهيرو غلافُ الصفحة: يملأ الشاشة الأولى ولا يتجاوز 46rem */
+  .hero-inner{ min-block-size: min(40rem, calc(100svh - var(--nav-h) - var(--s-32))); }
+}
+
+.hero-text{ container-type: inline-size; }
+
 .hero-title{
-  margin-block-end: var(--s-6);
+  margin-block-end: var(--s-4);
   /* الشعار قبل الاسم على سطر واحد، يتوسّطان عمودياً */
   display: flex;
   align-items: center;
@@ -1058,23 +1306,17 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 }
 
 /* يُقاس بخط الاسم نفسه فيتبعه في كل عرض بلا نقاط كسر خاصة به.
-   ‎0.78 من حجم الخط ≈ ارتفاع جسم الحروف العربية مع صواعدها، فيقف الشعار
-   نظيراً للاسم لا شارةً صغيرة بجانبه ولا كتلةً تطغى عليه. */
+   ‎0.78 من حجم الخط ≈ ارتفاع جسم الحروف العربية مع صواعدها. */
 .hero-mark{
   flex: none;
   block-size: calc(var(--name-size) * 0.78);
   inline-size: auto;
-  /* مركز صندوق الاسم أعلى من مركز حروفه البصري (ذيل الياء والزاي ينزل
-     تحت السطر)، فيُنزَل الشعار قليلاً ليقابل منتصفُه منتصفَ الكلمة لا
-     منتصفَ الصندوق. */
+  /* ذيل الياء والزاي ينزل تحت السطر، فيُنزَل الشعار ليقابل منتصفَ الكلمة */
   translate: 0 calc(var(--name-size) * 0.15);
 }
 
-/* «Mohammed Alzobaidi» أعرض من الاسم العربي بنحو ٧٠٪، فتصغيره ليتّسع سطراً
-   واحداً في الجوال يُنزله دون حجم العنوان. يُترك ينكسر سطرين، ويُقاس الحجم
-   بأطول كلمة مع الشعار (≈ ‎6.9 أضعاف الخط) لا بالاسم كلّه. ويُحاذى الشعار
-   إلى السطر الأول لا إلى منتصف السطرين:
-   (ارتفاع السطر 1.15 − ارتفاع الشعار 0.78) ÷ 2 = 0.185. */
+/* «Mohammed Alzobaidi» أعرض من الاسم العربي بنحو ٧٠٪، فيُترك ينكسر سطرين
+   ويُقاس الحجم بأطول كلمة مع الشعار، ويُحاذى الشعار إلى السطر الأول. */
 .hero-title:lang(en){
   --name-size: var(--t-hero);
   --name-size: min(var(--t-hero), 100cqi / 6.9);
@@ -1094,78 +1336,233 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   padding-block-end: 0.08em;
 }
 
-.name-en{
-  display: block;
-  margin-block-start: var(--s-2);
-  font-family: var(--font-sans);
-  font-size: var(--t-ui);
-  font-weight: 500;
-  color: var(--text-muted);
-  direction: ltr;
-  text-align: start;
-  unicode-bidi: isolate;
-  letter-spacing: -0.01em;
-}
-
 .hero-role{
   font-family: var(--font-text);
   font-size: var(--t-lede);
+  font-weight: 500;
+  line-height: var(--lh-lede);
   color: var(--text);
 }
+
+/* الشعار المكتوب: سطرٌ يُرى قبل أن يُقرأ، فخطّه العرض ومقاسه ≥28px دائماً.
+   شرطة لازوردية قصيرة فوقه تفصله عن الدور كما يُفصل التصدير عن متنه. */
 .hero-tagline{
-  font-family: var(--font-text);
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
+  position: relative;
+  max-inline-size: 21em;
+  margin-block: var(--s-8) var(--s-12);
+  padding-block-start: var(--s-6);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.5vw, 2.125rem);
+  font-weight: 400;
+  line-height: 1.65;
   color: var(--text-muted);
-  margin-block: var(--s-2) var(--s-8);
-  /* كان 32ch — آخر وحدة ch في التخطيط، وتتمدّد عند وصول الخط */
-  max-inline-size: var(--measure);
+  text-wrap: balance;
+}
+.hero-tagline::before{
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: var(--s-12);
+  block-size: 2px;
+  border-radius: var(--r-pill);
+  background: var(--solid);
 }
 
-.hero-cta{ display: flex; flex-wrap: wrap; gap: var(--s-2); }
+/* ── المداخل: ذُرى وبان بابان، والتواصل فعل ─────────────────────────────
+   كان الثلاثة أزراراً متجاورة لا يدلّ اثنان منها على وجهته. صار لكلّ قسم
+   بابٌ يحمل شعاره واسمه بخطّ العرض وشرحاً بكلمة، بلون قسمه. */
+.hero-cta{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+}
 
-.hero-image{ justify-self: center; }
-/* نصف القطر نفسه الذي تأخذه كل الأغلفة — كان --r-lg هنا و0 على الأغلفة */
+.hero-door{
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: var(--s-3);
+  min-inline-size: 12.5rem;
+  padding: var(--s-3) var(--s-4);
+  padding-inline-start: var(--s-3);
+  border-radius: var(--r-card);
+  background: var(--accent-quiet);
+  box-shadow: inset 0 0 0 1px var(--accent-line);
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: var(--transition-ui);
+}
+.hero-door img{
+  grid-row: 1 / 3;
+  block-size: 2.5rem;
+  inline-size: auto;
+}
+.hero-door-word{
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.hero-door-gloss{
+  grid-column: 2;
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+.hero-door .arrow{
+  grid-column: 3;
+  grid-row: 1 / 3;
+  margin-inline-start: var(--s-2);
+}
+.hero-door:hover{
+  color: var(--accent-text);
+  box-shadow: inset 0 0 0 1px var(--accent-text), var(--shadow-1);
+}
+.hero-door:active{ transform: scale(0.98); transition-duration: var(--dur-fast); }
+
+.hero-contact{ min-block-size: 3rem; padding-inline: var(--s-8); }
+
+/* ── السهم: يشير إلى الأمام في اتجاه القراءة ───────────────────────────── */
+.arrow{
+  flex: none;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  transition: translate var(--dur-mid) var(--ease-out);
+}
+[dir="ltr"] .arrow{ scale: -1 1; }
+:is(a, button):hover > .arrow{ translate: calc(var(--s-1) * -1) 0; }
+[dir="ltr"] :is(a, button):hover > .arrow{ translate: var(--s-1) 0; }
+
+/* ── الصورة: نافذة مقوّسة، ومدار الشعار يلتفّ حولها ──────────────────────
+   القوس نصف دائرة تماماً: نصف القطر الأفقي ٥٠٪ من العرض، والرأسي ٤٠٪ من
+   الارتفاع (= نصف العرض في نسبة ٤:٥)، فلا يُعاد تحجيم الزوايا السفلى.
+   المدار من لقطة «عني» نفسها: نقطة ذُرى القرميدية ونقطة بان التركوازية
+   حول من يتوسّطهما. يمرّ خلف الرأس ويعود أمام الكتفين — نسختان من الإهليلج
+   نفسه، الأمامية مقصوصة على نصفه القريب. */
+.hero-image{
+  position: relative;
+  justify-self: center;
+  inline-size: min(100%, 23rem);
+  isolation: isolate;
+}
+.hero-portrait{
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 50% 50% var(--r-card) var(--r-card) / 40% 40% var(--r-card) var(--r-card);
+  background: var(--bg-element);
+  box-shadow: var(--shadow-2);
+}
+.hero-portrait picture{ display: contents; }
 .profile-img{
   inline-size: 100%;
-  max-inline-size: 20rem;
-  aspect-ratio: 1;
+  block-size: 100%;
   object-fit: cover;
-  border-radius: var(--r-card);
-  background: var(--bg-element);
+  object-position: 50% 30%;
 }
 
-/* ── عني ───────────────────────────────────────────────────────────── */
-.about-content{ max-inline-size: var(--measure); }
+/* توسيط فيزيائي (left) لا منطقي: الرسم متناظر، ولا يتبع اتجاه اللغة */
+.hero-orbit{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  inline-size: 150%;
+  block-size: auto;
+  max-inline-size: none;
+  translate: -50% -50%;
+  overflow: visible;
+  pointer-events: none;
+}
+.hero-orbit--back{ z-index: -1; }
+.hero-orbit--front{ z-index: 1; }
+.orbit-path{
+  fill: none;
+  stroke: var(--a-7);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 10;
+}
+/* النقطتان تحملان ‎.brand-dhura / .brand-ban فتأخذان لونَي القسمين من مصدرهما */
+.orbit-dot{ fill: var(--solid); }
+
+
+/* ── عني ─────────────────────────────────────────────────────────────── */
+.about-grid{ display: grid; }
+
+@media (min-width: 60rem){
+  .about-grid{
+    grid-template-columns: minmax(0, var(--about-col)) minmax(0, 1fr);
+    grid-template-areas:
+      "head head"
+      "body reel"
+      "poem poem"
+      "cv   cv";
+    column-gap: var(--s-16);
+    --about-col: 34rem;
+  }
+  .about-grid > .section-head{ grid-area: head; }
+  .about-content{ grid-area: body; }
+  .about-grid > .about-reel{ grid-area: reel; align-self: center; }
+  .about-grid > .poetry-line{ grid-area: poem; }
+  .about-grid > .about-cv{ grid-area: cv; }
+}
+
+.about-content{ max-inline-size: 34rem; }
 .about-bio{
   font-family: var(--font-text);
   font-size: var(--t-body);
   line-height: var(--lh-body);
   color: var(--text);
 }
-/* فقرات «عني» المتتالية تتنفّس بمسافة سلّم واحدة */
+/* الفقرة الأولى مقدّمة: أكبر درجةً، كما تُفتتح المقالة في المجلّة */
+.about-bio:first-child{
+  font-size: var(--t-lede);
+  line-height: var(--lh-lede);
+}
+@media (min-width: 60rem){
+  .about-bio:first-child{ font-size: 1.5rem; }
+}
 .about-bio + .about-bio{ margin-block-start: var(--s-6); }
-/* بيت الشعر: أعلى من 28px عند كل المقاسات فيبقى ضمن نطاق Display.
-   الصدر والعجز شطران يفصلهما فراغ لا شرطة — وهو تنضيد البيت العربي
-   المعتاد. flex بلفّ: يجلسان جنباً إلى جنب حين يتّسع السطر، وينزل
-   العجز تحت الصدر حين يضيق، محاذيَين لجهة البدء في الحالتين. */
+
+/* بيت الشعر: شريطٌ بعرض الحاوية بين شعرتين، الصدر والعجز متقابلان كما
+   يُنضَّد البيت في الطباعة العربية — يفصلهما فراغ لا شرطة. وعلى الشعرة
+   العليا معيّنٌ صغير يعلن أن ما بينهما اقتباس. Display لأنه ≥28px دائماً. */
 .poetry-line{
+  position: relative;
   display: flex;
   flex-wrap: wrap;
-  gap: 0 var(--s-12);
+  justify-content: center;
+  gap: var(--s-1) var(--s-24);
+  margin-block: var(--s-12) var(--s-8);
+  padding-block: var(--s-12);
+  border-block: 1px solid var(--border-subtle);
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: clamp(1.75rem, 3.4vw, 2.625rem);
   line-height: 1.75;
   color: var(--text);
-  margin-block: var(--s-12);
-  padding-inline-start: var(--s-6);
-  border-inline-start: 2px solid var(--accent-line);
+  text-align: center;
+}
+.poetry-line::before{
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  left: 50%;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  background: var(--bg-canvas);
+  box-shadow: inset 0 0 0 1px var(--accent-line);
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 .poetry-hemistich{ text-wrap: balance; }
-.about-content .btn{ margin-block-start: var(--s-8); }
 
-/* فيديو «عني»: يختلف موضعه بعرض الشاشة، ويلتصق داخل صفّه فيتوقّف عند نهاية
-   القسم. darken على العنصر الملتصق نفسه: أرضية الفيديو أفتح من الصفحة قليلاً
+.about-cv{ display: flex; justify-content: center; }
+
+/* فيديو «عني»: darken على العنصر نفسه — أرضية الفيديو أفتح من الصفحة قليلاً
    فيغلب لون الصفحة، ولا يبقى إلا الرسم. */
 .about-reel{ margin: 0; mix-blend-mode: darken; }
 .about-reel video{ display: block; inline-size: 100%; block-size: auto; }
@@ -1192,79 +1589,81 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 }
 
 @media (max-width: 59.99rem){
-  .about-reel{ max-inline-size: 36rem; }
+  .about-reel{
+    inline-size: min(100%, 26rem);
+    margin-block-start: var(--s-8);
+    justify-self: center;
+  }
 }
 @media (min-width: 60rem){
-  #about .section-grid{
-    grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
-    gap: var(--s-8) 0;
-    align-items: start;
-  }
-  #about .section-head{ grid-column: 1 / -1; }
-  #about .section-body{ grid-column: 1; }
   .about-reel{
-    grid-column: 2;
-    position: sticky;
-    inset-block-start: calc(var(--nav-h) + var(--s-8));
-  }
-}
-@media (min-width: 76rem){
-  #about .section-grid{
-    grid-template-columns: 15rem var(--measure) minmax(0, 1fr);
-    gap: 0 var(--s-16);
-  }
-  #about .section-head{ grid-column: 1; grid-row: 1; }
-  #about .section-body{ grid-column: 2; grid-row: 1; }
-  .about-reel{
-    grid-column: 3;
-    grid-row: 1;
+    inline-size: min(100%, 30rem);
     justify-self: end;
-    inline-size: min(100% + var(--s-16), 27.3rem);
-    margin-inline-start: calc(var(--s-16) * -1);
   }
 }
 
-/* ── رحلة البيانات: تسلسل واحد على خطّ واحد ────────────────────────────
-   الرقم صغير مندمج طباعياً — 22px، أي تحت عتبة Display، فدوره Sans.
-   التسلسل نفسه هو ما يُرى لا الأرقام.
-   ترتيب RTL (يمين → يسار) محفوظ تلقائياً باتجاه المستند. */
+
+/* ── رحلة بناء الحل: أعمدة صاعدة ─────────────────────────────────────────
+   الرحلة من المشكلة إلى أثرٍ يُقاس، فتُرسم كما يُرسم الأثر: مخطّط أعمدة
+   يعلو عموداً بعد عمود. لكلّ مرحلة عمودٌ بلونها، رقمه في رأسه، ونصّها
+   تحت خطّ الأساس. ترتيب RTL (يمين → يسار) يأتي من اتجاه المستند، فيصعد
+   المخطّط نحو اليسار في العربية ونحو اليمين في الإنجليزية بلا قاعدة خاصة.
+
+   ‏<ol> فالترتيب هو المعنى، ولذلك nth-child لا data-motif: اللون والارتفاع
+   يشفّران موضع المرحلة في التسلسل، فلو أُعيد ترتيبها تبعتها. */
 .journey-grid{
+  --chart-h: 9.5rem;
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0 var(--s-8);
-  --num-block: 2.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 var(--s-6);
   list-style: none;
 }
+/* خطّ الأساس: محور المخطّط تحت الأعمدة الأربعة */
 .journey-grid::before{
   content: '';
   position: absolute;
   inset-inline: 0;
-  inset-block-start: var(--num-block);
+  inset-block-start: var(--chart-h);
   block-size: 1px;
-  background: var(--border-subtle);
+  background: var(--border-strong);
 }
 
 .stage-card{ display: flex; flex-direction: column; }
-
-/* ‏<ol> فالترتيب هو المعنى، ولذلك nth-child لا data-motif: اللون يشفّر
-   موضع المرحلة في التسلسل، فلو أُعيد ترتيبها تبعتها درجاتها. */
-.stage-card:nth-child(1){ --stage-tint: var(--stage-1-tint); --stage-ink: var(--stage-1-ink); }
-.stage-card:nth-child(2){ --stage-tint: var(--stage-2-tint); --stage-ink: var(--stage-2-ink); }
-.stage-card:nth-child(3){ --stage-tint: var(--stage-3-tint); --stage-ink: var(--stage-3-ink); }
-.stage-card:nth-child(4){ --stage-tint: var(--stage-4-tint); --stage-ink: var(--stage-4-ink); }
+.stage-card:nth-child(1){ --stage-ink: var(--stage-1-ink); --stage-bar: var(--stage-1-bar); --h: 0.36; }
+.stage-card:nth-child(2){ --stage-ink: var(--stage-2-ink); --stage-bar: var(--stage-2-bar); --h: 0.57; }
+.stage-card:nth-child(3){ --stage-ink: var(--stage-3-ink); --stage-bar: var(--stage-3-bar); --h: 0.78; }
+.stage-card:nth-child(4){ --stage-ink: var(--stage-4-ink); --stage-bar: var(--stage-4-bar); --h: 1; }
 .stage-canvas{ display: none; }   /* محفوظ في العقد، لم يعد يُرسم عليه */
 
+/* خانة المخطّط: ارتفاع ثابت، والعمود يقف على قاعدتها */
+.stage-bar{
+  position: relative;
+  display: block;
+  block-size: var(--chart-h);
+}
+.stage-bar::before{
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: calc(var(--h) * 100%);
+  background: var(--stage-bar);
+  border-block-start: 2px solid var(--stage-ink);
+  border-start-start-radius: var(--r-control);
+  border-start-end-radius: var(--r-control);
+  transform-origin: 50% 100%;
+}
+/* الرقم في رأس عموده: قاعدته تحت حافّة العمود بـ ‎2.75rem دائماً */
 .stage-number{
-  display: flex;
-  align-items: flex-end;
-  block-size: var(--num-block);
-  padding-block-end: var(--s-2);
-  font-family: var(--font-sans);
-  font-size: var(--t-h3);
+  position: absolute;
+  inset-inline-start: var(--s-4);
+  inset-block-end: calc(var(--h) * 100% - 2.75rem);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--text-faint);
+  color: var(--stage-ink);
 }
 
 .stage-title{
@@ -1290,19 +1689,70 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   color: var(--text-faint);
 }
 /* الفاصلة على الوسم السابق لا على التالي: بـ::before كانت تُفتتح بها
-   الأسطر الملتفّة — «· تطوير التطبيقات الذكية» في أول سطر جديد. وبـ::after
-   تبقى داخل الصندوق السطري للوسم الذي قبلها، فتلتفّ معه ذيلاً لا صدراً. */
+   الأسطر الملتفّة. وبـ::after تلتفّ مع وسمها ذيلاً لا صدراً. */
 .stage-tag:not(:last-child)::after{
   content: '·';
   margin-inline-start: var(--s-2);
+}
+
+/* نموّ الأعمدة عند الكشف: العمود يرتفع من قاعدته، والرقم يلحقه.
+   البوابتان نفساهما (‎.js والحركة المسموحة) — بدونهما العمود قائم أصلاً. */
+@media (prefers-reduced-motion: no-preference){
+  .js .stage-bar::before{ transition: transform 640ms var(--ease-out); }
+  .js .stage-number{ transition: opacity var(--dur-slow) var(--ease-out) 260ms; }
+  .js .stage-card:not(.animate) .stage-bar::before{ transform: scaleY(0.12); }
+  .js .stage-card:not(.animate) .stage-number{ opacity: 0; }
+}
+
+/* ── الجوال: العمود يصير مقياساً أفقياً ─────────────────────────────────
+   في عمود واحد لا يُقرأ مخطّط أعمدة. يبقى المعنى نفسه بالمقياس نفسه:
+   مسارٌ ممتلئ بنسبة موضع المرحلة — ٣٦٪ ثم ٥٧٪ ثم ٧٨٪ ثم الامتلاء. */
+@media (max-width: 59.99rem){
+  .journey-grid{
+    grid-template-columns: 1fr;
+    gap: var(--s-12);
+  }
+  .journey-grid::before{ display: none; }
+
+  .stage-bar{
+    block-size: 2.75rem;
+    border-radius: var(--r-control);
+    background: var(--bg-element);
+  }
+  .stage-bar::before{
+    inset-block: 0;
+    inset-inline-end: auto;
+    block-size: auto;
+    inline-size: calc(var(--h) * 100%);
+    border-block-start: 0;
+    border-inline-end: 2px solid var(--stage-ink);
+    border-radius: var(--r-control);
+    transform-origin: var(--origin-start);
+  }
+  .stage-number{
+    inset-block: 0;
+    display: flex;
+    align-items: center;
+    inset-inline-start: var(--s-3);
+  }
+  .stage-title{ margin-block-start: var(--s-4); }
+
+  @media (prefers-reduced-motion: no-preference){
+    .js .stage-card:not(.animate) .stage-bar::before{ transform: scaleX(0.12); }
+  }
 }
 
 /* ============================================================================
    الأدوات — الشريط اللانهائي
    ============================================================================ */
 
-.stack{ padding-block: var(--rhythm) 0; }
-.stack .container{ margin-block-end: var(--s-8); }
+/* الشريط على الحبر الليلي: البلاطات تبقى ورقاً (--bg-tile لا يُعاد ربطه
+   في ‎.on-ink) — الشعارات الداكنة (GitHub وNotion وNext.js) تحتاج أرضية
+   فاتحة، فالبلاطة الفاتحة على الليل تُبرزها كلّها معاً. */
+.stack .section-head{ margin-block-end: var(--s-8); }
+.stack.on-ink{
+  background-image: radial-gradient(60rem 26rem at 80% 0%, var(--ink-glow), transparent 70%);
+}
 
 /* ── الكتلة كما وردت، بلا تغيير في بنيتها ولا في الـkeyframes ─────────── */
 .mq{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
@@ -1383,7 +1833,7 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   block-size: var(--stack-size);
   padding: calc(var(--stack-size) * 0.15);
   border-radius: 22%;
-  background: var(--bg-surface);
+  background: var(--bg-tile);
   /* كانت حلقةً داخليةً مسطّحة، فتبدو البلاطة مرسومةً على الورق لا موضوعةً
      عليه. --shadow-1 يحمل الحلقة نفسها ومعها ارتفاع — وهو الظلّ ذاته الذي
      تحمله بطاقات الموقع، فينتمي الشريط إلى لغتها بدل أن يقف خارجها. */
@@ -1430,7 +1880,7 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
     mask-image: linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
   }
   /* المساحة فوق الشريط تُعاد توزيعاً: ‎32 قبله صارت ‎24، وحشوه ‎12 يكمّلها */
-  .stack .container{ margin-block-end: var(--s-6); }
+  .stack .section-head{ margin-block-end: var(--s-6); }
 }
 
 /* حركة مخفّضة: الشريط يتوقّف ويصير صفّاً ساكناً قابلاً للتمرير باليد.
@@ -1450,52 +1900,167 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 }
 
 
-/* ── مختارات: أحدث مشروع + أحدث مقال ────────────────────────────────── */
+/* ── مختارات: بابا القسمين ───────────────────────────────────────────────
+   عمودان، لكلٍّ رأسٌ بلون قسمه: شعرة علوية بلونه، وشعاره، واسمه بخطّ
+   العرض، وطريقٌ إلى القسم كلّه في طرف الرأس. تحته أحدث ما فيه. الفئة
+   ‎.brand-*‎ على العمود تُعيد ربط رموز اللكنة، فيتلوّن كل ما بداخله. */
 .selections-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
-  gap: var(--s-16) var(--s-8);
+  grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+  gap: var(--s-16) var(--s-12);
 }
-/* كل عمود بطاقةٌ واحدة يعلوها، ثم زرّ القسم مثبَّت في الأسفل فتتحاذى
-   الأزرار عبر العمودين مهما اختلف ارتفاع البطاقتين. */
 .selection-col{
   display: flex;
   flex-direction: column;
+  min-inline-size: 0;
 }
 .selection-col > .projects-grid,
 .selection-col > .articles-grid{ flex: 1; }
-.selection-col .section-more{ margin-block-start: var(--s-8); }
 
-.section-more{ margin-block-start: var(--s-12); }
+.selection-head{
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-4);
+  margin-block-end: var(--s-8);
+  border-block-start: 3px solid var(--solid);
+  border-block-end: 1px solid var(--border-subtle);
+}
+.selection-head img{ block-size: 2.5rem; inline-size: auto; flex: none; }
+.selection-name{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s-2);
+  min-inline-size: 0;
+}
+.selection-word{
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--accent-text);
+}
+.selection-gloss{
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.selection-more{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+  margin-inline-start: auto;
+  min-block-size: 2.75rem;
+  padding-inline: var(--s-4);
+  border-radius: var(--r-pill);
+  background: var(--accent-quiet);
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  font-weight: 500;
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: var(--transition-ui);
+}
+.selection-more:hover{ background: var(--solid); color: var(--text-on-solid); }
 
-/* ── تواصل ─────────────────────────────────────────────────────────── */
-.contact-content{ max-inline-size: 44rem; }
+/* البطاقتان متجاورتان فتتوحّدان: الغلاف بنسبة واحدة، والعنوان بخطّ العرض */
+.selections .project-card-image-wrapper,
+.selections .article-card-image-wrapper{ aspect-ratio: 16 / 10; }
+.selections .project-card-title,
+.selections .article-card-title{
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  line-height: var(--lh-head);
+}
+
+
+/* ── تواصل: الختام الليلي ────────────────────────────────────────────────
+   آخر قسم وأكبر عنوان بعد الاسم: من بلغ هنا أبدى أكبر اهتمام. المقدّمة
+   في عمود، والطرق في عمود يقابلها — كلّ طريقٍ سطرٌ بين شعرتين ينتهي بسهم. */
+.contact .section-title{ font-size: clamp(3rem, 9vw, 6.5rem); line-height: 1.12; }
+
+.contact-content{
+  display: grid;
+  gap: var(--s-12);
+}
+@media (min-width: 60rem){
+  .contact-content{
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "intro methods"
+      "cta   methods";
+    align-items: start;
+    gap: var(--s-8) var(--s-16);
+  }
+  .contact-intro{ grid-area: intro; }
+  .contact-methods{ grid-area: methods; }
+  .contact-cta{ grid-area: cta; }
+}
+
 .contact-intro{
   font-family: var(--font-text);
   font-size: var(--t-lede);
   line-height: var(--lh-lede);
   color: var(--text-muted);
-  margin-block-end: var(--s-8);
+  max-inline-size: 30rem;
 }
+@media (min-width: 60rem){
+  .contact-intro{ font-size: 1.5rem; }
+}
+
 .contact-methods{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
-  gap: var(--s-2);
+  border-block-start: 1px solid var(--border-subtle);
 }
 .contact-item{
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--s-3);
-  min-block-size: 2.75rem;
-  padding: var(--s-2) var(--s-3);
-  border-radius: var(--r-control);
+  gap: var(--s-4);
+  min-block-size: 4.5rem;
+  padding-inline: var(--s-3);
+  border-block-end: 1px solid var(--border-subtle);
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  font-weight: 500;
   color: var(--text);
   text-decoration: none;
   transition: var(--transition-ui);
 }
-.contact-item svg{ color: var(--text-faint); flex-shrink: 0; transition: color var(--dur-fast) var(--ease-out); }
-.contact-item:hover{ background: var(--bg-element); color: var(--accent-text); }
-.contact-item:hover svg{ color: var(--accent-text); }
+/* الأيقونة في دائرة: مقام واحد لأربع أيقونات مختلفة الوزن */
+.contact-icon{
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: var(--r-pill);
+  background: var(--bg-element);
+  color: var(--text-muted);
+  transition: var(--transition-ui);
+}
+/* justify-self:start يُبقي النصّ عند بداية السطر حتى حين يكون لاتينياً
+   (الهاتف dir="ltr" كان يلتصق بالسهم في الطرف المقابل) */
+.contact-item > span:not(.contact-icon){
+  justify-self: start;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.contact-item .arrow{ color: var(--text-faint); }
+.contact-item:hover{ background: var(--bg-element); color: var(--text); }
+.contact-item:hover .contact-icon{ background: var(--solid); color: var(--text-on-solid); }
+.contact-item:hover .arrow{ color: var(--text); }
+
+.contact-cta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
+
+
 /* ── صفحة ٤٠٤ ──────────────────────────────────────────────────────────
    الطريق المسدود يصير مفترقاً: أربعة مداخل بدل رسالة ورجوعٍ بالمتصفّح. */
 .notfound{ padding-block: var(--rhythm); }
@@ -1511,14 +2076,6 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
   margin-block-start: var(--s-8);
 }
 
-.contact-cta{
-  margin-block-start: var(--s-8);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-  align-items: center;
-}
-
 /* ── فئات العقد (§4) ───────────────────────────────────────────────────
    أسماء حقيقية في الترميز تنسيقُها يعيش في أبنائها أو في سلفها. تُعلَن
    هنا صراحةً كي يبقى كل اسم في العقد قابلاً للحلّ في CSS — فلا يظنّه
@@ -1527,95 +2084,28 @@ section:last-of-type{ padding-block-end: var(--rhythm); }
 .contact{}
 .skills{}
 .selections{}
-.hero-text{ container-type: inline-size; }   /* يقيس به .hero-title حجم الاسم */
-.section-body{}            /* عمود المحتوى في .section-grid */
+.section-body{}            /* عمود المحتوى في قسمَي عني والتواصل */
 .skill-card{}              /* محجوزة، بلا نسخة في أي صفحة حالياً */
 .hero-canvas{ display: none; }
 
 /* ── استجابة الصفحة الرئيسية ───────────────────────────────────────── */
-@media (max-width: 60rem){
+@media (max-width: 59.99rem){
   .hero-inner{ grid-template-columns: 1fr; gap: var(--s-8); }
-  .hero-image{ order: -1; justify-self: start; }
   /* الصورة تتصدّر الشاشة الضيّقة، فكلّ بكسل فيها يدفع الاسم والدور
-     والنداءات الثلاثة إلى ما تحت الحدّ. عند 12rem كان زائر الجوال يرى
-     صورةً ولا يرى فعلاً واحداً. */
-  .profile-img{ max-inline-size: 8rem; }
-
-  /* ── رحلة بناء الحل: العمود الواحد يستحقّ عموداً فقرياً ────────────────
-     على المكتب تربط المراحلَ الأربعَ خطٌّ أفقي واحد يمرّ تحت الأرقام، فتُقرأ
-     رحلةً متّصلة لا قائمة. وفي عمود واحد كان ذلك الخطّ يُخفى ويُستعاض عنه
-     بخطّ صغير تحت كل رقم — فينفرط التسلسل إلى أربع كتل لا رابط بينها،
-     ويضيع المعنى الوحيد الذي يحمله القسم: أن هذه مراحل يتلو بعضها بعضاً.
-
-     هنا يُقلَب المحور لا يُلغى: الرقم يصير عقدةً، والخيط يصلها بالتالية،
-     وينقطع عند الأخيرة فتُعرَف نهايةً. الخيط يُرسم على البطاقة نفسها لا
-     على الشبكة — فينتهي تلقائياً مع آخر بطاقة بلا حساب ارتفاعات. */
-  .journey-grid{
-    grid-template-columns: 1fr;
-    --node: 2.25rem;                 /* 36px — قطر العقدة */
-    --node-gap: var(--s-4);          /* بين العقدة والنصّ */
-    --journey-gap: var(--s-12);      /* بين مرحلة وأخرى — على السلّم */
-    --spine-breath: 0.5rem;          /* فسحة تفصل الخيط عن العقدتين */
-    gap: var(--journey-gap);
-    padding-inline-start: calc(var(--node) + var(--node-gap));
-  }
-  /* الخطّ الأفقي لا محلّ له في عمود واحد */
-  .journey-grid::before{ display: none; }
-
-  .stage-card{ position: relative; }
-
-  /* الخيط: من أسفل العقدة، عابراً الفجوة، إلى عقدة المرحلة التالية */
-  .stage-card::before{
-    content: '';
-    position: absolute;
-    inset-inline-start: calc(-1 * (var(--node-gap) + var(--node) / 2));
-    inset-block-start: calc(var(--node) + var(--spine-breath));
-    inset-block-end: calc(var(--spine-breath) - var(--journey-gap));
-    inline-size: 1px;
-    background: var(--border-subtle);
-  }
-  .stage-card:last-child::before{ content: none; }
-
-  /* الرقم يخرج من مجرى النصّ ويصير عقدةً على الخيط. حجمه يصغر لأنه لم يعد
-     عنواناً في سطره، بل علامةً في دائرة — والدائرة هي ما يُرى أولاً. */
-  .stage-number{
-    position: absolute;
-    inset-inline-start: calc(-1 * (var(--node) + var(--node-gap)));
-    inset-block-start: 0;
-    display: grid;
-    place-items: center;
-    inline-size: var(--node);
-    block-size: var(--node);
-    padding: 0;
-    border-radius: var(--r-full);
-    /* لمسة المرحلة: تعبئة خافتة وحبر من التدرّج نفسه. الحلقة والارتفاع
-       يبقيان محايدين (--shadow-1) — لو تلوّنا أيضاً لصارت اللمسة إعلاناً. */
-    background: var(--stage-tint, var(--bg-surface));
-    box-shadow: var(--shadow-1);
-    color: var(--stage-ink, var(--text-muted));
-
-    /* الرقم بخطّ العرض لا بالسانس: سانس يرسم «١» عموداً مستقيماً بنهايات
-       مسطّحة، وثمانية العرض ترسمه بانحناءة وطرفٍ مرفوع، و«٤» بالتفافة.
-       لا خاصية OpenType تصنع هذا — فحصتُ الخطوط الخمسة عشر: لا swsh ولا
-       ss01–ss08 ولا salt ولا onum تمسّ الأرقام العربية-الهندية إطلاقاً.
-       الانحناء في رسم العائلة نفسها، فيؤخذ باختيارها.
-
-       والوزن 400 لا 500: وزن العرض المتوسط ليس محمَّلاً في الصفحة، وطلبه
-       يجرّ ملفاً كاملاً — قِسْتُه، ‎81 كيلوبايت لأربعة أرقام، والخطوط
-       أصلاً ثلثا وزن الصفحة. الأوزان المحمَّلة من هذه العائلة 400 و700،
-       و400 هو الأنسب لرقم صغير في دائرة: 700 يملأ الدائرة حبراً. */
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 1rem;
-  }
-
-  /* الرقم لم يعد يشغل سطراً فوق العنوان، فالعنوان يصعد إلى رأس البطاقة */
-  .stage-title{ margin-block-start: 0; }
+     والمداخل إلى ما تحت الحدّ — تبقى صغيرة، والمدار حولها يكبّرها بصرياً
+     بلا كلفة في الارتفاع. */
+  .hero-image{ order: -1; inline-size: 8.5rem; margin-block-start: var(--s-4); }
+  .hero-tagline{ margin-block: var(--s-6) var(--s-8); padding-block-start: var(--s-4); }
 }
 
-@media (max-width: 30rem){
-  .hero-cta{ flex-direction: column; align-items: stretch; }
-  .hero-cta .btn{ inline-size: 100%; }
+@media (max-width: 36rem){
+  .hero-cta{ display: grid; grid-template-columns: 1fr 1fr; }
+  .hero-door{ min-inline-size: 0; }
+  .hero-door .arrow{ display: none; }
+  .hero-contact{ grid-column: 1 / -1; inline-size: 100%; }
+  .poetry-line{ gap: var(--s-1); padding-block: var(--s-8); }
+  .contact-item{ min-block-size: 4rem; padding-inline: var(--s-1); font-size: var(--t-ui); }
+  .contact-cta .btn{ flex: 1 1 auto; }
 }
 
 /* ── إشعار النسخ ────────────────────────────────────────────────────── */

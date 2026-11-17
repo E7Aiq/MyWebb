@@ -61,6 +61,19 @@
   }
 }
 
+/* فتات الخبز أخٌ للمقال لا ابنه، فيُعطى مساراته نفسها ويسكن مسار الغلاف —
+   فتبدأ من حيث يبدأ العنوان تحتها لا من حافّة عمود القراءة. */
+:is(#articleContainer, #projectContainer) > .breadcrumb{
+  --page: 75rem;
+  --measure: 32rem;
+  --bleed: calc((var(--page) - var(--measure)) / 2);
+  --rail:  calc((var(--page) - var(--measure)) / 2);
+}
+@media (min-width: 60rem){
+  :is(#articleContainer, #projectContainer) > .breadcrumb{ --measure: 38rem; }
+}
+:is(#articleContainer, #projectContainer) > .breadcrumb > .breadcrumb-list{ grid-column: wide; }
+
 /* تذييل النشر أخٌ لا ابن، فلا يرث تجاوزات .article — يُكرَّر عليه صراحةً */
 .article-footer{
   --measure: 75rem;
@@ -73,11 +86,12 @@
    بدونه تتجاوز الصورة الكاملة العرض حدّ النافذة بـ1.5% فيومض شريط تمرير
    أفقي أثناء الكشف. clip لا ينشئ سياق تمرير خلافاً لـ hidden. */
 .article-cover-wrapper{
-  margin-block-end: var(--s-12);
+  margin-block-end: var(--s-16);
   overflow: clip;
   border-radius: var(--r-card);
 }
-.article-cover-wrapper:has(img[hidden]){ margin-block-end: var(--s-16); }
+/* بلا غلاف لا يبقى وعاؤه فراغاً معلّقاً بين الترويسة والمتن */
+.article-cover-wrapper:has(img[hidden]){ margin-block-end: 0; }
 
 /* كل غلاف في الموقع يأخذ نصف القطر نفسه وحلقة الحافة نفسها. الحلقة تعرّف
    الحدّ حين تكون الصورة فاتحة عند أطرافها، فلا تسبح بلا شكل فوق الورق. */
@@ -95,9 +109,15 @@
 .article-cover[hidden]{ display: none; }
 
 /* ── الترويسة ──────────────────────────────────────────────────────────── */
-.article-header{ margin-block-end: var(--s-6); }
+/* تسبق الغلاف وتشاركه عرضه (u-wide): العنوان أوّل ما يُقرأ، والغلاف لوحةٌ
+   تحته لا ستارٌ قبله. والمتن بعدهما في عمود القراءة الأضيق. */
+.article-header{
+  margin-block-end: var(--s-12);
+  padding-block-start: var(--s-6);
+}
 
 .article-title{
+  max-inline-size: 16em;
   font-family: var(--font-display);
   font-size: var(--t-title);
   font-weight: 700;
@@ -116,10 +136,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--s-2) var(--s-4);
-  margin-block-start: var(--s-4);
-  margin-block-end: var(--s-16);
+  margin-block-start: var(--s-6);
   font-family: var(--font-sans);
-  font-size: var(--t-meta);
+  font-size: var(--t-ui);
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -438,18 +457,12 @@
    الطبقة الوحيدة غير النافبار التي تستحق backdrop-filter: تعلو نهاية
    المقال بلوح شفّاف يمرّ من تحته آخر سطر، فيُقرأ «انتهى النصّ، وهذا ما
    بعده» بدل خطّ فاصل رابع. */
+/* كان لوحاً زجاجياً بعرض الشاشة بزوايا مستديرة تلامس حافّتيها. صار فهرساً
+   مفتوحاً في مسار الغلاف: بطاقتا السابق والتالي، ثم سطور ما يتّصل —
+   والتذييل الليلي بعده يختم الصفحة، فلا حاجة إلى لوحٍ يفصل. */
 .article-footer{
   margin-block-start: var(--s-16);
-  padding-block: var(--s-12);
-  border-radius: var(--r-card);
-  background: var(--bg-glass);
-  -webkit-backdrop-filter: saturate(150%) blur(16px);
-  backdrop-filter: saturate(150%) blur(16px);
-  box-shadow: var(--shadow-1);
   row-gap: var(--s-12);
-}
-@supports not (backdrop-filter: blur(1px)){
-  .article-footer{ background: var(--bg-surface); }
 }
 .article-footer > *{ grid-column: wide; }
 
@@ -462,19 +475,22 @@
    لقاعدة تحدّ المركز. */
 .article-nav-item{
   display: block;
-  padding: var(--s-4);
+  padding: var(--s-6);
   border-radius: var(--r-card);
-  background: var(--bg-element);
+  background: var(--bg-canvas);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
   text-decoration: none;
   transition: var(--transition-ui);
 }
-.article-nav-item:hover{ background: var(--bg-element-hover); box-shadow: var(--shadow-1); }
+.article-nav-item:hover{ box-shadow: inset 0 0 0 1px var(--accent-line), var(--shadow-1); }
+.article-nav-item:hover .article-nav-title{ color: var(--accent-text); }
 .article-nav-label{
   display: block;
   font-family: var(--font-sans);
   font-size: var(--t-meta);
-  color: var(--text-muted);
-  margin-block-end: var(--s-1);
+  font-weight: 500;
+  color: var(--accent-text);
+  margin-block-end: var(--s-2);
 }
 .article-nav-title{
   font-family: var(--font-text);
@@ -495,22 +511,22 @@
   color: var(--text-muted);
   margin-block-end: var(--s-4);
 }
-.article-footer-more{ display: grid; gap: var(--s-1); }
+/* القوائم سطورُ فهرس بين شعرات: العنوان في البدء، والتسمية في الطرف */
+.article-footer-more{ display: grid; border-block-start: 1px solid var(--border-subtle); }
 .article-footer-more a{
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: var(--s-4);
-  padding: var(--s-2) var(--s-3);
-  margin-inline: calc(var(--s-3) * -1);
-  border-radius: var(--r-control);
+  padding-block: var(--s-3);
+  border-block-end: 1px solid var(--border-subtle);
   font-family: var(--font-text);
   font-weight: 700;
   color: var(--text);
   text-decoration: none;
   transition: var(--transition-ui);
 }
-.article-footer-more a:hover{ color: var(--accent-text); background: var(--bg-element); }
+.article-footer-more a:hover{ color: var(--accent-text); }
 /* min-inline-size:0 يسمح للعنصر المرن بالانكماش دون عرضه الأدنى الضمني،
    و overflow-wrap يكسر كلمةً واحدة أطول من العمود (رابط أو مصطلح لاتيني). */
 .article-footer-more-title{ min-inline-size: 0; overflow-wrap: anywhere; }
@@ -532,6 +548,44 @@
 }
 .article-footer-back{ justify-self: start; }
 
+/* ── فهرس الموضوعات: بلاطات لا سطور ──────────────────────────────────────
+   في صفحة الموضوعات وحدها تصير السطور بلاطاتٍ في شبكة: كل موضوع اسمه
+   وعدّاده في شارة بلون اللكنة. عنوان المحور فوق بلاطاته بخطّ المتن. */
+.topics-index{ gap: var(--s-12); }
+.topics-index .article-footer-heading{
+  font-family: var(--font-text);
+  font-size: var(--t-card);
+  font-weight: 700;
+  color: var(--text);
+}
+.topics-index .article-footer-more{
+  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+  gap: var(--s-3);
+  border: 0;
+}
+.topics-index .article-footer-more a{
+  align-items: center;
+  margin: 0;
+  padding: var(--s-4);
+  border: 0;
+  border-radius: var(--r-card);
+  background: var(--bg-surface);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+.topics-index .article-footer-more a:hover{
+  background: var(--bg-surface);
+  box-shadow: inset 0 0 0 1px var(--accent-line), var(--shadow-1);
+}
+.topics-index .article-footer-more a > span + span{
+  min-inline-size: 1.75rem;
+  padding: 0.125rem var(--s-2);
+  border-radius: var(--r-pill);
+  background: var(--accent-quiet);
+  color: var(--accent-text);
+  font-weight: 700;
+  text-align: center;
+}
+
 
 /* ============================================================================
    ٤. فهرس المقالات (articles.html) — منشور، لا نتائج بحث
@@ -543,9 +597,41 @@
    بلا بيانات وصفية هو مدخل تحريري: الغلاف بعرض العمود، والعنوان كبير
    بخط العرض، وزمن القراءة في الهامش. */
 
-.articles-section{ padding-block: var(--s-16) var(--s-24); }
+.articles-section{ padding-block: var(--s-8) var(--s-24); }
 
 .articles-grid{ display: grid; gap: var(--s-16); }
+
+/* ── فهرس «بان»: الصدارة غلافٌ أفقي، وما بعدها عمودان ─────────────────────
+   أحدث مقال يمتدّ عرض الفهرس: غلافه في عمود، وعنوانه وميتاه يتوسّطان
+   العمود المقابل. ما بعده مقالان في الصفّ. الغلاف يبقى بارتفاعه المقيّد
+   (‎.article-lead-cover‎) — لا نسبة ثابتة تُفرض عليه. */
+@media (min-width: 60rem){
+  .articles-index{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-16) var(--s-12);
+  }
+  .articles-index > :not(.article-card){ grid-column: 1 / -1; }
+  .articles-index > .article-lead{
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto 1fr;
+    grid-template-areas:
+      "cover ."
+      "cover title"
+      "cover meta"
+      "cover .";
+    column-gap: var(--s-12);
+    padding-block-end: var(--s-16);
+    border-block-end: 1px solid var(--border-subtle);
+  }
+  .articles-index > .article-lead .article-lead-cover{ grid-area: cover; margin-block-end: 0; }
+  .articles-index > .article-lead .article-lead-title{
+    grid-area: title;
+    font-size: clamp(2.25rem, 3.6vw, 3.25rem);
+  }
+  .articles-index > .article-lead .article-card-meta{ grid-area: meta; margin-block-start: var(--s-4); }
+  .articles-index .article-card-title{ font-size: clamp(1.75rem, 2.4vw, 2.25rem); }
+}
 
 /* المدخل — الشكل نفسه للصدارة ولما بعدها، والفرق في مقاس الغلاف فقط */
 .article-lead,
@@ -646,24 +732,33 @@
    ٤٫٥ ماستهيد مدوّنة «بان» — صفحة المقالات وحدها
    الفئات ‎.ban-*‎ لا توجد إلا في articles.html، فلا تمسّ صفحة المقال المفرد
    وإن شاركتها هذا الملف. يتبع نظام التصميم: نفس الرموز والأقطار والظلال. */
-.ban-masthead{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--s-3);
-  padding-block: var(--s-24) var(--s-12);
-  padding-inline: var(--gutter);   /* حاشية تمنع لمس الحرف المرسل حافة الشاشة */
+/* لكنة صفحة «بان» تتبع شعارها التركوازي (H≈202) بدل أزرق الموقع، كما تتبع
+   صفحة ذُرى شعارها القرميدي (‎.dhura‎ في project.css). الرموز الدلالية وحدها
+   تُعاد، فينقلب كل مكوّن في الصفحة دون لمسه. متحقَّق: نصّ اللكنة 5.9:1. */
+.ban{
+  --accent-quiet: oklch(96% 0.020 202);
+  --accent-line:  oklch(85% 0.045 202);
+  --focus:        oklch(62% 0.090 202);
+  --solid:        oklch(48% 0.100 202);
+  --solid-hover:  oklch(42% 0.100 202);
+  --accent-text:  oklch(46% 0.100 202);
+}
+@supports not (color: oklch(0 0 0)){
+  .ban{
+    --accent-quiet:#E3F6F7; --accent-line:#ACD7DA; --focus:#33969D;
+    --solid:#006D76; --solid-hover:#005C64; --accent-text:#006770;
+  }
 }
 
-/* الشعار مفرّغ الخلفية: الريشة والورقة تسبحان على الورق بلا إطار، بظلّ ناعم
-   مصبوغ نحو الحبر يرفعهما قليلاً — كأنّهما موضوعتان على الصفحة. */
+/* البنية مشتركة مع «ذُرى» في style.css (‎.masthead‎): عمود نصّ يقابله
+   الشعار في مداره. هنا طباعة «بان» ولونها فقط. */
+
+/* الشعار مفرّغ الخلفية: الريشة والورقة تسبحان في الهالة بلا إطار، بظلّ
+   ناعم مصبوغ نحو الحبر يرفعهما قليلاً — كأنّهما موضوعتان على الصفحة. */
 .ban-emblem{
-  block-size: clamp(7.5rem, 17vw, 11.5rem);
-  margin: 0 0 var(--s-2);
-  filter: drop-shadow(0 8px 16px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22));
+  filter: drop-shadow(0 10px 18px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22));
 }
-.ban-emblem img{ block-size: 100%; inline-size: auto; display: block; }
+.ban-emblem img{ display: block; }
 
 /* «خاطرة ومقال» — سطر واجهة صغير باللكنة، يُمهّد للاسم */
 .ban-kicker{
@@ -674,17 +769,10 @@
   color: var(--accent-text);
 }
 
-/* page-title يحمل المقاس؛ نلغي هامشه السفلي هنا. الحرف المرسل (salt) يقع على
-   كلمة «بان» وحدها عبر ‎.swash‎ — لا على «مدونة» — التزاماً بقاعدة عدم تزيين
-   كلمتين متجاورتين. */
-.ban-title{
-  margin: 0;
-  /* «مدوّنة بان» كلمتان — أصغر قليلاً من افتتاحية mega كي يتّسع بلا فيض،
-     مع balance يوزّعه على سطرين بأناقة حين تضيق الشاشة. */
-  font-size: clamp(2.75rem, 8.5vw, 5.5rem);
-  line-height: 1.14;
-  text-wrap: balance;
-}
+/* الحرف المرسل (salt) يقع على كلمة «بان» وحدها عبر ‎.swash‎ — لا على
+   «مدوّنة» — التزاماً بقاعدة عدم تزيين كلمتين متجاورتين. المقاس من
+   ‎.masthead-text .page-title‎ المشترك. */
+.ban-title{}
 
 /* تعريف لغويّ: «بان في اللغة:» باللكنة، والمعنى بلون المتن */
 .ban-definition{
@@ -698,8 +786,8 @@
 
 /* المقدّمة: عمود قراءة مريح، فقرتان بخط المتن */
 .ban-intro{
-  max-inline-size: 44rem;
-  margin-block-start: var(--s-6);
+  max-inline-size: 34rem;
+  margin-block-start: var(--s-4);
 }
 .ban-intro p{
   font-family: var(--font-text);
@@ -717,7 +805,8 @@
 
 @media (max-width: 48rem){
   .article-cover{ block-size: clamp(10rem, 30vh, 15rem); }
-  .article-meta{ margin-block-end: var(--s-12); }
+  .article-header{ margin-block-end: var(--s-8); padding-block-start: var(--s-2); }
+  .article-cover-wrapper{ margin-block-end: var(--s-12); }
 
   /* على الجوال ينزل عنوان الصفحة إلى 36px، فلو بقي h2 عند 28px لانهار
      التدرّج الهرمي. يصغر h2 إلى 24px — ودون عتبة 28px ينتقل من
@@ -738,7 +827,4 @@
 
   .article-nav-item.next{ text-align: start; }
 
-  /* ماستهيد «بان» على الجوال: شعار أصغر وحاشية علوية أقلّ */
-  .ban-masthead{ padding-block: var(--s-16) var(--s-8); }
-  .ban-emblem{ block-size: clamp(6.5rem, 30vw, 9rem); }
 }

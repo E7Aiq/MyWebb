@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r38"></script>
+    <script src="/js/view-transitions.js?v=r39"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,10 +21,10 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r38">
-    <link rel="stylesheet" href="/css/animations.css?v=r38">
-    <link rel="stylesheet" href="/css/article.css?v=r38">
-    <link rel="stylesheet" href="/css/responsive.css?v=r38">
+    <link rel="stylesheet" href="/css/style.css?v=r39">
+    <link rel="stylesheet" href="/css/animations.css?v=r39">
+    <link rel="stylesheet" href="/css/article.css?v=r39">
+    <link rel="stylesheet" href="/css/responsive.css?v=r39">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -115,7 +115,7 @@
 }
     </script>
 </head>
-<body>
+<body class="ban">
     <a class="skip-link" data-en="Skip to article" href="#article-body">تخطَّ إلى المقال</a>
 
     <nav class="navbar" id="navbar">
@@ -158,21 +158,23 @@
              كما كتبه صاحبه. -->
         <article class="article breakout" dir="rtl" lang="ar" id="articleShell" data-id="e0b1daa47a964f308a4310c2f6494ba2" data-static="1">
 
+            <!-- الترويسة أولاً بعرض الغلاف: العنوان بخطّ العرض ثم الميتا، والغلاف
+                 لوحةٌ تحتها، ثم المتن في عمود القراءة. -->
+            <header class="article-header u-wide">
+                <h1 id="article-title" class="article-title">الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!</h1>
+                <div class="article-meta">
+                <span id="article-date" class="article-date"><time datetime="2025-04-12">١٢ أبريل ٢٠٢٥</time></span>
+                <span id="article-category" class="article-category"></span>
+                <span id="article-read-time" class="article-read-time">٣ دقائق قراءة</span>
+                </div>
+
+            </header>
+
             <div class="article-cover-wrapper u-wide">
                 <img id="article-cover" class="article-cover" src="/assets/images/articles/e0b1daa47a964f308a4310c2f6494ba2-cover.webp" alt="" width="1600" height="900">
             </div>
 
-            <header class="article-header">
-                <h1 id="article-title" class="article-title">الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!</h1>
-            </header>
-
             <div class="article-rule" aria-hidden="true"></div>
-
-            <div class="article-meta">
-                <span id="article-date" class="article-date"><time datetime="2025-04-12">١٢ أبريل ٢٠٢٥</time></span>
-                <span id="article-category" class="article-category"></span>
-                <span id="article-read-time" class="article-read-time">٣ دقائق قراءة</span>
-            </div>
 
             <div id="article-body" class="article-body">
 <h2><strong>استخدام «ChatGPT» في كتابة الإيميلات.. متى يكون مناسبا؟</strong></h2>
@@ -214,10 +216,11 @@
 
     </main>
 
-    <!-- التذييل آخر ما يراه من قطع الصفحة كاملة — أي من أبدى أكبر اهتمام.
-         كان سطر حقوق وحده، فيُترك بلا وجهة. -->
-    <footer class="footer">
+    <!-- التذييل خاتمة الصفحة على الحبر الليلي: التوقيع، ثم المداخل، ثم الحقوق.
+         كان سطر حقوق بشعرة فوقه، فيُترك آخر ما يراه القارئ بلا وجهة. -->
+    <footer class="footer on-ink">
         <div class="container footer-grid">
+            <a href="/" class="footer-brand" data-en="Mohammed Alzobaidi">محمد الزبيدي</a>
             <nav class="footer-nav" aria-label="روابط التذييل" data-en-label="Footer links">
                 <a href="/" data-en="Home">الرئيسية</a>
                 <a href="/projects/" data-en="Projects">ذُرى — المشاريع</a>
@@ -231,11 +234,11 @@
     <script type="application/json" id="pageData">{"kind":"article","id":"e0b1daa47a964f308a4310c2f6494ba2","title":"الذكاء الاصطناعي في كتابة الإيميلات — متى تستخدمه ومتى تتركه؟!","date":"2025-04-12","readTime":3,"url":"https://alzobaidi.me/articles/%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%81%D9%8A-%D9%83%D8%AA%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%A5%D9%8A%D9%85%D9%8A%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D9%89-%D8%AA%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%87-%D9%88%D9%85%D8%AA%D9%89-%D8%AA%D8%AA%D8%B1%D9%83%D9%87/"}</script>
 
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r38"></script>
-    <script src="/js/covers.js?v=r38"></script>
-    <script src="/main.js?v=r38"></script>
-    <script src="/animations.js?v=r38"></script>
-    <script src="/js/article.js?v=r38"></script>
-    <script src="/effects.js?v=r38"></script>
+    <script src="/js/i18n.js?v=r39"></script>
+    <script src="/js/covers.js?v=r39"></script>
+    <script src="/main.js?v=r39"></script>
+    <script src="/animations.js?v=r39"></script>
+    <script src="/js/article.js?v=r39"></script>
+    <script src="/effects.js?v=r39"></script>
 </body>
 </html>

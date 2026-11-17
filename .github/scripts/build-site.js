@@ -873,8 +873,10 @@ function detailPage(item, ordered, index, ctx) {
         ? { href: '/articles/', word: 'بان', brand: 'brand-ban', label: 'بان — المقالات', enLabel: 'Ban — Writing' }
         : { href: '/projects/', word: 'ذُرى', brand: 'brand-dhura', label: 'ذُرى — المشاريع', enLabel: 'Dhura — Projects' };
 
+    /* لكنة القسم على <body> لا على <main>: شريط تقدّم القراءة يُلحَق بـbody
+       من effects.js، فيأخذ لون قسمه هو أيضاً — تركوازي بان أو قرميدي ذُرى. */
     return `${head}
-<body>
+<body class="${isArticle ? 'ban' : 'dhura'}">
     <a class="skip-link" data-en="Skip to ${isArticle ? 'article' : 'project'}" href="#${bodyId}">تخطَّ إلى ${isArticle ? 'المقال' : 'المشروع'}</a>
 
 ${C.navbar(isArticle ? 'articles' : 'projects', emblem)}
@@ -889,20 +891,22 @@ ${C.breadcrumb(trail)}
              كما كتبه صاحبه. -->
         <article class="article breakout" dir="rtl" lang="ar" id="${isArticle ? 'articleShell' : 'projectShell'}" data-id="${S.escapeAttr(item.id)}" data-static="1">
 
+            <!-- الترويسة أولاً بعرض الغلاف: العنوان بخطّ العرض ثم الميتا، والغلاف
+                 لوحةٌ تحتها، ثم المتن في عمود القراءة. -->
+            <header class="article-header u-wide">
+                <h1 id="${isArticle ? 'article' : 'project'}-title" class="article-title">${title}</h1>
+                <div class="article-meta">
+${metaRow}
+                </div>
+${previewBlock}
+            </header>
+
             <div class="article-cover-wrapper u-wide">
 ${cover}
             </div>
 
-            <header class="article-header">
-                <h1 id="${isArticle ? 'article' : 'project'}-title" class="article-title">${title}</h1>
-            </header>
-
             <div class="article-rule" aria-hidden="true"></div>
 
-            <div class="article-meta">
-${metaRow}
-            </div>
-${previewBlock}
             <div id="${bodyId}" class="${bodyClass}">
 ${renderProse(item, ctx)}
             ${shareBlock(item.kind, canonical, item.title)}
@@ -982,26 +986,33 @@ function articlesIndexPage(ctx) {
 ${C.navbar('articles', { href: '/articles/', word: 'بان', brand: 'brand-ban', label: 'بان — المقالات', enLabel: 'Ban — Writing' })}
 
     <!-- Main Content -->
-    <main class="publication">
+    <main class="publication publication--index ban">
 ${C.breadcrumb(trail)}
 
-        <!-- رأس الصفحة: ماستهيد مدوّنة «بان» — الشعار، الاسم، تعريفه، ثم المقدّمة -->
-        <header class="page-header breakout ban-masthead">
-            <a class="masthead-subscribe brand-ban rv" href="#subscribe-ban"
-                    data-en="Subscribe to Ban">اشترك في <span class="swash">بان</span></a>
-            <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
-            <figure class="ban-emblem rv">
-                <img src="/assets/logos/ban.webp"
-                     alt="ريشة زرقاء على ورقة — شعار مدوّنة بان"
-                     width="406" height="440" fetchpriority="high" decoding="async">
-            </figure>
-            <p class="ban-kicker rv" data-en="Reflections &amp; essays">خاطرة ومقال</p>
-            <p class="ban-definition rv" data-en="Bān, in Arabic: to appear and become clear.">
-                <span class="ban-def-label">بان في اللغة:</span> ظهر واتّضح.
-            </p>
-            <div class="ban-intro rv">
-                <p data-en="Here I write about what stirs my curiosity and is worth pausing over — in technology and work, in reading and experience, and in ideas that knock on the mind and do not leave quickly.">أكتب هنا عمّا يثير فضولي ويستحق التوقّف عنده؛ في التقنية والعمل، وفي القراءة والتجارب، وفي الأفكار التي تطرق الذهن ولا تغادره سريعًا.</p>
-                <p data-en="A space for what I learn, what I see from a different angle, and what deserves to be understood deeply — to be written and published with care.">مساحة لما أتعلمه، وما أراه من زاوية مختلفة، وما يستحق أن يُفهم بعمق، ليُكتب ويُنشر بإحسان.</p>
+        <!-- رأس الصفحة: غلاف «بان» — النصّ بترتيب قراءته (الملصق، الاسم، تعريفه،
+             المقدّمة)، والشعار في مداره يقابله، وختم الاشتراك على حافّة المدار. -->
+        <header class="page-header breakout masthead ban-masthead">
+            <div class="masthead-inner">
+                <div class="masthead-text">
+                    <p class="ban-kicker rv" data-en="Reflections &amp; essays">خاطرة ومقال</p>
+                    <h1 class="page-title ban-title rv" data-en="Ban Blog">مدوّنة <span class="swash">بان</span></h1>
+                    <p class="ban-definition rv" data-en="Bān, in Arabic: to appear and become clear.">
+                        <span class="ban-def-label">بان في اللغة:</span> ظهر واتّضح.
+                    </p>
+                    <div class="ban-intro rv">
+                        <p data-en="Here I write about what stirs my curiosity and is worth pausing over — in technology and work, in reading and experience, and in ideas that knock on the mind and do not leave quickly.">أكتب هنا عمّا يثير فضولي ويستحق التوقّف عنده؛ في التقنية والعمل، وفي القراءة والتجارب، وفي الأفكار التي تطرق الذهن ولا تغادره سريعًا.</p>
+                        <p data-en="A space for what I learn, what I see from a different angle, and what deserves to be understood deeply — to be written and published with care.">مساحة لما أتعلمه، وما أراه من زاوية مختلفة، وما يستحق أن يُفهم بعمق، ليُكتب ويُنشر بإحسان.</p>
+                    </div>
+                </div>
+                <div class="masthead-art">
+                    <figure class="ban-emblem rv">
+                        <img src="/assets/logos/ban.webp"
+                             alt="ريشة زرقاء على ورقة — شعار مدوّنة بان"
+                             width="406" height="440" fetchpriority="high" decoding="async">
+                    </figure>
+                    <a class="masthead-subscribe brand-ban rv" href="#subscribe-ban"
+                            data-en="Subscribe to Ban">اشترك في <span class="swash">بان</span></a>
+                </div>
             </div>
         </header>
 
@@ -1009,7 +1020,7 @@ ${C.breadcrumb(trail)}
              تعيد بناءه عند تبديل اللغة وحده. -->
         <section class="articles-section breakout" aria-label="فهرس المقالات" data-en-label="Article index">
             <p class="visually-hidden" id="gridStatus" role="status" aria-live="polite"></p>
-            <div id="articles-grid" class="articles-grid" data-prerendered="1">
+            <div id="articles-grid" class="articles-grid articles-index" data-prerendered="1">
 ${grid}
             </div>
 ${subscribeCard('ban', ctx)}
@@ -1072,26 +1083,33 @@ function projectsIndexPage(ctx) {
 ${C.navbar('projects', { href: '/projects/', word: 'ذُرى', brand: 'brand-dhura', label: 'ذُرى — المشاريع', enLabel: 'Dhura — Projects' })}
 
     <!-- Main Content -->
-    <main class="publication dhura">
+    <main class="publication publication--index dhura">
 ${C.breadcrumb(trail)}
 
-        <!-- ماستهيد «ذُرى» — العنوان، الشعار المفرّغ، الوصف، التعريف، ثم المقدّمة -->
-        <header class="page-header breakout page-masthead">
-            <a class="masthead-subscribe brand-dhura rv" href="#subscribe-dhura"
-                    data-en="Subscribe to Dhura">اشترك في <span class="swash">ذُرى</span></a>
-            <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
-            <figure class="masthead-emblem rv">
-                <img src="/assets/logos/dhura.webp"
-                     alt="مجلّد برتقالي تتصاعد منه كواكب ونجوم — شعار مشاريع ذُرى"
-                     width="349" height="440" fetchpriority="high" decoding="async">
-            </figure>
-            <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
-            <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
-                <span class="masthead-lead-label">ذُرى جمع ذروة؛</span> وهي المساحة التي أوثّق فيها أفضل ما وصلت إليه من مشاريع وتجارب في البيانات والذكاء الاصطناعي.
-            </p>
-            <div class="masthead-intro rv">
-                <p data-en="Every project here is an independent summit; it began with a question worth exploring, and took shape through research, experimentation, decisions, and overcoming challenges — until it reached a clear, usable solution.">كل مشروع هنا هو <strong>ذروة مستقلة</strong>؛ بدأ بسؤال يستحق الاستكشاف، وتشكّل عبر البحث والتجربة واتخاذ القرارات وتجاوز التحديات، حتى وصل إلى حلّ واضح وقابل للاستخدام.</p>
-                <p data-en="I don’t show only the final result, but what led to it: the problem, the approach, the decisions, and what I learned along the way.">لا أعرض النتيجة النهائية فحسب، بل ما قاد إليها: <strong>المشكلة، والمنهج، والقرارات، وما تعلّمته على الطريق.</strong></p>
+        <!-- غلاف «ذُرى» — البنية نفسها التي لـ«بان»: النصّ بترتيب قراءته،
+             والشعار في مداره يقابله، وختم الاشتراك على حافّة المدار. -->
+        <header class="page-header breakout masthead page-masthead">
+            <div class="masthead-inner">
+                <div class="masthead-text">
+                    <p class="masthead-kicker rv" data-en="Projects in data &amp; AI">مشاريع في البيانات والذكاء الاصطناعي</p>
+                    <h1 class="page-title masthead-title rv" data-en="Dhura"><span class="swash">ذُرى</span></h1>
+                    <p class="masthead-lead rv" data-en="Dhura is the plural of ‘dhurwa’ — a summit. It is where I document the best of what I have reached in data and AI projects and experiments.">
+                        <span class="masthead-lead-label">ذُرى جمع ذروة؛</span> وهي المساحة التي أوثّق فيها أفضل ما وصلت إليه من مشاريع وتجارب في البيانات والذكاء الاصطناعي.
+                    </p>
+                    <div class="masthead-intro rv">
+                        <p data-en="Every project here is an independent summit; it began with a question worth exploring, and took shape through research, experimentation, decisions, and overcoming challenges — until it reached a clear, usable solution.">كل مشروع هنا هو <strong>ذروة مستقلة</strong>؛ بدأ بسؤال يستحق الاستكشاف، وتشكّل عبر البحث والتجربة واتخاذ القرارات وتجاوز التحديات، حتى وصل إلى حلّ واضح وقابل للاستخدام.</p>
+                        <p data-en="I don’t show only the final result, but what led to it: the problem, the approach, the decisions, and what I learned along the way.">لا أعرض النتيجة النهائية فحسب، بل ما قاد إليها: <strong>المشكلة، والمنهج، والقرارات، وما تعلّمته على الطريق.</strong></p>
+                    </div>
+                </div>
+                <div class="masthead-art">
+                    <figure class="masthead-emblem rv">
+                        <img src="/assets/logos/dhura.webp"
+                             alt="مجلّد برتقالي تتصاعد منه كواكب ونجوم — شعار مشاريع ذُرى"
+                             width="349" height="440" fetchpriority="high" decoding="async">
+                    </figure>
+                    <a class="masthead-subscribe brand-dhura rv" href="#subscribe-dhura"
+                            data-en="Subscribe to Dhura">اشترك في <span class="swash">ذُرى</span></a>
+                </div>
             </div>
         </header>
 
@@ -1419,7 +1437,7 @@ ${rows([pl, ...pl.topics])}</div>`),
 
 ${C.navbar(null, { href: '/', src: '/assets/logos/ban.webp', alt: 'بان', w: 406, h: 440 })}
 
-    <main class="publication">
+    <main class="publication publication--index">
 ${C.breadcrumb(trail)}
 
         <header class="page-header breakout">
@@ -1428,7 +1446,7 @@ ${C.breadcrumb(trail)}
         </header>
 
         <section class="articles-section breakout" id="topics-list" aria-label="فهرس الموضوعات">
-            <div class="articles-grid">
+            <div class="articles-grid topics-index">
 ${list}
             </div>
         </section>
