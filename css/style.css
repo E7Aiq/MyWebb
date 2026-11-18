@@ -28,8 +28,25 @@
    ============================================================================ */
 @view-transition{ navigation: auto; }
 
-/* الجذر (خلفية الصفحة): تلاشٍ سريع هادئ بمدّة الرمز */
-::view-transition-group(root){ animation-duration: var(--dur-mid); }
+/* الجذر: كان تلاشياً متقاطعاً في 220ms فتومض الصفحتان معاً. صار تسلّماً:
+   القديمة تنسحب قليلاً إلى أعلى وتخفت سريعاً، والجديدة تصعد إلى مكانها
+   وتظهر بعدها بقليل — فلا تُرى صفحتان مركّبتان في لحظة واحدة. */
+::view-transition-old(root){
+  animation: vt-leave 200ms var(--ease-in) both;
+}
+::view-transition-new(root){
+  animation: vt-enter 380ms var(--ease-out) 80ms both;
+}
+@keyframes vt-leave{
+  to{ opacity: 0; transform: translateY(-12px); }
+}
+@keyframes vt-enter{
+  from{ opacity: 0; transform: translateY(16px); }
+}
+
+/* ‏شعار القسم: من باب الهيرو إلى غلاف القسم — الشعار الصغير يكبر ويستقرّ
+   في مداره. المورف نفسه (‎.morph‎) مع زمن أطول قليلاً لأن المسافة أكبر. */
+::view-transition-group(vt-emblem){ animation-duration: 0.6s; }
 
 /* ── مجموعة المورف (صورة البطاقة ⇆ الغلاف) ────────────────────────────────
    موسومة بـ view-transition-class:morph في جافاسكربت، فتُضبط وحدها دون

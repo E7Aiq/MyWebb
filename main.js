@@ -171,6 +171,42 @@
         });
     }
 
+    /* ── انزلاق مُليَّن ────────────────────────────────────────────────────
+       behavior:'smooth' يختلف من متصفّح لآخر: يندفع في بعضها ويقفز في Safari
+       على المسافات الطويلة — و«تواصل معي» في الهيرو يقطع الصفحة كلّها. هنا
+       منحنى واحد (يبدأ هادئاً ويهدأ عند الوصول) وزمنٌ يتبع المسافة بين
+       ٥٠٠ و١١٠٠ms. أي تمرير من القارئ نفسه يوقفه فوراً ولا يصارعه. */
+    let glide = 0;
+    function glideTo(top) {
+        const start = window.scrollY;
+        const distance = top - start;
+        if (Math.abs(distance) < 2) return;
+        const duration = Math.min(1100, Math.max(500, Math.abs(distance) * 0.3));
+        const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+        const root = document.documentElement;
+        const id = ++glide;
+        let t0 = null;
+
+        // scroll-behavior:smooth في CSS يحوّل كل خطوة إلى انزلاق مستقلّ
+        root.style.scrollBehavior = 'auto';
+        const stop = () => { glide++; };
+        const events = ['wheel', 'touchstart', 'keydown'];
+        events.forEach((ev) => window.addEventListener(ev, stop, { passive: true, once: true }));
+        const done = () => {
+            root.style.scrollBehavior = '';
+            events.forEach((ev) => window.removeEventListener(ev, stop));
+        };
+
+        requestAnimationFrame(function step(now) {
+            if (id !== glide) return done();
+            if (t0 === null) t0 = now;
+            const p = Math.min(1, (now - t0) / duration);
+            window.scrollTo(0, start + distance * ease(p));
+            if (p < 1) requestAnimationFrame(step);
+            else done();
+        });
+    }
+
     // ── تمرير سلس للمراسي ─────────────────────────────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', function (e) {
@@ -183,7 +219,8 @@
             e.preventDefault();
             const top = target.getBoundingClientRect().top + window.scrollY - navHeight();
             const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' });
+            if (reduced) window.scrollTo(0, top);
+            else glideTo(top);
 
             /* preventDefault يلغي نقل التركيز الذي كان المتصفّح سيقوم به،
                فكان مستخدم لوحة المفاتيح يرى الصفحة تنتقل وتركيزه لم يبرح

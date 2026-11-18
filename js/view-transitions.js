@@ -63,6 +63,49 @@
     return null;
   }
 
+  // ── باب القسم في الهيرو ⇆ شعار غلاف القسم ─────────────────────────────
+  // الطرفان صورتان للشعار نفسه بمقاسين، فيُسمّيان باسم واحد: الصغير في
+  // الباب يكبر إلى موضعه في مدار الغلاف.
+  var EMBLEM = 'vt-emblem';
+
+  function indexSection(url) {
+    if (!url) return null;
+    try {
+      var m = new URL(url, location.href).pathname.match(/^\/(articles|projects)\/?$/);
+      return m ? m[1] : null;
+    } catch (e) { return null; }
+  }
+
+  function nameFor(el, e, when) {
+    el.style.viewTransitionName = EMBLEM;
+    el.style.setProperty('view-transition-class', 'morph');
+    // then لا finally: انتقالٌ أُجهض يرفض الوعد، وfinally تعيد رفضه بلا معالج
+    var clear = function () {
+      el.style.viewTransitionName = '';
+      el.style.removeProperty('view-transition-class');
+    };
+    e.viewTransition[when].then(clear, clear);
+  }
+
+  window.addEventListener('pageswap', function (e) {
+    if (!e.viewTransition) return;
+    var section = indexSection(e.activation && e.activation.entry && e.activation.entry.url);
+    if (!section) return;
+    var door = document.querySelector('.hero-door[href="/' + section + '/"] img');
+    if (door) nameFor(door, e, 'finished');
+  });
+
+  window.addEventListener('pagereveal', function (e) {
+    if (!e.viewTransition || !indexSection(location.href)) return;
+    // من الرئيسية وحدها يوجد بابٌ يقابله؛ من غيرها لا يُسمّى شيء
+    var from = window.navigation && navigation.activation && navigation.activation.from;
+    var path = '';
+    try { path = from && from.url ? new URL(from.url).pathname : ''; } catch (err) { path = ''; }
+    if (path !== '/' && path !== '/index.html') return;
+    var emblem = document.querySelector('.masthead-art img');
+    if (emblem) nameFor(emblem, e, 'ready');
+  });
+
   // ── المغادرة: سمِّ البطاقة المنقورة وحدها ────────────────────────────
   window.addEventListener('pageswap', function (e) {
     if (!e.viewTransition) return;
