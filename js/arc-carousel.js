@@ -236,6 +236,7 @@
 
             const keep = this.items[this.index] && this.items[this.index].id;
             this.items = items;
+            this.seal.classList.remove('is-expanded');
             this.track.replaceChildren(...items.map((it, i) => this.card(it, i)));
             this.cards = [...this.track.children];
             this.dots.replaceChildren(...items.map((it, i) => {
@@ -301,6 +302,7 @@
                 b.setAttribute('aria-label', T([`${k} من ${of}`, `${i + 1} of ${n}`]));
             });
             this.cards.forEach((c, i) => c.setAttribute('aria-label', this.items[i].title));
+            this.updateSealLabel();
         }
 
         /* ── الهندسة: تُحسب عند كل تغيّر في المقاس ─────────────────────────── */
@@ -517,8 +519,8 @@
             this.introRaf = requestAnimationFrame(step);
         }
 
-        /* ── ختم المعاينة: ستة رموز SVG ملوّنة تدور حول سهم ثابت ───────────
-           يظهر على ركن البطاقة حين تستقرّ، ويختفي فور حركتها. */
+        /* ── ختم المعاينة: النقر الأول يكشف الرموز، والثاني يفتح الرابط ──────
+           الرموز تدور حول سهم ثابت، وتُطوى عند الانتقال إلى بطاقة أخرى. */
         buildSeal() {
             const a = el('a', 'arc-seal');
             a.target = '_blank';
@@ -528,30 +530,47 @@
             a.innerHTML =
                 '<svg class="arc-seal-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
                 + '<circle class="arc-seal-hair" cx="50" cy="50" r="27"></circle>'
-                + '<g class="arc-seal-symbol arc-seal-symbol--eye" transform="translate(50 10)">'
+                + '<g class="arc-seal-symbol arc-seal-symbol--eye" style="--step:0" transform="translate(50 10)"><g>'
                 + '<path d="M-7 0Q0-6 7 0Q0 6 -7 0Z"></path><circle cx="0" cy="0" r="2"></circle>'
-                + '</g>'
-                + '<g class="arc-seal-symbol arc-seal-symbol--play" transform="translate(85 30)">'
+                + '</g></g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--play" style="--step:1" transform="translate(85 30)"><g>'
                 + '<circle r="6"></circle><path d="M-1.5-3 3 0 -1.5 3Z"></path>'
-                + '</g>'
-                + '<g class="arc-seal-symbol arc-seal-symbol--zoom" transform="translate(85 70)">'
+                + '</g></g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--zoom" style="--step:2" transform="translate(85 70)"><g>'
                 + '<circle cx="-1.5" cy="-1.5" r="4.5"></circle><path d="M2 2 6 6"></path>'
-                + '</g>'
-                + '<g class="arc-seal-symbol arc-seal-symbol--focus" transform="translate(50 90)">'
+                + '</g></g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--focus" style="--step:3" transform="translate(50 90)"><g>'
                 + '<path d="M-6-2V-6H-2M2-6H6V-2M6 2V6H2M-2 6H-6V2"></path>'
-                + '</g>'
-                + '<g class="arc-seal-symbol arc-seal-symbol--lens" transform="translate(15 70)">'
+                + '</g></g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--lens" style="--step:4" transform="translate(15 70)"><g>'
                 + '<circle r="6"></circle><circle r="2"></circle><path d="M0-6 2-2M5 3 2 2M-5 3 -2 2"></path>'
-                + '</g>'
-                + '<g class="arc-seal-symbol arc-seal-symbol--window" transform="translate(15 30)">'
+                + '</g></g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--window" style="--step:5" transform="translate(15 30)"><g>'
                 + '<rect x="-6" y="-5" width="12" height="10" rx="1.5"></rect><path d="M-6-2H6M-3-3.5H-2"></path>'
-                + '</g>'
+                + '</g></g>'
                 + '</svg>'
                 + '<span class="arc-seal-core" aria-hidden="true">'
                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
                 + 'stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path></svg>'
                 + '</span>';
+            a.addEventListener('click', (event) => {
+                if (a.classList.contains('is-expanded') || event.metaKey || event.ctrlKey
+                    || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                a.classList.add('is-expanded');
+                this.updateSealLabel();
+            });
             return a;
+        }
+
+        updateSealLabel() {
+            const it = this.items[this.index];
+            if (!it || !it.preview) return;
+            const expanded = this.seal.classList.contains('is-expanded');
+            this.seal.setAttribute('aria-label', expanded
+                ? T([`افتح معاينة «${it.title}» في نافذة جديدة`, `Open preview of “${it.title}” in a new tab`])
+                : T([`أظهر رموز معاينة «${it.title}»، ثم اضغط مرة أخرى لفتحها`,
+                    `Show preview icons for “${it.title}”, then press again to open`]));
         }
 
         /* مركز الختم على ركن البطاقة النشطة العلويّ من جهة النهاية (يسار في
@@ -577,8 +596,7 @@
             if (on) {
                 this.seal.href = it.preview;
                 this.seal.removeAttribute('aria-hidden');
-                this.seal.setAttribute('aria-label', T([`معاينة حيّة لـ«${it.title}» — تُفتح في نافذة جديدة`,
-                    `Live preview of “${it.title}” — opens in a new tab`]));
+                this.updateSealLabel();
             } else {
                 this.seal.setAttribute('aria-hidden', 'true');
             }
@@ -599,7 +617,7 @@
         }
         hideText() {
             this.text.classList.remove('is-in');
-            this.seal.classList.remove('is-in');
+            this.seal.classList.remove('is-in', 'is-expanded');
             this.seal.tabIndex = -1;
         }
         reveal() {

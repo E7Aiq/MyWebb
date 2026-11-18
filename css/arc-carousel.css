@@ -299,7 +299,9 @@
   inline-size: 100%;
   block-size: 100%;
   animation: arc-seal-spin 18s linear infinite;
+  animation-play-state: paused;
 }
+.arc-seal.is-expanded .arc-seal-ring{ animation-play-state: running; }
 [dir="ltr"] .arc-seal-ring{ animation-direction: reverse; }
 @keyframes arc-seal-spin{ to{ transform: rotate(-360deg); } }
 
@@ -317,6 +319,22 @@
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+.arc-seal-symbol > g{
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.55);
+  transition: transform 420ms cubic-bezier(.2, .8, .2, 1);
+}
+.arc-seal.is-expanded .arc-seal-symbol{
+  opacity: 1;
+  transition-delay: calc(var(--step) * 35ms);
+}
+.arc-seal.is-expanded .arc-seal-symbol > g{
+  transform: scale(1);
+  transition-delay: calc(var(--step) * 35ms);
 }
 .arc-seal-symbol--eye{ color: #c74a32; }
 .arc-seal-symbol--play{ color: #298981; }
@@ -381,6 +399,9 @@
      وبدونه يصير التبديل وميضاً — فيُستعاد زمنه وحده. */
   .arc-track{ transition-duration: 160ms !important; }
   .arc-seal-ring{ animation: none; }
+  .arc-seal-symbol{ transition: opacity 160ms ease !important; }
+  .arc-seal-symbol > g{ transform: none; transition: none; }
+  .arc-seal.is-expanded .arc-seal-symbol{ transition-delay: 0ms; }
   .arc-seal, .arc-seal.is-in{ transform: none; }
   .arc-sub, [dir="ltr"] .arc-sub{ clip-path: none; opacity: 0; }
   .arc-text.is-in .arc-sub{ opacity: 1; transition: opacity 300ms !important; }
