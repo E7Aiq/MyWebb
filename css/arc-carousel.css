@@ -24,19 +24,19 @@
 /* ── القسم: بعرض الشاشة، والمسرح في وسطه ───────────────────────────────── */
 .arc{
   position: relative;
-  padding-block: var(--s-4) var(--s-12);
+  padding-block: var(--s-4) var(--s-6);
   /* البطاقات الطرفية تميل خارج المسرح عمداً — تُقصّ أفقياً بلا شريط تمرير */
   overflow-x: hidden;
   overflow-x: clip;
 }
 
 /* حجزٌ تقريبيّ لارتفاع المسرح قبل أن يُبنى، فلا يقفز ما تحته */
-.arc-on .arc:not(.is-ready){ min-block-size: calc(62vw + 16rem); }
+.arc-on .arc:not(.is-ready){ min-block-size: calc(56vw + 16rem); }
 @media (min-width: 40.0625rem){
-  .arc-on .arc:not(.is-ready){ min-block-size: calc(52vw + 15rem); }
+  .arc-on .arc:not(.is-ready){ min-block-size: calc(34vw + 15rem); }
 }
 @media (min-width: 64.0625rem){
-  .arc-on .arc:not(.is-ready){ min-block-size: calc(min(100vw, 1200px) * 0.7); }
+  .arc-on .arc:not(.is-ready){ min-block-size: calc(min(100vw, 1200px) * 0.6); }
 }
 
 .arc-stage{
