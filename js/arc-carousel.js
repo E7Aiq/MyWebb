@@ -530,18 +530,16 @@
             a.rel = 'noopener';
             a.tabIndex = -1;
             a.setAttribute('aria-hidden', 'true');
-            const id = `arcSeal${Math.random().toString(36).slice(2, 8)}`;
             a.innerHTML =
                 '<svg class="arc-seal-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
-                + `<defs><path id="${id}" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"></path></defs>`
-                + '<circle class="arc-seal-hair" cx="50" cy="50" r="29"></circle>'
-                + `<text class="arc-seal-text"><textPath href="#${id}" startOffset="2%"></textPath></text>`
+                + '<circle class="arc-seal-hair" cx="50" cy="50" r="39"></circle>'
                 + '</svg>'
+                + '<span class="arc-seal-copy" aria-hidden="true"></span>'
                 + '<span class="arc-seal-core" aria-hidden="true">'
                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
                 + 'stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path></svg>'
                 + '</span>';
-            this.sealText = a.querySelector('textPath');
+            this.sealText = a.querySelector('.arc-seal-copy');
             return a;
         }
 
@@ -561,29 +559,13 @@
             this.fitSeal();
         }
 
-        /* النصّ يملأ محيط الدائرة تماماً بمقاسٍ صغير ثابت تقريباً (٩ وحدات من
-           ١٠٠): تُقاس العبارة مرّة، ويُحسب كم مرّة تتكرّر لتقارب المحيط، ثم
-           يُضبط المقاس بالنسبة كي لا تبقى فجوة. لا textLength: تمطيط المسافات
-           يفصل الحروف العربية المتصلة. */
+        /* Safari على الآيفون لا يشكّل العربية على SVG textPath بشكل موثوق؛
+           لذلك يبقى الرسم SVG، لكن العبارة نفسها نص HTML طبيعي ثابت أعلى
+           الختم. هكذا تتصل الحروف وتبقى النقطة ظاهرة في كل متصفّح. */
         fitSeal() {
-            /* علامة الاتجاه (U+200F) بعد كل نقطة تُلحقها بالكلمات العربية حولها،
-               فتبقى «.» بعد كل «معاينة حيّة» حتى عند ملتقى الدائرة — بدونها
-               قد تنفصل النقطة الأخيرة إلى طرف المسار. */
-            const phrase = T(['معاينة حيّة.\u200F ', 'LIVE PREVIEW. ']);
-            const textEl = this.sealText.parentNode;
-            const circumference = 2 * Math.PI * 38;
-            /* نترك ٤٪ موزّعة حول ملتقى المسار؛ ملؤه حتى الحافة كان يقصّ
-               نقطة العبارة الأخيرة بصرياً، فتبدو جملة واحدة بلا خاتمة. */
-            const usableCircumference = circumference * 0.96;
-            this.sealText.textContent = phrase;
-            textEl.style.fontSize = '10px';
-            let one = 0;
-            try { one = textEl.getComputedTextLength(); } catch (err) { one = 0; }
-            if (!one) return;
-            const reps = Math.max(1, Math.round(usableCircumference / (one * 1.15)));
-            this.sealText.textContent = phrase.repeat(reps);
-            // ملءٌ متّزن للمحيط مع حماية نقطة العبارة الأخيرة عند الملتقى
-            textEl.style.fontSize = `${(10 * usableCircumference) / (one * reps)}px`;
+            this.sealText.textContent = T(['معاينة حيّة.', 'LIVE PREVIEW.']);
+            this.sealText.lang = document.documentElement.lang || 'ar';
+            this.sealText.dir = document.documentElement.dir || 'rtl';
         }
 
         showSeal() {

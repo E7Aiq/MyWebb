@@ -258,9 +258,9 @@
 .arc-dot:hover:not(.is-active)::before{ background: var(--text-muted); }
 
 /* ── ختم المعاينة الحيّة ─────────────────────────────────────────────────
-   دائرة ورقية على ركن البطاقة النشطة: حلقةُ نصٍّ تدور ببطء كما يدور المدار
-   حول نقطة الشعار، وشعرةٌ بلون القسم تحتها، وفي القلب سهمٌ ورقيّ على لكنة
-   القسم يشير إلى الخارج (يسار-أعلى في العربية). صغير: ٦٤–٧٢px. */
+   دائرة ورقية على ركن البطاقة النشطة: شعرةٌ منقّطة تدور ببطء، وعبارة HTML
+   ثابتة سليمة التشكيل أعلى الختم، وفي القلب سهمٌ بلون القسم يشير إلى الخارج.
+   إبقاء العربية خارج SVG textPath يمنع Safari من تفكيك حروفها. */
 .arc-seal{
   --seal: 4.75rem;
   position: absolute;
@@ -306,16 +306,27 @@
 [dir="ltr"] .arc-seal-ring{ animation-direction: reverse; }
 @keyframes arc-seal-spin{ to{ transform: rotate(-360deg); } }
 
-.arc-seal-text{
+.arc-seal-copy{
+  position: absolute;
+  inset-block-start: 0.34rem;
+  inset-inline-start: 50%;
+  z-index: 1;
+  padding-inline: 0.2em;
+  background: var(--bg-canvas);
   font-family: var(--font-sans);
-  font-weight: 500;
-  fill: currentColor;
-  /* اتجاه الفقرة LTR على المسار وحده: في RTL يُرصف النصّ من نهاية المسار
-     إلى الوراء فيسقط عن بدايته ولا يُرسم إلا حرف. الحروف العربية تبقى
-     متّصلة ومرتّبة داخل كل كلمة — الاتجاه هنا للمسار لا للكتابة. */
-  direction: ltr;
+  font-size: clamp(0.46rem, calc(var(--seal) * 0.11), 0.55rem);
+  font-weight: 600;
+  line-height: 1;
+  color: currentColor;
+  white-space: nowrap;
+  direction: rtl;
+  unicode-bidi: isolate;
+  transform: translateX(-50%);
 }
-.arc-seal-text:lang(en){ letter-spacing: 0.08em; }
+[dir="ltr"] .arc-seal-copy{
+  direction: ltr;
+  letter-spacing: 0.04em;
+}
 .arc-seal-hair{
   fill: none;
   stroke: var(--arc-accent);
