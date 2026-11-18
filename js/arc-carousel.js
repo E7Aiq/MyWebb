@@ -61,7 +61,7 @@
     const KINDS = {
         projects: {
             max: 8,
-            loop: false,
+            loop: true,
             label: ['مشاريع ذُرى', 'Dhura projects'],
             cta: ['تفاصيل المشروع', 'Project details'],
             source: '#projectsGrid',
@@ -71,7 +71,8 @@
                     title: text(card, '.project-card-title'),
                     sub: text(card, '.project-card-summary'),
                     href: attr(card, '.project-card-link', 'href'),
-                    cover: attr(card, '.project-card-image', 'src')
+                    cover: attr(card, '.project-card-image', 'src'),
+                    preview: attr(card, '.project-card-btn-preview', 'href')
                 }));
             }
         },
@@ -103,7 +104,6 @@
     const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
     const lerp = (a, b, t) => a + (b - a) * t;
     const mod = (v, n) => ((v % n) + n) % n;
-    const easeOutSine = (t) => Math.sin((t * Math.PI) / 2);
     const DEG = Math.PI / 180;
 
     function text(root, sel) {
@@ -129,12 +129,12 @@
             this.items = [];
             this.cards = [];
             this.pos = 0;
-            this.from = 0;
+            this.vel = 0;                 // عناصر في الثانية — يحفظها النابض بين الأهداف
             this.to = 0;
-            this.t0 = 0;
+            this.last = 0;
             this.raf = 0;
             this.index = 0;
-            this.revealAt = 0;
+            this.pendingReveal = false;
             this.drag = null;
             this.dragged = false;
             this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -150,6 +150,8 @@
             this.setText(this.index);
             this.root.classList.add('is-ready');
             requestAnimationFrame(() => this.reveal());
+            // قياس نصّ الختم يتبع الخط؛ يُعاد حين يكتمل تحميله
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.fitSeal());
 
             /* الفهرس يُعاد بناؤه عند تبديل اللغة (تواريخ وتسميات) — يُقرأ منه
                من جديد بعد أن يستقرّ، وتبقى البطاقة النشطة هي هي. */
@@ -191,9 +193,11 @@
             this.dots = el('div', 'arc-dots');
             this.dots.setAttribute('role', 'group');
 
+            this.seal = this.buildSeal();
+
             this.head.append(this.prev, this.title, this.next);
             this.text.append(this.head, this.sub, this.cta);
-            this.stage.append(this.track, this.text, this.dots);
+            this.stage.append(this.track, this.seal, this.text, this.dots);
             r.append(this.stage);
 
             this.prev.addEventListener('click', () => this.step(-1));
@@ -241,10 +245,11 @@
                 return b;
             }));
 
-            if (this.loop === undefined) this.loop = this.kind.loop && items.length >= 2 * this.c.reach + 1;
+            this.loop = this.kind.loop && items.length >= 3;
             const again = keep ? items.findIndex((it) => it.id === keep) : -1;
-            this.index = again >= 0 ? again : this.startIndex();
-            this.pos = this.from = this.to = this.index;
+            this.index = again >= 0 ? again : 0;
+            this.pos = this.to = this.index;
+            this.vel = 0;
             // غلاف البطاقة النشطة أوّلاً وبأولوية — هو ما يُرى قبل غيره
             const first = this.cards[this.index].firstElementChild;
             if (first && first.dataset.src) {
@@ -261,11 +266,6 @@
                 .map((it) => it.href + it.sub).join('|');
             if (was === now) return;
             if (this.load()) { this.layout(); this.setText(this.index); this.reveal(); }
-        }
-
-        /* البدء: الأحدث في القمّة إن دار الدوّار، وإلا الأوسط */
-        startIndex() {
-            return this.loop ? 0 : Math.floor((this.items.length - 1) / 2);
         }
 
         card(it, i) {
@@ -301,6 +301,7 @@
                 b.setAttribute('aria-label', T([`${k} من ${of}`, `${i + 1} of ${n}`]));
             });
             this.cards.forEach((c, i) => c.setAttribute('aria-label', this.items[i].title));
+            if (this.c) this.fitSeal();
         }
 
         /* ── الهندسة: تُحسب عند كل تغيّر في المقاس ─────────────────────────── */
@@ -321,16 +322,6 @@
             this.liftPx = c.lift * W;
             this.pxPerItem = Math.max(40, this.R * Math.sin(c.spacing * DEG));
 
-            const wasLoop = this.loop;
-            const n = this.items.length;
-            this.loop = this.kind.loop && n >= 2 * c.reach + 1;
-            if (wasLoop !== undefined && wasLoop !== this.loop) {
-                // تحوّلٌ بين الدوران والحدود: يُثبَّت الموضع على عنصره
-                cancelAnimationFrame(this.raf);
-                this.raf = 0;
-                this.pos = this.from = this.to = this.index;
-            }
-
             const s = this.stage.style;
             s.setProperty('--arc-w', `${W}px`);
             s.setProperty('--arc-h', `${H}px`);
@@ -338,6 +329,7 @@
             s.setProperty('--arc-ch', `${this.ch}px`);
             s.setProperty('--arc-r', `${c.cornerRadius}px`);
             this.stage.classList.toggle('is-below', !!c.textBelow);
+            this.placeSeal();
 
             this.render();
             this.placeText();
@@ -357,18 +349,21 @@
             }
             /* عرض سطر العنوان: ما بين البطاقتين الثانيتين على جانبي القمّة —
                فلا يجلس سهمٌ فوق بطاقة، ولا يمتدّ العنوان تحتها. */
+            const far = Math.min(c.reach, this.loop
+                ? Math.floor((this.items.length - 1) / 2) : this.items.length - 1);
             const th = Math.min(2 * c.spacing, 80) * DEG;
             const half = (this.cw * Math.cos(th) + this.ch * Math.sin(th)) * c.sideScale / 2;
-            const room = clamp(2 * (this.R * Math.sin(th) - half) - 16, 280, 640);
+            // بلا بطاقتين ثانيتين (ثلاثة عناصر) لا يضيّق شيءٌ سطرَ العنوان
+            const room = far >= 2 ? clamp(2 * (this.R * Math.sin(th) - half) - 16, 280, 640) : 640;
             this.stage.style.setProperty('--arc-head-w', `${room}px`);
             const top = c.titleY * this.H - this.head.offsetHeight / 2;
             this.text.style.top = `${top}px`;
-            const dotsTop = Math.max(c.dotsY * this.H, top + this.text.offsetHeight + 24);
+            // النقاط عند قاعدة القوس حين تبلغها البطاقات، وإلا فتحت النصّ مباشرة
+            const dotsTop = Math.max(far >= 2 ? c.dotsY * this.H : 0, top + this.text.offsetHeight + 28);
             this.dots.style.top = `${dotsTop}px`;
             /* المسرح بقدر ما يُرسم فيه: قائمةٌ قصيرة بلا دوران لا تبلغ بطاقاتها
                ركنَي القوس السفليين، فلا يُحجز لها فراغ تحت النقاط. */
-            const far = Math.min(this.loop ? c.reach : Math.min(c.reach, this.items.length - 1), 89 / c.spacing);
-            const fth = far * c.spacing * DEG;
+            const fth = Math.min(far, 89 / c.spacing) * c.spacing * DEG;
             const low = this.apex + this.R * (1 - Math.cos(fth))
                 + (this.cw * Math.sin(fth) + this.ch * Math.cos(fth)) * c.sideScale / 2;
             const h = Math.max(dotsTop + this.dots.offsetHeight + 16, low + 16);
@@ -386,7 +381,10 @@
                 if (this.loop) d = mod(d + n / 2, n) - n / 2;
                 const ad = Math.abs(d);
                 const t = Math.min(ad, 1);
-                const fade = clamp(c.reach + 1 - ad, 0, 1);
+                let fade = clamp(c.reach + 1 - ad, 0, 1);
+                // في الدوران تعبر البطاقة من طرفٍ إلى الطرف المقابل عند ‎±n/2‎ —
+                // تخفت قبل العبور وتظهر بعده، فلا تُرى قافزةً عبر القوس.
+                if (this.loop) fade = Math.min(fade, clamp((n / 2 - ad) * 2, 0, 1));
                 const th = d * c.spacing * DEG;
                 const phi = this.dir * th;
                 const x = this.W / 2 + this.R * Math.sin(phi) - this.cw / 2;
@@ -424,7 +422,7 @@
 
         focusIndex(i) { this.goTo(this.nearest(i)); }
 
-        goTo(target) {
+        goTo(target, velocity) {
             const n = this.items.length;
             const k = mod(Math.round(target), n);
             const moving = Math.abs(target - this.pos) > 0.001;
@@ -437,7 +435,7 @@
             this.syncControls();
             if (focusCard) this.cards[k].focus({ preventScroll: true });
 
-            if (!moving) { this.pos = target; this.render(); this.reveal(); return; }
+            if (!moving) { this.pos = target; this.vel = 0; this.render(); this.reveal(); return; }
 
             // تقليل الحركة: لا انتقال على القوس — تلاشٍ متقاطع فقط
             if (this.reduced.matches) {
@@ -446,7 +444,8 @@
                 this.track.classList.add('is-fading');
                 clearTimeout(this.fadeTimer);
                 this.fadeTimer = setTimeout(() => {
-                    this.pos = this.from = target;
+                    this.pos = target;
+                    this.vel = 0;
                     this.render();
                     this.track.classList.remove('is-fading');
                     this.reveal();
@@ -454,27 +453,116 @@
                 return;
             }
 
-            this.from = this.pos;
-            this.t0 = performance.now();
-            this.revealAt = 0.45;   // النصّ الجديد يبدأ قبل أن تستقرّ البطاقات
-            if (!this.raf) this.raf = requestAnimationFrame(this.tick);
+            if (velocity !== undefined) this.vel = velocity;
+            this.pendingReveal = true;
+            if (!this.raf) {
+                this.last = performance.now();
+                this.raf = requestAnimationFrame(this.tick);
+            }
         }
 
+        /* نابضٌ مُخمَّد حرجاً بدل منحنى زمنيّ: يبدأ من سرعته الحالية بلا قفزة،
+           ويهدأ عند الهدف بلا ارتداد، وإن تغيّر الهدف في منتصف الطريق انعطف
+           بالسرعة نفسها — فلا توقّف ولا اندفاع. الحلّ تحليليّ لكل إطار، فلا
+           يتأثّر بتفاوت الإطارات. ‎duration‎ زمن الاستقرار تقريباً. */
         tick(now) {
-            const p = Math.min(1, (now - this.t0) / this.c.duration);
-            this.pos = this.from + (this.to - this.from) * easeOutSine(p);
+            const dt = Math.min(0.05, Math.max(0, (now - this.last) / 1000));
+            this.last = now;
+            const w = 7.5 / (this.c.duration / 1000);
+            const e0 = this.pos - this.to;
+            const v0 = this.vel;
+            const decay = Math.exp(-w * dt);
+            const e = (e0 + (v0 + w * e0) * dt) * decay;
+            this.vel = (v0 - w * (v0 + w * e0) * dt) * decay;
+            this.pos = this.to + e;
             this.render();
-            if (this.revealAt && p >= this.revealAt) { this.revealAt = 0; this.reveal(); }
-            if (p < 1) {
+
+            // النصّ الجديد يبدأ حين تقترب البطاقة من القمّة، قبل أن تستقرّ
+            if (this.pendingReveal && Math.abs(e) < 0.3) { this.pendingReveal = false; this.reveal(); }
+
+            if (Math.abs(e) > 0.0005 || Math.abs(this.vel) > 0.01) {
                 this.raf = requestAnimationFrame(this.tick);
+                return;
+            }
+            this.raf = 0;
+            this.pos = this.to;
+            this.vel = 0;
+            // في الدوران يبقى الموضع قريباً من نطاق القائمة
+            if (this.loop && Math.abs(this.pos) > this.items.length * 4) this.pos = this.to = this.index;
+            this.render();
+            if (this.pendingReveal) { this.pendingReveal = false; this.reveal(); }
+        }
+
+        /* ── ختم المعاينة: على ركن البطاقة النشطة، لمشروعٍ له معاينة حيّة ────
+           دائرةٌ ورقية صغيرة يدور حولها نصّها كما يدور المدار حول نقطة
+           الشعار، وفي قلبها سهمٌ بلون القسم. يظهر حين تستقرّ البطاقة ويختفي
+           فور حركتها، كالنصّ. رابطٌ حقيقي يُفتح في نافذة جديدة. */
+        buildSeal() {
+            const a = el('a', 'arc-seal');
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.tabIndex = -1;
+            a.setAttribute('aria-hidden', 'true');
+            const id = `arcSeal${Math.random().toString(36).slice(2, 8)}`;
+            a.innerHTML =
+                '<svg class="arc-seal-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
+                + `<defs><path id="${id}" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"></path></defs>`
+                + '<circle class="arc-seal-hair" cx="50" cy="50" r="29"></circle>'
+                + `<text class="arc-seal-text"><textPath href="#${id}"></textPath></text>`
+                + '</svg>'
+                + '<span class="arc-seal-core" aria-hidden="true">'
+                + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+                + 'stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path></svg>'
+                + '</span>';
+            this.sealText = a.querySelector('textPath');
+            return a;
+        }
+
+        /* مركز الختم على ركن البطاقة النشطة العلويّ من جهة النهاية (يسار في
+           العربية)، داخل الركن قليلاً كي يُقرأ ختماً على الطبعة لا معلّقاً. */
+        placeSeal() {
+            const c = this.c;
+            const size = this.seal.offsetWidth || 72;
+            const halfW = this.cw * c.activeScale / 2;
+            const halfH = this.ch * c.activeScale / 2;
+            const inset = size * 0.2;
+            const x = this.W / 2 + this.dir * (halfW - inset);
+            const y = this.apex - this.liftPx - halfH + inset;
+            this.stage.style.setProperty('--seal-x', `${x}px`);
+            this.stage.style.setProperty('--seal-y', `${y}px`);
+            this.fitSeal();
+        }
+
+        /* النصّ يملأ محيط الدائرة تماماً بمقاسٍ صغير ثابت تقريباً (٩ وحدات من
+           ١٠٠): تُقاس العبارة مرّة، ويُحسب كم مرّة تتكرّر لتقارب المحيط، ثم
+           يُضبط المقاس بالنسبة كي لا تبقى فجوة. لا textLength: تمطيط المسافات
+           يفصل الحروف العربية المتصلة. */
+        fitSeal() {
+            const phrase = T(['معاينة حيّة • ', 'LIVE PREVIEW • ']);
+            const textEl = this.sealText.parentNode;
+            const circumference = 2 * Math.PI * 38;
+            this.sealText.textContent = phrase;
+            textEl.style.fontSize = '10px';
+            let one = 0;
+            try { one = textEl.getComputedTextLength(); } catch (err) { one = 0; }
+            if (!one) return;
+            const reps = Math.max(1, Math.round(circumference / (one * 1.15)));
+            this.sealText.textContent = phrase.repeat(reps);
+            textEl.style.fontSize = `${(10 * circumference * 0.985) / (one * reps)}px`;
+        }
+
+        showSeal() {
+            const it = this.items[this.index];
+            const on = !!(it && it.preview);
+            this.seal.classList.toggle('is-in', on);
+            this.seal.tabIndex = on ? 0 : -1;
+            if (on) {
+                this.seal.href = it.preview;
+                this.seal.removeAttribute('aria-hidden');
+                this.seal.setAttribute('aria-label', T([`معاينة حيّة لـ«${it.title}» — تُفتح في نافذة جديدة`,
+                    `Live preview of “${it.title}” — opens in a new tab`]));
             } else {
-                this.raf = 0;
-                this.pos = this.to;
-                // في الدوران يبقى الموضع قريباً من نطاق القائمة
-                if (this.loop && Math.abs(this.pos) > this.items.length * 4) {
-                    this.pos = this.from = this.to = this.index;
-                }
-                this.render();
+                this.seal.setAttribute('aria-hidden', 'true');
             }
         }
 
@@ -491,10 +579,15 @@
             if (this.title.scrollHeight > this.title.clientHeight + 2) this.title.classList.add('is-long');
             this.placeText();
         }
-        hideText() { this.text.classList.remove('is-in'); }
+        hideText() {
+            this.text.classList.remove('is-in');
+            this.seal.classList.remove('is-in');
+            this.seal.tabIndex = -1;
+        }
         reveal() {
             void this.text.offsetWidth;   // يثبّت حالة الإخفاء قبل الانتقال
             this.text.classList.add('is-in');
+            this.showSeal();
         }
 
         syncControls() {
@@ -543,7 +636,7 @@
 
         onDown(e) {
             if (e.pointerType === 'mouse' && e.button !== 0) return;
-            if (e.target.closest('.arc-nav, .arc-dot, .arc-cta')) return;
+            if (e.target.closest('.arc-nav, .arc-dot, .arc-cta, .arc-seal')) return;
             this.dragged = false;
             this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, pos: this.pos, active: false, samples: [] };
         }
@@ -558,6 +651,7 @@
                 this.dragged = true;
                 cancelAnimationFrame(this.raf);
                 this.raf = 0;
+                this.vel = 0;
                 clearTimeout(this.fadeTimer);
                 this.track.classList.remove('is-fading');
                 g.pos = this.pos;
@@ -597,11 +691,12 @@
                 const [t1, p1] = g.samples[g.samples.length - 1];
                 if (t1 > t0) v = (p1 - p0) / (t1 - t0);
             }
-            // مكافأة النفض: دفعةٌ صغيرة في اتجاهه، لا تتجاوز عنصرين
+            // مكافأة النفض: دفعةٌ صغيرة في اتجاهه، لا تتجاوز عنصرين. والنابض
+            // يبدأ بسرعة الإصبع نفسها، فتكمل البطاقات حركتها ولا تنطلق من سكون.
             const bonus = clamp(v * 180, -2, 2);
             let target = Math.round(this.pos + bonus);
             if (!this.loop) target = clamp(target, 0, this.items.length - 1);
-            this.goTo(target);
+            this.goTo(target, clamp(v * 1000, -12, 12));
         }
     }
 

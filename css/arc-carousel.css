@@ -139,7 +139,7 @@
 
 .arc-title.is-long{ font-size: 1.75rem; }
 
-/* سطرٌ واحد: الملخّص يُقصّ بنقاط، والتاريخ وزمن القراءة يتّسعان أصلاً */
+/* سطرٌ واحد للتاريخ وزمن القراءة. وموجز المشروع يمتدّ سطرين (أدناه) */
 .arc-sub{
   max-inline-size: min(100%, 34rem, var(--arc-head-w, 34rem));
   font-family: var(--font-text);
@@ -150,6 +150,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* موجز المشروع: سطران لا سطر — يكفيان لجملة الفكرة كاملةً ثم يُقصّ */
+.arc[data-arc="projects"] .arc-sub{
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-wrap: pretty;
+}
+.arc[data-arc="projects"] .arc-sub[hidden]{ display: none; }
 
 .arc-cta{
   display: inline-flex;
@@ -171,24 +182,32 @@
 .arc-cta:hover{ color: var(--n-1); box-shadow: var(--shadow-2); }
 .arc-cta:active{ transform: scale(0.97); }
 
-/* ── ظهور النصّ: يختفي فوراً حين تبدأ الحركة، ثم يصعد ٦px متدرّجاً ─────────
-   الحالة الخفيّة بلا انتقال — فالإخفاء لحظيّ — والظاهرة بانتقالها. */
-.arc-title, .arc-sub, .arc-cta{
+/* ── ظهور النصّ: يختفي فوراً حين تبدأ الحركة، ثم يظهر متدرّجاً ─────────────
+   الحالة الخفيّة بلا انتقال — فالإخفاء لحظيّ — والظاهرة بانتقالها. منحنى
+   «خروجٍ طويل» يبدأ سريعاً ويستقرّ ببطء، فيهبط النصّ في مكانه ولا يُرمى.
+   العنوان يصعد ٦px، والموجز «يمتدّ» من بداية السطر إلى نهايته كأنما
+   يُكتب، ثم الزرّ. */
+.arc{ --arc-ease: cubic-bezier(.22, 1, .36, 1); }
+.arc-title, .arc-cta{
   opacity: 0;
   transform: translateY(6px);
 }
+.arc-sub{ clip-path: inset(0 0 0 100%); }            /* RTL: يمتدّ من اليمين */
+[dir="ltr"] .arc-sub{ clip-path: inset(0 100% 0 0); }
 .arc-text:not(.is-in) .arc-cta{ pointer-events: none; }
 .arc-text.is-in .arc-title,
-.arc-text.is-in .arc-sub,
 .arc-text.is-in .arc-cta{
   opacity: 1;
   transform: none;
   transition:
-    opacity 300ms var(--ease-out),
-    transform 300ms var(--ease-out);
+    opacity 420ms var(--arc-ease),
+    transform 520ms var(--arc-ease);
 }
-.arc-text.is-in .arc-sub{ transition-delay: 120ms; }
-.arc-text.is-in .arc-cta{ transition-delay: 240ms; }
+.arc-text.is-in .arc-sub{
+  clip-path: inset(0);
+  transition: clip-path 640ms var(--arc-ease) 110ms;
+}
+.arc-text.is-in .arc-cta{ transition-delay: 260ms; }
 
 /* ── السهمان: محايدان، والاتجاه يتبع لغة الواجهة ───────────────────────────
    الأيقونة تشير يميناً في الأصل. في RTL «السابق» يمين (يشير يميناً)
@@ -238,6 +257,103 @@
 }
 .arc-dot:hover:not(.is-active)::before{ background: var(--text-muted); }
 
+/* ── ختم المعاينة الحيّة ─────────────────────────────────────────────────
+   دائرة ورقية على ركن البطاقة النشطة: حلقةُ نصٍّ تدور ببطء كما يدور المدار
+   حول نقطة الشعار، وشعرةٌ بلون القسم تحتها، وفي القلب سهمٌ ورقيّ على لكنة
+   القسم يشير إلى الخارج (يسار-أعلى في العربية). صغير: ٦٤–٧٢px. */
+.arc-seal{
+  --seal: 4.75rem;
+  position: absolute;
+  left: var(--seal-x, 50%);
+  top: var(--seal-y, 0);
+  z-index: 1002;
+  display: grid;
+  place-items: center;
+  inline-size: var(--seal);
+  block-size: var(--seal);
+  margin: calc(var(--seal) / -2) 0 0 calc(var(--seal) / -2);
+  border-radius: 50%;
+  background: var(--bg-canvas);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow:
+    0 0 0 1px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .08),
+    0 12px 26px -10px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .35),
+    0 2px 6px -2px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .18);
+  /* خفيّ حتى تستقرّ البطاقة، بلا انتقال — فيختفي لحظة تبدأ الحركة */
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0.5) rotate(-40deg);
+}
+.arc-seal.is-in{
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 360ms var(--arc-ease) 300ms,
+    transform 760ms cubic-bezier(.34, 1.4, .5, 1) 300ms;
+}
+.arc-stage.is-below .arc-seal{ --seal: 4rem; }
+
+.arc-seal-ring{
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  animation: arc-seal-spin 18s linear infinite;
+}
+[dir="ltr"] .arc-seal-ring{ animation-direction: reverse; }
+@keyframes arc-seal-spin{ to{ transform: rotate(-360deg); } }
+
+.arc-seal-text{
+  font-family: var(--font-sans);
+  font-weight: 500;
+  fill: currentColor;
+  /* اتجاه الفقرة LTR على المسار وحده: في RTL يُرصف النصّ من نهاية المسار
+     إلى الوراء فيسقط عن بدايته ولا يُرسم إلا حرف. الحروف العربية تبقى
+     متّصلة ومرتّبة داخل كل كلمة — الاتجاه هنا للمسار لا للكتابة. */
+  direction: ltr;
+}
+.arc-seal-text:lang(en){ letter-spacing: 0.08em; }
+.arc-seal-hair{
+  fill: none;
+  stroke: var(--arc-accent);
+  stroke-width: 0.6;
+  stroke-dasharray: 0.6 2.4;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
+.arc-seal-core{
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--arc-accent);
+  color: var(--n-1);
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / .22),
+    0 4px 10px -4px var(--arc-accent);
+  transition: transform 420ms var(--arc-ease);
+}
+.arc-seal-core svg{
+  inline-size: 52%;
+  block-size: auto;
+  transform: scaleX(-1);              /* RTL: إلى الخارج = يسار-أعلى */
+  transition: translate 420ms var(--arc-ease);
+}
+[dir="ltr"] .arc-seal-core svg{ transform: none; }
+
+@media (hover: hover) and (pointer: fine){
+  .arc-seal:hover .arc-seal-core{ transform: scale(1.1); }
+  .arc-seal:hover .arc-seal-core svg{ translate: -2px -2px; }
+  [dir="ltr"] .arc-seal:hover .arc-seal-core svg{ translate: 2px -2px; }
+}
+.arc-seal:active .arc-seal-core{ transform: scale(0.94); }
+
 /* ── التركيز: حلقة بلكنة القسم ─────────────────────────────────────────── */
 .arc :focus-visible{
   outline: 2px solid var(--arc-accent);
@@ -264,6 +380,10 @@
   /* القاعدة العامة في style.css تُلغي كل انتقال؛ التلاشي هنا ليس حركة،
      وبدونه يصير التبديل وميضاً — فيُستعاد زمنه وحده. */
   .arc-track{ transition-duration: 160ms !important; }
+  .arc-seal-ring{ animation: none; }
+  .arc-seal, .arc-seal.is-in{ transform: none; }
+  .arc-sub, [dir="ltr"] .arc-sub{ clip-path: none; opacity: 0; }
+  .arc-text.is-in .arc-sub{ opacity: 1; transition: opacity 300ms !important; }
   .arc-text.is-in .arc-title,
   .arc-text.is-in .arc-sub,
   .arc-text.is-in .arc-cta{ transition-duration: 300ms !important; }
