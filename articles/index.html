@@ -13,7 +13,7 @@
     try{if(localStorage.getItem('alzobaidi:lang')==='en'){d.lang='en';d.dir='ltr';}}catch(e){}})();</script>
 
     <!-- مورف الصورة بين القائمة والتفاصيل — يُسجَّل مبكّراً كي يُلتقط pagereveal -->
-    <script src="/js/view-transitions.js?v=r40"></script>
+    <script src="/js/view-transitions.js?v=r41"></script>
 
     <!-- تحميل مسبق لما يظهر فوق حدّ الشاشة فقط -->
     <link rel="preload" href="/assets/fonts/thmanyahserifdisplay-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -21,11 +21,12 @@
     <link rel="preload" href="/assets/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/style.css?v=r40">
-    <link rel="stylesheet" href="/css/animations.css?v=r40">
-    <link rel="stylesheet" href="/css/article.css?v=r40">
-    <link rel="stylesheet" href="/css/subscribe.css?v=r40">
-    <link rel="stylesheet" href="/css/responsive.css?v=r40">
+    <link rel="stylesheet" href="/css/style.css?v=r41">
+    <link rel="stylesheet" href="/css/animations.css?v=r41">
+    <link rel="stylesheet" href="/css/article.css?v=r41">
+    <link rel="stylesheet" href="/css/subscribe.css?v=r41">
+    <link rel="stylesheet" href="/css/arc-carousel.css?v=r41">
+    <link rel="stylesheet" href="/css/responsive.css?v=r41">
 
     <!-- Speculation Rules: يهيّئ روابط الموقع نفسها مسبقاً عند التلويح (moderate)
          فيبدو التنقّل فورياً. تحسين تدريجي — المتصفّحات غير الداعمة تتجاهله. -->
@@ -179,6 +180,13 @@
             </div>
         </header>
 
+        <!-- الدوّار (js/arc-carousel.js) يحلّ محلّ الفهرس على الشاشة. مخفيّ في
+             الترميز؛ السكربت السطري يُظهره ويضع ‎.arc-on‎ فقط حين تعمل جافاسكربت،
+             فبدونها تبقى الصفحة كما هي والفهرس تحته. -->
+        <section class="arc" data-arc="articles" hidden>
+            <script>document.documentElement.classList.add('arc-on');document.currentScript.parentElement.hidden=false;</script>
+        </section>
+
         <!-- الفهرس: مقال الصدارة ثم القائمة — مصيَّر مسبقاً، وجافاسكربت
              تعيد بناءه عند تبديل اللغة وحده. -->
         <section class="articles-section breakout" aria-label="فهرس المقالات" data-en-label="Article index">
@@ -236,6 +244,7 @@
 
             <section class="sub-card sub-ban brand-ban rv" id="subscribe-ban"
                      data-list="ban" aria-labelledby="subTitle-ban">
+                <div class="sub-visual" aria-hidden="true"></div>
                 <p class="sub-kicker" data-en="Email updates">تحديثات بالبريد</p>
                 <h2 class="sub-title" id="subTitle-ban"
                     data-en="New Ban work, straight to you">جديد بان يصلك أوّلاً</h2>
@@ -289,11 +298,12 @@
     </footer>
     <script>window.SUBSCRIBE_CONFIG={"url":"https://hswidotyrnlvkkeddszn.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2lkb3R5cm5sdmtrZWRkc3puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3Njg2NDQsImV4cCI6MjA5NjM0NDY0NH0.H_xibI87OI0Vj_ae_Y_TwPuljQYH0NEQSFWkTM0BL1M"};</script>
     <!-- Scripts -->
-    <script src="/js/i18n.js?v=r40"></script>
-    <script src="/js/covers.js?v=r40"></script>
-    <script src="/main.js?v=r40"></script>
-    <script src="/animations.js?v=r40"></script>
-    <script src="/js/articles-list.js?v=r40"></script>
-    <script src="/js/subscribe.js?v=r40"></script>
+    <script src="/js/i18n.js?v=r41"></script>
+    <script src="/js/covers.js?v=r41"></script>
+    <script src="/main.js?v=r41"></script>
+    <script src="/animations.js?v=r41"></script>
+    <script src="/js/articles-list.js?v=r41"></script>
+    <script src="/js/subscribe.js?v=r41"></script>
+    <script src="/js/arc-carousel.js?v=r41" onerror="document.documentElement.classList.remove('arc-on');var a=document.querySelector('.arc');if(a)a.hidden=true"></script>
 </body>
 </html>
