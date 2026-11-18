@@ -1,0 +1,270 @@
+@charset "UTF-8";
+/* ============================================================================
+   دوّار القوس — ذُرى وبان (js/arc-carousel.js)
+
+   القسم مخفيّ في الترميز (hidden). سكربت سطري فيه يُظهره ويضع ‎.arc-on‎
+   على <html>، فيحلّ الدوّار محلّ الفهرس على الشاشة ويبقى الفهرس في
+   الترميز لمن لا جافاسكربت عنده وللزواحف. إن أخفق السكربت تُزال الفئة.
+
+   الهندسة كلها في جافاسكربت (موضع كل بطاقة ودورانها ومقاسها في كل إطار)؛
+   هنا الأبعاد التي تقرؤها من متغيّراتها، والطباعة، والأزرار. لا يتحرّك هنا
+   إلا transform وopacity.
+
+   اللكنة على الزرّ وحلقة التركيز وحدهما، وكل ما عداها محايد من رموز الموقع.
+   ============================================================================ */
+
+.arc[data-arc="projects"]{ --arc-accent: var(--arc-dhura); }
+.arc[data-arc="articles"]{ --arc-accent: var(--arc-ban); }
+
+/* الدوّار يحلّ محلّ الفهرس وفلاتره على الشاشة */
+.arc-on #projectFilters,
+.arc-on #projectsGrid,
+.arc-on #articles-grid{ display: none; }
+
+/* ── القسم: بعرض الشاشة، والمسرح في وسطه ───────────────────────────────── */
+.arc{
+  position: relative;
+  padding-block: var(--s-4) var(--s-12);
+  /* البطاقات الطرفية تميل خارج المسرح عمداً — تُقصّ أفقياً بلا شريط تمرير */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* حجزٌ تقريبيّ لارتفاع المسرح قبل أن يُبنى، فلا يقفز ما تحته */
+.arc-on .arc:not(.is-ready){ min-block-size: calc(62vw + 16rem); }
+@media (min-width: 40.0625rem){
+  .arc-on .arc:not(.is-ready){ min-block-size: calc(52vw + 15rem); }
+}
+@media (min-width: 64.0625rem){
+  .arc-on .arc:not(.is-ready){ min-block-size: calc(min(100vw, 1200px) * 0.7); }
+}
+
+.arc-stage{
+  position: relative;
+  inline-size: var(--arc-w, 100%);
+  block-size: var(--arc-stage-h, var(--arc-h));
+  margin-inline: auto;
+  /* الأفقي للدوّار، والرأسي للصفحة: السحب لا يحبس التمرير */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.arc.is-ready .arc-stage{ animation: arc-in 480ms var(--ease-out) both; }
+@keyframes arc-in{ from{ opacity: 0; } }
+
+.arc-track{
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: var(--arc-h);
+  transition: opacity 160ms var(--ease-out);
+}
+.arc-track.is-fading{ opacity: 0; }
+
+/* ── البطاقة: موضعها ودورانها ومقاسها من جافاسكربت في كل إطار ────────────── */
+.arc-card{
+  position: absolute;
+  left: 0;
+  top: 0;
+  inline-size: var(--arc-cw);
+  block-size: var(--arc-ch);
+  overflow: hidden;
+  border-radius: var(--arc-r, 18px);
+  /* الأرضية حين يغيب الغلاف أو يتعثّر: صبغة خفيفة من لكنة القسم، بلا نصّ */
+  background: linear-gradient(155deg,
+    color-mix(in oklab, var(--arc-accent) 24%, var(--bg-canvas)),
+    color-mix(in oklab, var(--arc-accent) 7%, var(--bg-canvas)));
+  box-shadow:
+    0 0 0 1px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .06),
+    0 10px 24px -10px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .22),
+    0 30px 60px -30px oklch(var(--shadow-l) var(--shadow-chroma) var(--shadow-hue) / .30);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  -webkit-user-drag: none;
+  cursor: pointer;
+}
+@supports not (color: color-mix(in oklab, red, blue)){
+  .arc-card{ background: var(--bg-element); }
+}
+.arc-card-img{
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.arc-stage.is-dragging,
+.arc-stage.is-dragging .arc-card{ cursor: grabbing; }
+
+/* ── النصّ ─────────────────────────────────────────────────────────────── */
+.arc-text{
+  position: absolute;
+  inset-inline: 0;
+  z-index: 1001;          /* فوق البطاقات الطرفية إن مالت قريباً منه */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  padding-inline: var(--s-4);
+  text-align: center;
+  pointer-events: none;
+}
+.arc-text > *{ pointer-events: auto; }
+
+.arc-head{
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-4);
+  inline-size: min(100%, var(--arc-head-w, 40rem));
+}
+
+/* العنوان يُرى قبل أن يُقرأ: Display ومقاسه ≥28px في كل عرض */
+.arc-title{
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-block: 0.08em;
+}
+
+.arc-title.is-long{ font-size: 1.75rem; }
+
+/* سطرٌ واحد: الملخّص يُقصّ بنقاط، والتاريخ وزمن القراءة يتّسعان أصلاً */
+.arc-sub{
+  max-inline-size: min(100%, 34rem, var(--arc-head-w, 34rem));
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: 1.8;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arc-cta{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 2.75rem;
+  margin-block-start: var(--s-2);
+  padding-inline: var(--s-8);
+  border-radius: var(--r-pill);
+  background: var(--arc-accent);
+  color: var(--n-1);
+  font-family: var(--font-sans);
+  font-size: var(--t-ui);
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: var(--shadow-1);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-mid) var(--ease-out);
+}
+.arc-cta:hover{ color: var(--n-1); box-shadow: var(--shadow-2); }
+.arc-cta:active{ transform: scale(0.97); }
+
+/* ── ظهور النصّ: يختفي فوراً حين تبدأ الحركة، ثم يصعد ٦px متدرّجاً ─────────
+   الحالة الخفيّة بلا انتقال — فالإخفاء لحظيّ — والظاهرة بانتقالها. */
+.arc-title, .arc-sub, .arc-cta{
+  opacity: 0;
+  transform: translateY(6px);
+}
+.arc-text:not(.is-in) .arc-cta{ pointer-events: none; }
+.arc-text.is-in .arc-title,
+.arc-text.is-in .arc-sub,
+.arc-text.is-in .arc-cta{
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+.arc-text.is-in .arc-sub{ transition-delay: 120ms; }
+.arc-text.is-in .arc-cta{ transition-delay: 240ms; }
+
+/* ── السهمان: محايدان، والاتجاه يتبع لغة الواجهة ───────────────────────────
+   الأيقونة تشير يميناً في الأصل. في RTL «السابق» يمين (يشير يميناً)
+   و«التالي» يسار؛ وفي LTR بالعكس. */
+.arc-nav{
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: var(--r-pill);
+  background: var(--bg-element);
+  color: var(--text);
+  transition: background-color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.arc-nav:hover:not(:disabled){ background: var(--bg-element-hover); }
+.arc-nav:active:not(:disabled){ transform: scale(0.94); }
+.arc-nav:disabled{ opacity: 0.35; cursor: default; }
+.arc-next svg{ transform: scaleX(-1); }
+[dir="ltr"] .arc-prev svg{ transform: scaleX(-1); }
+[dir="ltr"] .arc-next svg{ transform: none; }
+
+/* ── النقاط: النشطة تتمدّد حبّة ──────────────────────────────────────────── */
+.arc-dots{
+  position: absolute;
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--s-1);
+}
+.arc-dot{
+  display: grid;
+  place-items: center;
+  min-inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+.arc-dot::before{
+  content: '';
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--r-pill);
+  background: var(--border-strong);
+  transition: inline-size var(--dur-mid) var(--ease-out), background-color var(--dur-mid) var(--ease-out);
+}
+.arc-dot.is-active::before{
+  inline-size: 1.5rem;
+  background: var(--text);
+}
+.arc-dot:hover:not(.is-active)::before{ background: var(--text-muted); }
+
+/* ── التركيز: حلقة بلكنة القسم ─────────────────────────────────────────── */
+.arc :focus-visible{
+  outline: 2px solid var(--arc-accent);
+  outline-offset: 3px;
+}
+.arc-card:focus-visible{ outline-offset: 4px; }
+
+/* ── النصّ تحت البطاقات (الجوال) ─────────────────────────────────────────── */
+.arc-stage.is-below{ block-size: auto; }
+.arc-stage.is-below .arc-track{ position: relative; }
+.arc-stage.is-below .arc-text,
+.arc-stage.is-below .arc-dots{ position: static; }
+.arc-stage.is-below .arc-text{ margin-block-start: var(--s-4); }
+.arc-stage.is-below .arc-dots{ margin-block-start: var(--s-6); }
+.arc-stage.is-below .arc-head{ gap: var(--s-2); }
+.arc-stage.is-below .arc-sub{ font-size: var(--t-ui); }
+/* تحت القوس يتّسع السطر، فيُسمح بثلاثة أسطر كي لا يُقصّ اسمٌ طويل */
+.arc-stage.is-below .arc-title{ -webkit-line-clamp: 3; line-clamp: 3; }
+
+/* ── تقليل الحركة: لا انتقال على القوس، وتلاشٍ متقاطع بلا صعود ─────────── */
+@media (prefers-reduced-motion: reduce){
+  .arc-title, .arc-sub, .arc-cta{ transform: none; }
+  .arc.is-ready .arc-stage{ animation: none; }
+  /* القاعدة العامة في style.css تُلغي كل انتقال؛ التلاشي هنا ليس حركة،
+     وبدونه يصير التبديل وميضاً — فيُستعاد زمنه وحده. */
+  .arc-track{ transition-duration: 160ms !important; }
+  .arc-text.is-in .arc-title,
+  .arc-text.is-in .arc-sub,
+  .arc-text.is-in .arc-cta{ transition-duration: 300ms !important; }
+}

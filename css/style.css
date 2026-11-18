@@ -226,6 +226,11 @@
   --ink-line-2:     oklch(100% 0 0 / 0.26);   /* حدّ ما يُنقر */
   --ink-glow:       oklch(34% 0.090 266 / 0.55);   /* وهج لازوردي في ركن الشريط */
 
+  /* ── لكنتا الدوّار (arc-carousel.css): زرّه وحلقة تركيزه فقط ──────────
+     ‎#C2422B‎ لذُرى و‎#1C565B‎ لبان. النصّ الورقي عليهما ‎4.8:1‎ و‎8.1:1‎. */
+  --arc-dhura: oklch(55.7% 0.168 32);
+  --arc-ban:   oklch(41.8% 0.059 203);
+
   /* الحبر الخام لصبغ الظلال — ظلّ رمادي محايد فوق سطح دافئ يبدو متّسخاً */
   --shadow-hue: 264;
   --shadow-chroma: 0.012;
@@ -903,6 +908,7 @@ time, .article-read-time, .article-card-date, .project-card-date,
     --ink-wash:rgba(255,255,255,.07); --ink-wash-2:rgba(255,255,255,.12);
     --ink-line:rgba(255,255,255,.13); --ink-line-2:rgba(255,255,255,.26);
     --ink-glow:rgba(34,53,102,.55);
+    --arc-dhura:#C2422B; --arc-ban:#1C565B;
     --shadow-1:
       0 0 0 1px rgba(22,24,28,.06),
       0 1px 2px -1px rgba(22,24,28,.10),
@@ -988,7 +994,13 @@ time, .article-read-time, .article-card-date, .project-card-date,
    والشعار بعدها؛ والجوال يقدّمه بصرياً وحده. */
 .publication--index{ --measure: 70rem; }
 
-.masthead{ padding-block: var(--s-8) var(--s-16); }
+.masthead{
+  padding-block: var(--s-8) var(--s-16);
+  /* إهليلج المدار المائل أعرض من عموده؛ قرب حافّة الشاشة (≈1024px) كان
+     يفيض ٣٦px فيظهر شريط تمرير أفقي. يُقصّ عند حافّة الصفحة لا قبلها. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
 
 .masthead-inner{
   display: grid;

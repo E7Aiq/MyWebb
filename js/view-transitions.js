@@ -56,7 +56,8 @@
       if (href !== path) continue;
 
       var host = a.closest('.project-card') || a;
-      var img = host.querySelector('.article-card-image, .article-lead-cover, .project-card-image');
+      // ‎.arc-card-img‎: بطاقة دوّار القوس تتحوّل هي الأخرى إلى الغلاف
+      var img = host.querySelector('.article-card-image, .article-lead-cover, .project-card-image, .arc-card-img');
       var id = host.dataset ? host.dataset.id : null;
       if (img && id) return { img: img, id: id };
     }

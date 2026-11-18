@@ -971,7 +971,7 @@ function articlesIndexPage(ctx) {
             imageHeight: ctx.ogFixed.articles.height,
             title: s.title_ar, description: s.og_description_ar
         },
-        css: ['style.css', 'animations.css', 'article.css', 'subscribe.css', 'responsive.css'],
+        css: ['style.css', 'animations.css', 'article.css', 'subscribe.css', 'arc-carousel.css', 'responsive.css'],
         jsonLd: [schemaCollection({
             name: `مدوّنة ${s.brand_ar}`, description: s.description_ar,
             url: canonical, items: ctx.articles
@@ -1016,6 +1016,13 @@ ${C.breadcrumb(trail)}
             </div>
         </header>
 
+        <!-- الدوّار (js/arc-carousel.js) يحلّ محلّ الفهرس على الشاشة. مخفيّ في
+             الترميز؛ السكربت السطري يُظهره ويضع ‎.arc-on‎ فقط حين تعمل جافاسكربت،
+             فبدونها تبقى الصفحة كما هي والفهرس تحته. -->
+        <section class="arc" data-arc="articles" hidden>
+            <script>document.documentElement.classList.add('arc-on');document.currentScript.parentElement.hidden=false;</script>
+        </section>
+
         <!-- الفهرس: مقال الصدارة ثم القائمة — مصيَّر مسبقاً، وجافاسكربت
              تعيد بناءه عند تبديل اللغة وحده. -->
         <section class="articles-section breakout" aria-label="فهرس المقالات" data-en-label="Article index">
@@ -1030,6 +1037,7 @@ ${subscribeCard('ban', ctx)}
 ${C.FOOTER}
 ${subscribeConfig(ctx)}
 ${C.scripts(['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'js/articles-list.js', 'js/subscribe.js'], site.cacheBuster)}
+    <script src="${C.asset('js/arc-carousel.js', site.cacheBuster)}" onerror="document.documentElement.classList.remove('arc-on');var a=document.querySelector('.arc');if(a)a.hidden=true"></script>
 </body>
 </html>
 `;
@@ -1068,7 +1076,7 @@ function projectsIndexPage(ctx) {
             imageHeight: ctx.ogFixed.projects.height,
             title: s.title_ar, description: s.og_description_ar
         },
-        css: ['style.css', 'animations.css', 'project.css', 'subscribe.css', 'responsive.css'],
+        css: ['style.css', 'animations.css', 'project.css', 'subscribe.css', 'arc-carousel.css', 'responsive.css'],
         jsonLd: [schemaCollection({
             name: `${s.brand_ar} — ${s.label_ar}`, description: s.description_ar,
             url: canonical, items: ctx.projects
@@ -1113,6 +1121,13 @@ ${C.breadcrumb(trail)}
             </div>
         </header>
 
+        <!-- الدوّار (js/arc-carousel.js) يحلّ محلّ الفهرس على الشاشة. مخفيّ في
+             الترميز؛ السكربت السطري يُظهره ويضع ‎.arc-on‎ فقط حين تعمل جافاسكربت،
+             فبدونها تبقى الصفحة كما هي والفهرس تحته. -->
+        <section class="arc" data-arc="projects" hidden>
+            <script>document.documentElement.classList.add('arc-on');document.currentScript.parentElement.hidden=false;</script>
+        </section>
+
         <section class="projects-section breakout" aria-label="فهرس المشاريع" data-en-label="Project index">
             <!-- الفلاتر مصيَّرة مسبقاً من categories[] في البيانات -->
             <div class="filters" id="projectFilters" role="group" aria-label="تصفية المشاريع حسب التصنيف" data-en-label="Filter projects by category" data-prerendered="1">
@@ -1137,6 +1152,7 @@ ${subscribeCard('dhura', ctx)}
 ${C.FOOTER}
 ${subscribeConfig(ctx)}
 ${C.scripts(['js/i18n.js', 'js/covers.js', 'main.js', 'animations.js', 'projects.js', 'js/subscribe.js'], site.cacheBuster)}
+    <script src="${C.asset('js/arc-carousel.js', site.cacheBuster)}" onerror="document.documentElement.classList.remove('arc-on');var a=document.querySelector('.arc');if(a)a.hidden=true"></script>
 </body>
 </html>
 `;
