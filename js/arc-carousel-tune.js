@@ -18,7 +18,7 @@
         cardWidth: [0.06, 0.5, 0.002], aspect: [0.5, 1.5, 0.01], cornerRadius: [0, 40, 1],
         activeScale: [0.8, 2, 0.01], lift: [0, 0.1, 0.002], sideScale: [0.4, 1.2, 0.01],
         sideOpacity: [0, 1, 0.01], titleY: [0.2, 0.9, 0.01], dotsY: [0.3, 1, 0.01],
-        duration: [150, 1500, 10], textBelow: [0, 1, 1]
+        duration: [150, 1500, 10], intro: [1, 1.6, 0.01], textBelow: [0, 1, 1]
     };
 
     const style = document.createElement('style');

@@ -41,6 +41,7 @@
         titleY: 0.56,       // منتصف سطر العنوان ÷ H
         dotsY: 0.86,        // ÷ H
         duration: 720,      // ms
+        intro: 1.22,        // تكبير الأحدث عند فتح الصفحة، حتى أول تنقّل
         textBelow: 0        // 1 ⇒ النصّ تحت البطاقات لا داخل القوس
     };
 
@@ -135,6 +136,7 @@
             this.raf = 0;
             this.index = 0;
             this.pendingReveal = false;
+            this.boost = 1;               // ١ ⇒ الأحدث مكبَّر؛ يخبو إلى ٠ مع أول تنقّل
             this.drag = null;
             this.dragged = false;
             this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -385,11 +387,14 @@
                 // في الدوران تعبر البطاقة من طرفٍ إلى الطرف المقابل عند ‎±n/2‎ —
                 // تخفت قبل العبور وتظهر بعده، فلا تُرى قافزةً عبر القوس.
                 if (this.loop) fade = Math.min(fade, clamp((n / 2 - ad) * 2, 0, 1));
+                const grow = (c.intro - 1) * this.boost * (1 - t);
                 const th = d * c.spacing * DEG;
                 const phi = this.dir * th;
                 const x = this.W / 2 + this.R * Math.sin(phi) - this.cw / 2;
-                const y = this.apex + this.R * (1 - Math.cos(th)) - this.liftPx * (1 - t) - this.ch / 2;
-                const scale = lerp(c.activeScale, c.sideScale, t);
+                // التكبير ينمو إلى أسفل — نحو الفراغ فوق العنوان — وحافّته العليا ثابتة
+                const y = this.apex + this.R * (1 - Math.cos(th)) - this.liftPx * (1 - t) - this.ch / 2
+                    + this.ch * c.activeScale * grow / 2;
+                const scale = lerp(c.activeScale, c.sideScale, t) * (1 + grow);
 
                 card.style.transform =
                     `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) rotate(${phi.toFixed(4)}rad) scale(${scale.toFixed(4)})`;
@@ -430,6 +435,7 @@
 
             this.to = target;
             this.index = k;
+            this.endIntro();
             this.hideText();
             this.setText(k);
             this.syncControls();
@@ -493,6 +499,27 @@
             if (this.pendingReveal) { this.pendingReveal = false; this.reveal(); }
         }
 
+        /* الأحدث يُفتح أكبر من مقاسه، تحيّةً له ما دام وحده في القمّة. أول
+           تنقّل — زرّ أو نقطة أو سحب أو مفتاح — يعيده إلى مقاس البطاقات
+           بانكماشٍ ناعم، ولا يعود التكبير بعدها. */
+        endIntro() {
+            if (this.boost <= 0 || this.introRaf) return;
+            if (this.reduced.matches) { this.boost = 0; this.render(); this.placeSeal(); return; }
+            const t0 = performance.now();
+            const from = this.boost;
+            const step = (now) => {
+                const p = Math.min(1, (now - t0) / 420);
+                this.boost = from * (1 - (1 - Math.pow(1 - p, 3)));
+                if (!this.raf && !this.drag) this.render();
+                if (p < 1) { this.introRaf = requestAnimationFrame(step); return; }
+                this.boost = 0;
+                this.introRaf = 0;
+                this.render();
+                this.placeSeal();
+            };
+            this.introRaf = requestAnimationFrame(step);
+        }
+
         /* ── ختم المعاينة: على ركن البطاقة النشطة، لمشروعٍ له معاينة حيّة ────
            دائرةٌ ورقية صغيرة يدور حولها نصّها كما يدور المدار حول نقطة
            الشعار، وفي قلبها سهمٌ بلون القسم. يظهر حين تستقرّ البطاقة ويختفي
@@ -523,8 +550,9 @@
         placeSeal() {
             const c = this.c;
             const size = this.seal.offsetWidth || 72;
-            const halfW = this.cw * c.activeScale / 2;
-            const halfH = this.ch * c.activeScale / 2;
+            const grow = (c.intro - 1) * this.boost;
+            const halfW = this.cw * c.activeScale * (1 + grow) / 2;
+            const halfH = this.ch * c.activeScale / 2;   // الحافّة العليا ثابتة مع التكبير
             const inset = size * 0.2;
             const x = this.W / 2 + this.dir * (halfW - inset);
             const y = this.apex - this.liftPx - halfH + inset;
@@ -538,7 +566,10 @@
            يُضبط المقاس بالنسبة كي لا تبقى فجوة. لا textLength: تمطيط المسافات
            يفصل الحروف العربية المتصلة. */
         fitSeal() {
-            const phrase = T(['معاينة حيّة • ', 'LIVE PREVIEW • ']);
+            /* علامة الاتجاه (U+200F) بعد كل نقطة تُلحقها بالكلمات العربية حولها،
+               فتبقى «•» بعد كل «معاينة حيّة» حتى عند ملتقى الدائرة — بدونها
+               قد تنفصل النقطة الأخيرة إلى طرف المسار. */
+            const phrase = T(['معاينة حيّة \u2022\u200F ', 'LIVE PREVIEW \u2022 ']);
             const textEl = this.sealText.parentNode;
             const circumference = 2 * Math.PI * 38;
             this.sealText.textContent = phrase;
@@ -548,7 +579,8 @@
             if (!one) return;
             const reps = Math.max(1, Math.round(circumference / (one * 1.15)));
             this.sealText.textContent = phrase.repeat(reps);
-            textEl.style.fontSize = `${(10 * circumference * 0.985) / (one * reps)}px`;
+            // ملءٌ تامّ للمحيط: فراغ الملتقى يساوي فراغ ما بين العبارات
+            textEl.style.fontSize = `${(10 * circumference) / (one * reps)}px`;
         }
 
         showSeal() {
@@ -652,6 +684,7 @@
                 cancelAnimationFrame(this.raf);
                 this.raf = 0;
                 this.vel = 0;
+                this.endIntro();
                 clearTimeout(this.fadeTimer);
                 this.track.classList.remove('is-fading');
                 g.pos = this.pos;
