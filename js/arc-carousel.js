@@ -531,15 +531,17 @@
             a.tabIndex = -1;
             a.setAttribute('aria-hidden', 'true');
             a.innerHTML =
-                '<svg class="arc-seal-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
-                + '<circle class="arc-seal-hair" cx="50" cy="50" r="39"></circle>'
+                '<span class="arc-seal-ring" aria-hidden="true">'
+                + '<svg class="arc-seal-outline" viewBox="0 0 100 100" focusable="false">'
+                + '<circle class="arc-seal-hair" cx="50" cy="50" r="29"></circle>'
                 + '</svg>'
-                + '<span class="arc-seal-copy" aria-hidden="true"></span>'
+                + [0, 1, 2, 3].map((i) => `<span class="arc-seal-copy" style="--seal-quarter:${i}"></span>`).join('')
+                + '</span>'
                 + '<span class="arc-seal-core" aria-hidden="true">'
                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
                 + 'stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path></svg>'
                 + '</span>';
-            this.sealText = a.querySelector('.arc-seal-copy');
+            this.sealText = a.querySelectorAll('.arc-seal-copy');
             return a;
         }
 
@@ -559,13 +561,15 @@
             this.fitSeal();
         }
 
-        /* Safari على الآيفون لا يشكّل العربية على SVG textPath بشكل موثوق؛
-           لذلك يبقى الرسم SVG، لكن العبارة نفسها نص HTML طبيعي ثابت أعلى
-           الختم. هكذا تتصل الحروف وتبقى النقطة ظاهرة في كل متصفّح. */
+        /* أربع عبارات على أرباع الحلقة، تدور معاً كما في الختم الأصلي.
+           كل عبارة عنصر HTML واحد حتى تبقى حروف العربية متصلة في Safari. */
         fitSeal() {
-            this.sealText.textContent = T(['معاينة حيّة.', 'LIVE PREVIEW.']);
-            this.sealText.lang = document.documentElement.lang || 'ar';
-            this.sealText.dir = document.documentElement.dir || 'rtl';
+            const phrase = T(['معاينة حيّة.', 'LIVE PREVIEW.']);
+            this.sealText.forEach((part) => {
+                part.textContent = phrase;
+                part.lang = document.documentElement.lang || 'ar';
+                part.dir = document.documentElement.dir || 'rtl';
+            });
         }
 
         showSeal() {

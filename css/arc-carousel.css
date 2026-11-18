@@ -258,9 +258,8 @@
 .arc-dot:hover:not(.is-active)::before{ background: var(--text-muted); }
 
 /* ── ختم المعاينة الحيّة ─────────────────────────────────────────────────
-   دائرة ورقية على ركن البطاقة النشطة: شعرةٌ منقّطة تدور ببطء، وعبارة HTML
-   ثابتة سليمة التشكيل أعلى الختم، وفي القلب سهمٌ بلون القسم يشير إلى الخارج.
-   إبقاء العربية خارج SVG textPath يمنع Safari من تفكيك حروفها. */
+   أربع عبارات متصلة حول الحلقة الدوّارة، والشعرة والسهم في موضعيهما الأصليين.
+   كل عبارة HTML واحدة لأن Safari يكسر تشكيل العربية على SVG textPath. */
 .arc-seal{
   --seal: 4.75rem;
   position: absolute;
@@ -300,32 +299,36 @@
   inset: 0;
   inline-size: 100%;
   block-size: 100%;
-  overflow: visible;
   animation: arc-seal-spin 18s linear infinite;
 }
 [dir="ltr"] .arc-seal-ring{ animation-direction: reverse; }
 @keyframes arc-seal-spin{ to{ transform: rotate(-360deg); } }
 
+.arc-seal-outline{
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
 .arc-seal-copy{
   position: absolute;
-  inset-block-start: 0.34rem;
-  inset-inline-start: 50%;
-  z-index: 1;
-  padding-inline: 0.2em;
-  background: var(--bg-canvas);
+  left: 50%;
+  top: 50%;
   font-family: var(--font-sans);
-  font-size: clamp(0.46rem, calc(var(--seal) * 0.11), 0.55rem);
-  font-weight: 600;
+  font-size: calc(var(--seal) * 0.095);
+  font-weight: 500;
   line-height: 1;
   color: currentColor;
   white-space: nowrap;
   direction: rtl;
   unicode-bidi: isolate;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%) rotate(calc(var(--seal-quarter) * 90deg)) translateY(calc(var(--seal) * -0.41));
 }
 [dir="ltr"] .arc-seal-copy{
   direction: ltr;
-  letter-spacing: 0.04em;
+  font-size: calc(var(--seal) * 0.087);
+  letter-spacing: 0.01em;
 }
 .arc-seal-hair{
   fill: none;
