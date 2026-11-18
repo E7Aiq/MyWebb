@@ -258,10 +258,9 @@
 .arc-dot:hover:not(.is-active)::before{ background: var(--text-muted); }
 
 /* ── ختم المعاينة الحيّة ─────────────────────────────────────────────────
-   أربع عبارات متصلة حول الحلقة الدوّارة، والشعرة والسهم في موضعيهما الأصليين.
-   كل عبارة HTML واحدة لأن Safari يكسر تشكيل العربية على SVG textPath. */
+   ستة رموز للرؤية والمعاينة تدور في الحلقة البيضاء، والسهم ثابت في القلب. */
 .arc-seal{
-  --seal: 4.75rem;
+  --seal: 4rem;
   position: absolute;
   left: var(--seal-x, 50%);
   top: var(--seal-y, 0);
@@ -292,7 +291,7 @@
     opacity 360ms var(--arc-ease) 300ms,
     transform 760ms cubic-bezier(.34, 1.4, .5, 1) 300ms;
 }
-.arc-stage.is-below .arc-seal{ --seal: 4rem; }
+.arc-stage.is-below .arc-seal{ --seal: 3.75rem; }
 
 .arc-seal-ring{
   position: absolute;
@@ -304,32 +303,6 @@
 [dir="ltr"] .arc-seal-ring{ animation-direction: reverse; }
 @keyframes arc-seal-spin{ to{ transform: rotate(-360deg); } }
 
-.arc-seal-outline{
-  position: absolute;
-  inset: 0;
-  inline-size: 100%;
-  block-size: 100%;
-  overflow: visible;
-}
-.arc-seal-copy{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-family: var(--font-sans);
-  font-size: calc(var(--seal) * 0.095);
-  font-weight: 500;
-  line-height: 1;
-  color: currentColor;
-  white-space: nowrap;
-  direction: rtl;
-  unicode-bidi: isolate;
-  transform: translate(-50%, -50%) rotate(calc(var(--seal-quarter) * 90deg)) translateY(calc(var(--seal) * -0.41));
-}
-[dir="ltr"] .arc-seal-copy{
-  direction: ltr;
-  font-size: calc(var(--seal) * 0.087);
-  letter-spacing: 0.01em;
-}
 .arc-seal-hair{
   fill: none;
   stroke: var(--arc-accent);
@@ -338,6 +311,19 @@
   stroke-linecap: round;
   opacity: 0.8;
 }
+.arc-seal-symbol{
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.arc-seal-symbol--eye{ color: #c74a32; }
+.arc-seal-symbol--play{ color: #298981; }
+.arc-seal-symbol--zoom{ color: #5e70b8; }
+.arc-seal-symbol--focus{ color: #d18a27; }
+.arc-seal-symbol--lens{ color: #9367a5; }
+.arc-seal-symbol--window{ color: #5e8d58; }
 
 .arc-seal-core{
   position: relative;

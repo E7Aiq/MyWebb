@@ -152,8 +152,6 @@
             this.setText(this.index);
             this.root.classList.add('is-ready');
             requestAnimationFrame(() => this.reveal());
-            // قياس نصّ الختم يتبع الخط؛ يُعاد حين يكتمل تحميله
-            if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.fitSeal());
 
             /* الفهرس يُعاد بناؤه عند تبديل اللغة (تواريخ وتسميات) — يُقرأ منه
                من جديد بعد أن يستقرّ، وتبقى البطاقة النشطة هي هي. */
@@ -303,7 +301,6 @@
                 b.setAttribute('aria-label', T([`${k} من ${of}`, `${i + 1} of ${n}`]));
             });
             this.cards.forEach((c, i) => c.setAttribute('aria-label', this.items[i].title));
-            if (this.c) this.fitSeal();
         }
 
         /* ── الهندسة: تُحسب عند كل تغيّر في المقاس ─────────────────────────── */
@@ -520,10 +517,8 @@
             this.introRaf = requestAnimationFrame(step);
         }
 
-        /* ── ختم المعاينة: على ركن البطاقة النشطة، لمشروعٍ له معاينة حيّة ────
-           دائرةٌ ورقية صغيرة يدور حولها نصّها كما يدور المدار حول نقطة
-           الشعار، وفي قلبها سهمٌ بلون القسم. يظهر حين تستقرّ البطاقة ويختفي
-           فور حركتها، كالنصّ. رابطٌ حقيقي يُفتح في نافذة جديدة. */
+        /* ── ختم المعاينة: ستة رموز SVG ملوّنة تدور حول سهم ثابت ───────────
+           يظهر على ركن البطاقة حين تستقرّ، ويختفي فور حركتها. */
         buildSeal() {
             const a = el('a', 'arc-seal');
             a.target = '_blank';
@@ -531,17 +526,31 @@
             a.tabIndex = -1;
             a.setAttribute('aria-hidden', 'true');
             a.innerHTML =
-                '<span class="arc-seal-ring" aria-hidden="true">'
-                + '<svg class="arc-seal-outline" viewBox="0 0 100 100" focusable="false">'
-                + '<circle class="arc-seal-hair" cx="50" cy="50" r="29"></circle>'
+                '<svg class="arc-seal-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
+                + '<circle class="arc-seal-hair" cx="50" cy="50" r="27"></circle>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--eye" transform="translate(50 10)">'
+                + '<path d="M-7 0Q0-6 7 0Q0 6 -7 0Z"></path><circle cx="0" cy="0" r="2"></circle>'
+                + '</g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--play" transform="translate(85 30)">'
+                + '<circle r="6"></circle><path d="M-1.5-3 3 0 -1.5 3Z"></path>'
+                + '</g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--zoom" transform="translate(85 70)">'
+                + '<circle cx="-1.5" cy="-1.5" r="4.5"></circle><path d="M2 2 6 6"></path>'
+                + '</g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--focus" transform="translate(50 90)">'
+                + '<path d="M-6-2V-6H-2M2-6H6V-2M6 2V6H2M-2 6H-6V2"></path>'
+                + '</g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--lens" transform="translate(15 70)">'
+                + '<circle r="6"></circle><circle r="2"></circle><path d="M0-6 2-2M5 3 2 2M-5 3 -2 2"></path>'
+                + '</g>'
+                + '<g class="arc-seal-symbol arc-seal-symbol--window" transform="translate(15 30)">'
+                + '<rect x="-6" y="-5" width="12" height="10" rx="1.5"></rect><path d="M-6-2H6M-3-3.5H-2"></path>'
+                + '</g>'
                 + '</svg>'
-                + [0, 1, 2, 3].map((i) => `<span class="arc-seal-copy" style="--seal-quarter:${i}"></span>`).join('')
-                + '</span>'
                 + '<span class="arc-seal-core" aria-hidden="true">'
                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
                 + 'stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path></svg>'
                 + '</span>';
-            this.sealText = a.querySelectorAll('.arc-seal-copy');
             return a;
         }
 
@@ -558,18 +567,6 @@
             const y = this.apex - this.liftPx - halfH + inset;
             this.stage.style.setProperty('--seal-x', `${x}px`);
             this.stage.style.setProperty('--seal-y', `${y}px`);
-            this.fitSeal();
-        }
-
-        /* أربع عبارات على أرباع الحلقة، تدور معاً كما في الختم الأصلي.
-           كل عبارة عنصر HTML واحد حتى تبقى حروف العربية متصلة في Safari. */
-        fitSeal() {
-            const phrase = T(['معاينة حيّة.', 'LIVE PREVIEW.']);
-            this.sealText.forEach((part) => {
-                part.textContent = phrase;
-                part.lang = document.documentElement.lang || 'ar';
-                part.dir = document.documentElement.dir || 'rtl';
-            });
         }
 
         showSeal() {
