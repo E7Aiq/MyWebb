@@ -535,7 +535,7 @@
                 '<svg class="arc-seal-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
                 + `<defs><path id="${id}" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"></path></defs>`
                 + '<circle class="arc-seal-hair" cx="50" cy="50" r="29"></circle>'
-                + `<text class="arc-seal-text"><textPath href="#${id}"></textPath></text>`
+                + `<text class="arc-seal-text"><textPath href="#${id}" startOffset="2%"></textPath></text>`
                 + '</svg>'
                 + '<span class="arc-seal-core" aria-hidden="true">'
                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
@@ -567,20 +567,23 @@
            يفصل الحروف العربية المتصلة. */
         fitSeal() {
             /* علامة الاتجاه (U+200F) بعد كل نقطة تُلحقها بالكلمات العربية حولها،
-               فتبقى «•» بعد كل «معاينة حيّة» حتى عند ملتقى الدائرة — بدونها
+               فتبقى «.» بعد كل «معاينة حيّة» حتى عند ملتقى الدائرة — بدونها
                قد تنفصل النقطة الأخيرة إلى طرف المسار. */
-            const phrase = T(['معاينة حيّة \u2022\u200F ', 'LIVE PREVIEW \u2022 ']);
+            const phrase = T(['معاينة حيّة.\u200F ', 'LIVE PREVIEW. ']);
             const textEl = this.sealText.parentNode;
             const circumference = 2 * Math.PI * 38;
+            /* نترك ٤٪ موزّعة حول ملتقى المسار؛ ملؤه حتى الحافة كان يقصّ
+               نقطة العبارة الأخيرة بصرياً، فتبدو جملة واحدة بلا خاتمة. */
+            const usableCircumference = circumference * 0.96;
             this.sealText.textContent = phrase;
             textEl.style.fontSize = '10px';
             let one = 0;
             try { one = textEl.getComputedTextLength(); } catch (err) { one = 0; }
             if (!one) return;
-            const reps = Math.max(1, Math.round(circumference / (one * 1.15)));
+            const reps = Math.max(1, Math.round(usableCircumference / (one * 1.15)));
             this.sealText.textContent = phrase.repeat(reps);
-            // ملءٌ تامّ للمحيط: فراغ الملتقى يساوي فراغ ما بين العبارات
-            textEl.style.fontSize = `${(10 * circumference) / (one * reps)}px`;
+            // ملءٌ متّزن للمحيط مع حماية نقطة العبارة الأخيرة عند الملتقى
+            textEl.style.fontSize = `${(10 * usableCircumference) / (one * reps)}px`;
         }
 
         showSeal() {

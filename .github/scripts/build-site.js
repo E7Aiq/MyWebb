@@ -1183,6 +1183,7 @@ function subscribeCard(list, ctx) {
     return `
             <section class="sub-card sub-${list} ${brand} rv" id="subscribe-${list}"
                      data-list="${list}" aria-labelledby="subTitle-${list}">
+                <div class="sub-visual" aria-hidden="true"></div>
                 <p class="sub-kicker" data-en="Email updates">تحديثات بالبريد</p>
                 <h2 class="sub-title" id="subTitle-${list}"
                     data-en="New ${selfEn} work, straight to you">جديد ${self} يصلك أوّلاً</h2>
